@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>現在地を更新</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: white; border-radius: 20px; padding: 32px 24px; max-width: 380px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+    h1 { font-size: 1.3rem; font-weight: 800; color: #302b63; margin-bottom: 6px; }
+    .sub { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
+    label { font-size: 0.82rem; font-weight: 700; color: #555; display: block; margin-bottom: 6px; }
+    input, select { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; margin-bottom: 14px; outline: none; transition: border 0.2s; }
+    input:focus, select:focus { border-color: #302b63; }
+    .btn { width: 100%; padding: 14px; background: #302b63; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-bottom: 10px; }
+    .btn:hover { background: #24243e; }
+    .btn-gps { background: #27ae60; }
+    .btn-gps:hover { background: #1e8449; }
+    .status { font-size: 0.85rem; padding: 12px 14px; border-radius: 10px; margin-top: 10px; display: none; }
+    .status.success { background: #d4edda; color: #155724; display: block; }
+    .status.error   { background: #f8d7da; color: #721c24; display: block; }
+    .status.loading { background: #d1ecf1; color: #0c5460; display: block; }
+    .pin-screen { }
+    .main-screen { display: none; }
+    .gps-result { font-size: 0.78rem; color: #888; margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <!-- PINロック画面 -->
+  <div class="pin-screen" id="pin-screen">
+    <h1>🔐 管理者ログイン</h1>
+    <p class="sub">PINを入力してください</p>
+    <label>PIN</label>
+    <input type="password" id="pin-input" placeholder="****" maxlength="10">
+    <button class="btn" onclick="checkPin()">ログイン</button>
+    <div class="status error" id="pin-error">PINが違います</div>
+  </div>
+
+  <!-- メイン画面 -->
+  <div class="main-screen" id="main-screen">
+    <h1>📍 現在地を更新</h1>
+    <p class="sub">旅の現在地をみんなに知らせよう</p>
+
+    <button class="btn btn-gps" onclick="getGPS()">🛰️ GPSで現在地を取得</button>
+    <div class="gps-result" id="gps-result"></div>
+
+    <label>都市名（日本語）</label>
+    <input type="text" id="city" placeholder="例：バンコク">
+
+    <label>国名（日本語）</label>
+    <input type="text" id="country" placeholder="例：タイ">
+
+    <label>ひとこと（任意）</label>
+    <input type="text" id="message" placeholder="例：サファリ中！">
+
+    <button class="btn" onclick="updateLocation()">🌍 現在地を更新する</button>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+const CORRECT_PIN = "gen1226"; // ← PINを変更する場合はここを編集
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDBYGmx12_Rdcc1K4dNbaCV4fuKU211OVc",
+  authDomain: "trip-2026-5a4d8.firebaseapp.com",
+  databaseURL: "https://trip-2026-5a4d8-default-rtdb.firebaseio.com",
+  projectId: "trip-2026-5a4d8",
+  storageBucket: "trip-2026-5a4d8.firebasestorage.app",
+  messagingSenderId: "372431238996",
+  appId: "1:372431238996:web:337f3957e3ecbf5ff97ac1"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let gpsLat = null, gpsLon = null;
+
+function checkPin() {
+  const val = document.getElementById('pin-input').value;
+  if (val === CORRECT_PIN) {
+    document.getElementById('pin-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+  } else {
+    document.getElementById('pin-error').style.display = 'block';
+  }
+}
+
+document.getElementById('pin-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPin();
+});
+
+function getGPS() {
+  const el = document.getElementById('gps-result');
+  el.textContent = '📡 取得中...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    gpsLat = pos.coords.latitude;
+    gpsLon = pos.coords.longitude;
+    el.textContent = `✅ 取得完了: ${gpsLat.toFixed(4)}, ${gpsLon.toFixed(4)}`;
+  }, () => {
+    el.textContent = '❌ GPS取得失敗。手動で都市名を入力してください。';
+  });
+}
+
+function updateLocation() {
+  const city    = document.getElementById('city').value.trim();
+  const country = document.getElementById('country').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const status  = document.getElementById('status');
+
+  if (!city || !country) {
+    status.className = 'status error';
+    status.textContent = '都市名と国名を入力してください';
+    return;
+  }
+
+  status.className = 'status loading';
+  status.textContent = '更新中...';
+
+  const data = {
+    city, country, message,
+    lat: gpsLat,
+    lon: gpsLon,
+    updatedAt: Date.now()
+  };
+
+  db.ref('location').set(data)
+    .then(() => {
+      status.className = 'status success';
+      status.textContent = `✅ ${country}・${city} に更新しました！`;
+    })
+    .catch(err => {
+      status.className = 'status error';
+      status.textContent = '更新失敗: ' + err.message;
+    });
+}
+</script>
+</body>
+</html>

@@ -82,6 +82,28 @@
     #map-section { padding: 0; max-width: 100%; }
     #map-section.active { display: flex; flex-direction: column; }
     #map { height: calc(100vh - 130px); min-height: 500px; }
+    .current-location-banner {
+      display: none;
+      background: linear-gradient(90deg, #302b63, #27ae60);
+      color: white;
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .current-location-banner.visible { display: flex; }
+    .pulse-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #7fff7f;
+      animation: pulse 1.5s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(127,255,127,0.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(127,255,127,0); }
+      100% { box-shadow: 0 0 0 0 rgba(127,255,127,0); }
+    }
     .map-legend {
       background: white;
       padding: 12px 20px;
@@ -95,6 +117,12 @@
     .legend-item { display: flex; align-items: center; gap: 6px; }
     .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
     .legend-line { width: 24px; height: 3px; flex-shrink: 0; }
+    .locate-btn {
+      background: #302b63; color: white; border: none; border-radius: 8px;
+      padding: 6px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      margin-left: 8px; transition: background 0.2s;
+    }
+    .locate-btn:hover { background: #24243e; }
 
     /* ===== ITINERARY ===== */
     .section-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; color: #302b63; border-left: 4px solid #302b63; padding-left: 12px; }
@@ -255,6 +283,10 @@
 
 <!-- ===== MAP TAB ===== -->
 <div id="tab-map" class="section active" id="map-section" style="padding:0;max-width:100%;">
+  <div class="current-location-banner" id="location-banner">
+    <div class="pulse-dot"></div>
+    <span id="location-text">現在地を取得中...</span>
+  </div>
   <div id="map"></div>
   <div class="map-legend">
     <div class="legend-item"><div class="legend-dot" style="background:var(--jp)"></div> 日本</div>
@@ -446,6 +478,8 @@
   <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank">🗺️ Google マイマップ</a>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ===== DATA =====
@@ -582,6 +616,56 @@ function getCurvedPath(from, to) {
   }
   return pts;
 }
+
+// ===== FIREBASE 現在地 =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDBYGmx12_Rdcc1K4dNbaCV4fuKU211OVc",
+  authDomain: "trip-2026-5a4d8.firebaseapp.com",
+  databaseURL: "https://trip-2026-5a4d8-default-rtdb.firebaseio.com",
+  projectId: "trip-2026-5a4d8",
+  storageBucket: "trip-2026-5a4d8.firebasestorage.app",
+  messagingSenderId: "372431238996",
+  appId: "1:372431238996:web:337f3957e3ecbf5ff97ac1"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let liveMarker = null;
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60)    return `${diff}秒前`;
+  if (diff < 3600)  return `${Math.floor(diff/60)}分前`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}時間前`;
+  return `${Math.floor(diff/86400)}日前`;
+}
+
+db.ref('location').on('value', snapshot => {
+  const d = snapshot.val();
+  if (!d) return;
+
+  const banner = document.getElementById('location-banner');
+  const text   = document.getElementById('location-text');
+  const ago    = timeAgo(d.updatedAt);
+  const msg    = d.message ? `「${d.message}」` : '';
+  text.textContent = `現在地：${d.country}・${d.city}　${msg}　（更新：${ago}）`;
+  banner.classList.add('visible');
+
+  if (liveMarker) map.removeLayer(liveMarker);
+
+  if (d.lat && d.lon) {
+    const icon = L.divIcon({
+      html: `<div style="position:relative;width:36px;height:36px;">
+        <div style="position:absolute;inset:0;border-radius:50%;background:rgba(39,174,96,0.3);animation:pulse 1.5s infinite;"></div>
+        <div style="position:absolute;inset:6px;border-radius:50%;background:#27ae60;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:11px;">✈️</div>
+      </div>`,
+      className: '', iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]
+    });
+    liveMarker = L.marker([d.lat, d.lon], { icon })
+      .addTo(map)
+      .bindPopup(`<b>📍 現在地</b><br>${d.country}・${d.city}${d.message ? '<br>'+d.message : ''}<br><small style="color:#888">更新：${ago}</small>`);
+  }
+});
 
 // ===== ITINERARY TABLE =====
 const tbody = document.getElementById('itinerary-body');
