@@ -40,18 +40,8 @@
 </head>
 <body>
 <div class="card">
-  <!-- PINロック画面 -->
-  <div class="pin-screen" id="pin-screen">
-    <h1>🔐 ログイン</h1>
-    <p class="sub">PINを入力してください</p>
-    <label>PIN</label>
-    <input type="password" id="pin-input" placeholder="****" maxlength="10">
-    <button class="btn" onclick="checkPin()">ログイン</button>
-    <div class="status error" id="pin-error" style="display:none">PINが違います</div>
-  </div>
-
   <!-- メイン画面 -->
-  <div class="main-screen" id="main-screen">
+  <div class="main-screen" id="main-screen" style="display:block">
     <h1>📍 現在地トラッカー</h1>
     <p class="sub">開くだけで自動的に位置情報を送信します</p>
 
@@ -79,7 +69,6 @@
 </div>
 
 <script>
-const CORRECT_PIN = "gen1226";
 const AUTO_INTERVAL_MIN = 15; // 自動更新間隔（分）
 
 const firebaseConfig = {
@@ -99,24 +88,11 @@ let autoTimer = null;
 let countdownTimer = null;
 let nextUpdateTime = null;
 
-function checkPin() {
-  const val = document.getElementById('pin-input').value;
-  if (val === CORRECT_PIN) {
-    document.getElementById('pin-screen').style.display = 'none';
-    document.getElementById('main-screen').style.display = 'block';
-    // 前回の都市・国をlocalStorageから復元
-    document.getElementById('city').value    = localStorage.getItem('loc_city') || '';
-    document.getElementById('country').value = localStorage.getItem('loc_country') || '';
-    document.getElementById('message').value = localStorage.getItem('loc_message') || '';
-    startAutoTracking();
-  } else {
-    document.getElementById('pin-error').style.display = 'block';
-  }
-}
-
-document.getElementById('pin-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkPin();
-});
+// ページ読み込み時に自動開始
+document.getElementById('city').value    = localStorage.getItem('loc_city') || '';
+document.getElementById('country').value = localStorage.getItem('loc_country') || '';
+document.getElementById('message').value = localStorage.getItem('loc_message') || '';
+startAutoTracking();
 
 function getGPS() {
   return new Promise((resolve, reject) => {
