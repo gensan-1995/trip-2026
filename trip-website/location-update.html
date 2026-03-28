@@ -8,62 +8,79 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .card { background: white; border-radius: 20px; padding: 32px 24px; max-width: 380px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0f0c29; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .card { background: white; border-radius: 20px; padding: 32px 24px; max-width: 380px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
     h1 { font-size: 1.3rem; font-weight: 800; color: #302b63; margin-bottom: 6px; }
     .sub { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
     label { font-size: 0.82rem; font-weight: 700; color: #555; display: block; margin-bottom: 6px; }
-    input, select { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; margin-bottom: 14px; outline: none; transition: border 0.2s; }
-    input:focus, select:focus { border-color: #302b63; }
+    input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; margin-bottom: 14px; outline: none; transition: border 0.2s; }
+    input:focus { border-color: #302b63; }
     .btn { width: 100%; padding: 14px; background: #302b63; color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-bottom: 10px; }
     .btn:hover { background: #24243e; }
-    .btn-gps { background: #27ae60; }
-    .btn-gps:hover { background: #1e8449; }
     .status { font-size: 0.85rem; padding: 12px 14px; border-radius: 10px; margin-top: 10px; display: none; }
     .status.success { background: #d4edda; color: #155724; display: block; }
     .status.error   { background: #f8d7da; color: #721c24; display: block; }
     .status.loading { background: #d1ecf1; color: #0c5460; display: block; }
     .pin-screen { }
     .main-screen { display: none; }
-    .gps-result { font-size: 0.78rem; color: #888; margin-bottom: 14px; }
+
+    /* 自動更新UI */
+    .tracker-box {
+      background: linear-gradient(135deg, #302b63, #27ae60);
+      border-radius: 14px; padding: 20px; color: white; margin-bottom: 16px; text-align: center;
+    }
+    .tracker-box .big-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .tracker-status { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .tracker-next { font-size: 0.78rem; opacity: 0.8; }
+    .tracker-coords { font-size: 0.72rem; opacity: 0.6; margin-top: 6px; }
+    .divider { border: none; border-top: 1px solid #eee; margin: 16px 0; }
+    .send-now-btn { background: #27ae60; }
+    .send-now-btn:hover { background: #1e8449; }
   </style>
 </head>
 <body>
 <div class="card">
   <!-- PINロック画面 -->
   <div class="pin-screen" id="pin-screen">
-    <h1>🔐 管理者ログイン</h1>
+    <h1>🔐 ログイン</h1>
     <p class="sub">PINを入力してください</p>
     <label>PIN</label>
     <input type="password" id="pin-input" placeholder="****" maxlength="10">
     <button class="btn" onclick="checkPin()">ログイン</button>
-    <div class="status error" id="pin-error">PINが違います</div>
+    <div class="status error" id="pin-error" style="display:none">PINが違います</div>
   </div>
 
   <!-- メイン画面 -->
   <div class="main-screen" id="main-screen">
-    <h1>📍 現在地を更新</h1>
-    <p class="sub">旅の現在地をみんなに知らせよう</p>
+    <h1>📍 現在地トラッカー</h1>
+    <p class="sub">開くだけで自動的に位置情報を送信します</p>
 
-    <button class="btn btn-gps" onclick="getGPS()">🛰️ GPSで現在地を取得</button>
-    <div class="gps-result" id="gps-result"></div>
+    <div class="tracker-box">
+      <div class="big-icon" id="tracker-icon">📡</div>
+      <div class="tracker-status" id="tracker-status">GPS取得中...</div>
+      <div class="tracker-next" id="tracker-next"></div>
+      <div class="tracker-coords" id="tracker-coords"></div>
+    </div>
 
-    <label>都市名（日本語）</label>
+    <hr class="divider">
+
+    <label>都市名（任意・手動で変更可）</label>
     <input type="text" id="city" placeholder="例：バンコク">
 
-    <label>国名（日本語）</label>
+    <label>国名（任意・手動で変更可）</label>
     <input type="text" id="country" placeholder="例：タイ">
 
     <label>ひとこと（任意）</label>
     <input type="text" id="message" placeholder="例：サファリ中！">
 
-    <button class="btn" onclick="updateLocation()">🌍 現在地を更新する</button>
+    <button class="btn send-now-btn" onclick="sendNow()">📤 今すぐ送信</button>
     <div class="status" id="status"></div>
   </div>
 </div>
 
 <script>
-const CORRECT_PIN = "gen1226"; // ← PINを変更する場合はここを編集
+const CORRECT_PIN = "gen1226";
+const AUTO_INTERVAL_MIN = 15; // 自動更新間隔（分）
 
 const firebaseConfig = {
   apiKey: "AIzaSyDBYGmx12_Rdcc1K4dNbaCV4fuKU211OVc",
@@ -78,12 +95,20 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let gpsLat = null, gpsLon = null;
+let autoTimer = null;
+let countdownTimer = null;
+let nextUpdateTime = null;
 
 function checkPin() {
   const val = document.getElementById('pin-input').value;
   if (val === CORRECT_PIN) {
     document.getElementById('pin-screen').style.display = 'none';
     document.getElementById('main-screen').style.display = 'block';
+    // 前回の都市・国をlocalStorageから復元
+    document.getElementById('city').value    = localStorage.getItem('loc_city') || '';
+    document.getElementById('country').value = localStorage.getItem('loc_country') || '';
+    document.getElementById('message').value = localStorage.getItem('loc_message') || '';
+    startAutoTracking();
   } else {
     document.getElementById('pin-error').style.display = 'block';
   }
@@ -94,48 +119,81 @@ document.getElementById('pin-input').addEventListener('keydown', e => {
 });
 
 function getGPS() {
-  const el = document.getElementById('gps-result');
-  el.textContent = '📡 取得中...';
-  navigator.geolocation.getCurrentPosition(pos => {
-    gpsLat = pos.coords.latitude;
-    gpsLon = pos.coords.longitude;
-    el.textContent = `✅ 取得完了: ${gpsLat.toFixed(4)}, ${gpsLon.toFixed(4)}`;
-  }, () => {
-    el.textContent = '❌ GPS取得失敗。手動で都市名を入力してください。';
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(pos => {
+      gpsLat = pos.coords.latitude;
+      gpsLon = pos.coords.longitude;
+      document.getElementById('tracker-coords').textContent = `GPS: ${gpsLat.toFixed(4)}, ${gpsLon.toFixed(4)}`;
+      resolve();
+    }, reject, { enableHighAccuracy: true, timeout: 15000 });
   });
 }
 
-function updateLocation() {
+async function sendLocation() {
   const city    = document.getElementById('city').value.trim();
   const country = document.getElementById('country').value.trim();
   const message = document.getElementById('message').value.trim();
-  const status  = document.getElementById('status');
 
-  if (!city || !country) {
-    status.className = 'status error';
-    status.textContent = '都市名と国名を入力してください';
-    return;
+  document.getElementById('tracker-icon').textContent = '📡';
+  document.getElementById('tracker-status').textContent = 'GPS取得中...';
+  document.getElementById('tracker-next').textContent = '';
+
+  try {
+    await getGPS();
+
+    const data = {
+      lat: gpsLat, lon: gpsLon,
+      city: city || '移動中',
+      country: country || '不明',
+      message,
+      updatedAt: Date.now()
+    };
+
+    await db.ref('location').set(data);
+
+    // localStorageに保存
+    localStorage.setItem('loc_city', city);
+    localStorage.setItem('loc_country', country);
+    localStorage.setItem('loc_message', message);
+
+    document.getElementById('tracker-icon').textContent = '✅';
+    document.getElementById('tracker-status').textContent = `送信完了：${data.country}・${data.city}`;
+    scheduleNext();
+  } catch (e) {
+    document.getElementById('tracker-icon').textContent = '❌';
+    document.getElementById('tracker-status').textContent = 'GPS取得失敗。再試行します...';
+    scheduleNext();
   }
+}
 
-  status.className = 'status loading';
-  status.textContent = '更新中...';
+function scheduleNext() {
+  nextUpdateTime = Date.now() + AUTO_INTERVAL_MIN * 60 * 1000;
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    const remaining = Math.max(0, Math.ceil((nextUpdateTime - Date.now()) / 1000));
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    document.getElementById('tracker-next').textContent = `次の自動送信：${m}分${s}秒後`;
+    if (remaining === 0) clearInterval(countdownTimer);
+  }, 1000);
+}
 
-  const data = {
-    city, country, message,
-    lat: gpsLat,
-    lon: gpsLon,
-    updatedAt: Date.now()
-  };
+function startAutoTracking() {
+  sendLocation(); // 即時1回実行
+  if (autoTimer) clearInterval(autoTimer);
+  autoTimer = setInterval(sendLocation, AUTO_INTERVAL_MIN * 60 * 1000);
 
-  db.ref('location').set(data)
-    .then(() => {
-      status.className = 'status success';
-      status.textContent = `✅ ${country}・${city} に更新しました！`;
-    })
-    .catch(err => {
-      status.className = 'status error';
-      status.textContent = '更新失敗: ' + err.message;
-    });
+  // 画面スリープ防止（Wake Lock API）
+  if ('wakeLock' in navigator) {
+    navigator.wakeLock.request('screen').catch(() => {});
+  }
+}
+
+function sendNow() {
+  if (autoTimer) clearInterval(autoTimer);
+  if (countdownTimer) clearInterval(countdownTimer);
+  sendLocation();
+  autoTimer = setInterval(sendLocation, AUTO_INTERVAL_MIN * 60 * 1000);
 }
 </script>
 </body>
