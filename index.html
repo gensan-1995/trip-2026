@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>半年間バックパッカー旅 2026–2027</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --jp:  #e74c3c;
+      --as:  #e67e22;
+      --ea:  #27ae60;
+      --sa:  #16a085;
+      --sm:  #2980b9;
+      --cm:  #8e44ad;
+    }
+    body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background: #f5f5f5; color: #333; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><circle cx="30" cy="30" r="1" fill="rgba(255,255,255,0.15)"/></svg>') repeat;
+      animation: stars 20s linear infinite;
+    }
+    @keyframes stars { from { transform: translateY(0); } to { transform: translateY(-60px); } }
+    .hero-content { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(1.6rem, 5vw, 2.8rem); font-weight: 800; letter-spacing: 0.02em; margin-bottom: 8px; }
+    .hero .subtitle { font-size: clamp(0.9rem, 2.5vw, 1.1rem); opacity: 0.85; margin-bottom: 28px; }
+    .stats { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .stat-pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(8px);
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .stat-pill span { opacity: 0.7; font-weight: 400; font-size: 0.8rem; display: block; }
+
+    /* ===== TABS ===== */
+    .tabs-bar {
+      background: #fff;
+      border-bottom: 2px solid #e0e0e0;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .tab-btn {
+      padding: 14px 28px;
+      border: none;
+      background: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #888;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { color: #302b63; border-bottom-color: #302b63; }
+    .tab-btn:hover:not(.active) { color: #555; background: #f8f8f8; }
+
+    /* ===== SECTIONS ===== */
+    .section { display: none; padding: 24px 16px 48px; max-width: 1100px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    /* ===== MAP ===== */
+    #map-section { padding: 0; max-width: 100%; }
+    #map-section.active { display: flex; flex-direction: column; }
+    #map { height: calc(100vh - 130px); min-height: 500px; }
+    .map-legend {
+      background: white;
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-top: 1px solid #e0e0e0;
+      font-size: 0.82rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .legend-line { width: 24px; height: 3px; flex-shrink: 0; }
+
+    /* ===== ITINERARY ===== */
+    .section-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; color: #302b63; border-left: 4px solid #302b63; padding-left: 12px; }
+    .route-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .route-table th { background: #302b63; color: white; padding: 10px 12px; text-align: left; white-space: nowrap; }
+    .route-table td { padding: 9px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    .route-table tr.transport-row td { background: #fafafa; color: #888; font-style: italic; font-size: 0.82rem; }
+    .area-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+    }
+    .days-num { font-weight: 700; text-align: center; }
+    .highlight-text { color: #555; font-size: 0.82rem; }
+
+    /* Area row colors */
+    tr.area-jp td { background: #fef5f5; }
+    tr.area-as td { background: #fdf6ec; }
+    tr.area-ea td { background: #f0faf3; }
+    tr.area-sa td { background: #edf8f6; }
+    tr.area-sm td { background: #edf4fb; }
+    tr.area-cm td { background: #f5f0fb; }
+
+    /* ===== BUDGET ===== */
+    .budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .budget-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-top: 4px solid var(--c);
+    }
+    .budget-card h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .budget-card .amount { font-size: 1.6rem; font-weight: 800; color: var(--c); }
+    .budget-card .detail { font-size: 0.8rem; color: #888; margin-top: 4px; }
+    .budget-bar-wrap { margin-top: 8px; background: #eee; border-radius: 4px; height: 8px; overflow: hidden; }
+    .budget-bar { height: 100%; border-radius: 4px; background: var(--c); transition: width 1s ease; }
+
+    .total-box {
+      background: linear-gradient(135deg, #302b63, #24243e);
+      color: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .total-box .label { font-size: 0.9rem; opacity: 0.75; margin-bottom: 6px; }
+    .total-box .big { font-size: 2.4rem; font-weight: 900; }
+    .total-box .note { font-size: 0.85rem; opacity: 0.8; margin-top: 8px; }
+
+    /* ===== HIGHLIGHTS ===== */
+    .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .highlight-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .highlight-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+    .highlight-card-top { height: 8px; }
+    .highlight-card-body { padding: 18px; }
+    .highlight-card .num { font-size: 1.4rem; font-weight: 900; opacity: 0.2; float: right; }
+    .highlight-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .highlight-card .country { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
+    .highlight-card p { font-size: 0.82rem; color: #555; line-height: 1.6; }
+    .highlight-card .days-tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: #f0f0f0;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #302b63;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 20px;
+      font-size: 0.82rem;
+      margin-top: 40px;
+    }
+    footer a { color: rgba(255,255,255,0.9); }
+
+    @media (max-width: 600px) {
+      .tab-btn { padding: 12px 14px; font-size: 0.82rem; }
+      .route-table { font-size: 0.78rem; }
+      .route-table td { padding: 7px 8px; }
+      .highlight-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div style="font-size:2rem;margin-bottom:10px;">✈️ 🌍 🎒</div>
+    <h1>半年間バックパッカー世界一周</h1>
+    <p class="subtitle">2026年7月6日 〜 2027年1月6日</p>
+    <div class="stats">
+      <div class="stat-pill">🗓️ 184日間<span>旅行期間</span></div>
+      <div class="stat-pill">🌐 17カ国<span>訪問国</span></div>
+      <div class="stat-pill">📍 19都市<span>主要ストップ</span></div>
+      <div class="stat-pill">💰 約200万円<span>総予算</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('map')">🗺️ マップ</button>
+  <button class="tab-btn" onclick="switchTab('itinerary')">📋 旅程</button>
+  <button class="tab-btn" onclick="switchTab('budget')">💰 予算</button>
+  <button class="tab-btn" onclick="switchTab('highlights')">⭐ ハイライト</button>
+</div>
+
+<!-- ===== MAP TAB ===== -->
+<div id="tab-map" class="section active" id="map-section" style="padding:0;max-width:100%;">
+  <div id="map"></div>
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--jp)"></div> 日本</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--as)"></div> アジア</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--ea)"></div> 東アフリカ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sa)"></div> 南部アフリカ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sm)"></div> 南米</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cm)"></div> 中米</div>
+    <div class="legend-item"><div class="legend-line" style="background:#e74c3c;"></div> ✈️ 飛行機</div>
+    <div class="legend-item"><div class="legend-line" style="background:#f39c12;"></div> 🚌 陸路</div>
+    <div style="margin-left:8px;">
+      <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank"
+         style="font-size:0.82rem;color:#302b63;text-decoration:none;font-weight:600;">
+        🗺️ Google マイマップで開く →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ITINERARY TAB ===== -->
+<div id="tab-itinerary" class="section">
+  <div class="section-title">旅程スケジュール</div>
+  <div style="overflow-x:auto;">
+    <table class="route-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>エリア</th>
+          <th>国</th>
+          <th>都市・拠点</th>
+          <th>移動</th>
+          <th>泊数</th>
+          <th>ハイライト</th>
+        </tr>
+      </thead>
+      <tbody id="itinerary-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== BUDGET TAB ===== -->
+<div id="tab-budget" class="section">
+  <div class="section-title">予算概要</div>
+
+  <div class="total-box">
+    <div class="label">旅行総予算（目安）</div>
+    <div class="big">約 200万円</div>
+    <div class="note">※ フライト・宿泊・食費・ツアー・ビザ等すべて含む概算</div>
+  </div>
+
+  <div class="budget-grid">
+    <div class="budget-card" style="--c: var(--as)">
+      <h3>🇹🇭🇮🇳 アジア</h3>
+      <div class="amount">約 20万円</div>
+      <div class="detail">タイ 11日 + インド 5日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:10%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: var(--ea)">
+      <h3>🇰🇪🇺🇬🇷🇼🇹🇿 東アフリカ</h3>
+      <div class="amount">約 80万円</div>
+      <div class="detail">ケニア・ウガンダ・ルワンダ・タンザニア 50日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:40%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: var(--sa)">
+      <h3>🇿🇼🇳🇦🇿🇦 南部アフリカ</h3>
+      <div class="amount">約 35万円</div>
+      <div class="detail">ジンバブエ・ナミビア・南アフリカ 28日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:17%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: var(--sm)">
+      <h3>🇧🇷🇦🇷🇨🇱🇧🇴🇵🇪🇨🇴 南米</h3>
+      <div class="amount">約 40万円</div>
+      <div class="detail">6カ国 66日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:20%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: var(--cm)">
+      <h3>🇬🇹🇲🇽 中米</h3>
+      <div class="amount">約 15万円</div>
+      <div class="detail">グアテマラ・メキシコ 24日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:7.5%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: #e74c3c">
+      <h3>✈️ フライト合計</h3>
+      <div class="amount">約 35万円</div>
+      <div class="detail">国際線 7区間</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:17%"></div></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:24px;">主要ツアー費用</div>
+  <div style="overflow-x:auto;">
+    <table class="route-table">
+      <thead>
+        <tr>
+          <th>ツアー名</th>
+          <th>エリア</th>
+          <th>費用（目安）</th>
+          <th>日数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="area-ea">
+          <td>🦁 マサイマラ サファリ（グレートマイグレーション）</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 10万円</td>
+          <td>5日</td>
+        </tr>
+        <tr class="area-ea">
+          <td>🦍 ゴリラトレッキング（ブウィンディ）</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 12万円</td>
+          <td>2日</td>
+        </tr>
+        <tr class="area-ea">
+          <td>🏔️ キリマンジャロ登山（マチャメルート）</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 40万円</td>
+          <td>8日</td>
+        </tr>
+        <tr class="area-ea">
+          <td>🏝️ ザンジバル島滞在</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 8万円</td>
+          <td>10日</td>
+        </tr>
+        <tr class="area-sa">
+          <td>🌊 ビクトリアフォールズ アクティビティ</td>
+          <td><span class="area-badge" style="background:var(--sa)">南部アフリカ</span></td>
+          <td>約 5万円</td>
+          <td>2日</td>
+        </tr>
+        <tr class="area-sa">
+          <td>🏜️ ナミブ砂漠ツアー</td>
+          <td><span class="area-badge" style="background:var(--sa)">南部アフリカ</span></td>
+          <td>約 14万円</td>
+          <td>3日</td>
+        </tr>
+        <tr class="area-sm">
+          <td>🏛️ マチュピチュ</td>
+          <td><span class="area-badge" style="background:var(--sm)">南米</span></td>
+          <td>約 2万円</td>
+          <td>1日</td>
+        </tr>
+        <tr class="area-sm">
+          <td>🪞 ウユニ塩湖ツアー</td>
+          <td><span class="area-badge" style="background:var(--sm)">南米</span></td>
+          <td>約 3万円</td>
+          <td>2日</td>
+        </tr>
+        <tr class="area-sm">
+          <td>🌋 アタカマ砂漠ツアー</td>
+          <td><span class="area-badge" style="background:var(--sm)">南米</span></td>
+          <td>約 3万円</td>
+          <td>2日</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== HIGHLIGHTS TAB ===== -->
+<div id="tab-highlights" class="section">
+  <div class="section-title">旅のハイライト</div>
+  <div class="highlights-grid" id="highlights-grid"></div>
+</div>
+
+<footer>
+  半年間バックパッカー旅 2026–2027 &nbsp;|&nbsp;
+  <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank">🗺️ Google マイマップ</a>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ===== DATA =====
+const stops = [
+  {num:1,  name:"東京（出国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"成田発 Thai VietJet VZ831",                         area:"日本",       country:"日本",       flag:"🇯🇵", transport:null},
+  {num:2,  name:"バンコク",                          lat:13.7563,  lon:100.5018, days:"11", note:"ワクチン一括接種・バンコク観光",                      area:"アジア",     country:"タイ",       flag:"🇹🇭", transport:"✈️ Thai VietJet"},
+  {num:3,  name:"ムンバイ",                          lat:19.0760,  lon:72.8777,  days:"5",  note:"ゲートウェイオブインディア・エレファンタ島",           area:"アジア",     country:"インド",     flag:"🇮🇳", transport:"✈️ Thai VietJet"},
+  {num:4,  name:"ナイロビ・マサイマラ",              lat:-1.2921,  lon:36.8219,  days:"14", note:"マサイマラサファリ（グレートマイグレーション）",       area:"東アフリカ", country:"ケニア",     flag:"🇰🇪", transport:"✈️ Kenya Airways"},
+  {num:5,  name:"カンパラ・ブウィンディ",            lat:0.3476,   lon:32.5825,  days:"8",  note:"ゴリラトレッキング・チンパンジートレッキング",         area:"東アフリカ", country:"ウガンダ",   flag:"🇺🇬", transport:"🚌 陸路バス"},
+  {num:6,  name:"キガリ",                            lat:-1.9441,  lon:30.0619,  days:"4",  note:"虐殺記念館・現代アフリカの街並み",                    area:"東アフリカ", country:"ルワンダ",   flag:"🇷🇼", transport:"🚌 陸路バス"},
+  {num:7,  name:"ダルエスサラーム・ザンジバル・キリマンジャロ", lat:-6.7924, lon:39.2083, days:"24", note:"ザンジバル島（10日）・キリマンジャロ登山（8日マチャメルート）", area:"東アフリカ", country:"タンザニア", flag:"🇹🇿", transport:"🚌 陸路バス"},
+  {num:8,  name:"ビクトリアフォールズ",              lat:-17.9243, lon:25.8572,  days:"4",  note:"世界三大瀑布・バンジージャンプ・ラフティング",        area:"南部アフリカ",country:"ジンバブエ", flag:"🇿🇼", transport:"🚂 TAZARA鉄道"},
+  {num:9,  name:"ウィントフック・ナミブ砂漠",        lat:-22.5597, lon:17.0832,  days:"10", note:"ナミブ砂漠・デッドフレイ・ソーサスフレイ",            area:"南部アフリカ",country:"ナミビア",   flag:"🇳🇦", transport:"🚌 陸路バス"},
+  {num:10, name:"ケープタウン",                      lat:-33.9249, lon:18.4241,  days:"14", note:"テーブルマウンテン・喜望峰・ワインランド",            area:"南部アフリカ",country:"南アフリカ", flag:"🇿🇦", transport:"🚌 陸路バス"},
+  {num:11, name:"サンパウロ・リオ・イグアス",        lat:-23.5505, lon:-46.6333, days:"14", note:"コルコバード・コパカバーナ・イグアスの滝（ブラジル側）",area:"南米",      country:"ブラジル",   flag:"🇧🇷", transport:"✈️ ケープタウン→サンパウロ"},
+  {num:12, name:"ブエノスアイレス・イグアス",        lat:-34.6037, lon:-58.3816, days:"10", note:"イグアスの滝（アルゼンチン側）・タンゴショー",        area:"南米",       country:"アルゼンチン",flag:"🇦🇷", transport:"🚌 陸路バス"},
+  {num:13, name:"サンティアゴ・アタカマ",            lat:-33.4489, lon:-70.6693, days:"8",  note:"アタカマ砂漠・月の谷・タティオ間欠泉・星空観測",      area:"南米",       country:"チリ",       flag:"🇨🇱", transport:"🚌 陸路バス"},
+  {num:14, name:"ウユニ・ラパス",                    lat:-19.5832, lon:-65.7533, days:"8",  note:"ウユニ塩湖・星空ツアー・死の道路・ティワナク遺跡",    area:"南米",       country:"ボリビア",   flag:"🇧🇴", transport:"🚌 陸路バス（国境越え）"},
+  {num:15, name:"クスコ・マチュピチュ・リマ",        lat:-13.5319, lon:-71.9675, days:"14", note:"マチュピチュ・クスコ旧市街・レインボーマウンテン",     area:"南米",       country:"ペルー",     flag:"🇵🇪", transport:"🚌 陸路バス"},
+  {num:16, name:"カルタヘナ・メデジン・ボゴタ",      lat:4.7110,   lon:-74.0721, days:"12", note:"カルタヘナ旧市街・メデジン・コーヒー農園",            area:"南米",       country:"コロンビア", flag:"🇨🇴", transport:"✈️ リマ→ボゴタ"},
+  {num:17, name:"アンティグア・アティトラン",        lat:14.5586,  lon:-90.7295, days:"10", note:"アンティグア旧市街・アティトラン湖・マヤ遺跡・火山",  area:"中米",       country:"グアテマラ", flag:"🇬🇹", transport:"✈️ ボゴタ→グアテマラシティ"},
+  {num:18, name:"メキシコシティ・オアハカ・カンクン",lat:19.4326,  lon:-99.1332, days:"14", note:"テオティワカン・チチェンイッツァ・オアハカ・年越し",  area:"中米",       country:"メキシコ",   flag:"🇲🇽", transport:"🚌 陸路バス"},
+  {num:19, name:"東京（帰国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"メキシコシティ→成田 帰国",                           area:"日本",       country:"日本",       flag:"🇯🇵", transport:"✈️ メキシコシティ→成田"},
+];
+
+const airPairs = new Set(["1-2","2-3","3-4","10-11","15-16","16-17","18-19"]);
+
+const areaColors = {
+  "日本":        "#e74c3c",
+  "アジア":      "#e67e22",
+  "東アフリカ":  "#27ae60",
+  "南部アフリカ":"#16a085",
+  "南米":        "#2980b9",
+  "中米":        "#8e44ad",
+};
+
+const areaCssClass = {
+  "日本":        "area-jp",
+  "アジア":      "area-as",
+  "東アフリカ":  "area-ea",
+  "南部アフリカ":"area-sa",
+  "南米":        "area-sm",
+  "中米":        "area-cm",
+};
+
+// ===== TAB SWITCHING =====
+function switchTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'map') { setTimeout(() => map.invalidateSize(), 100); }
+}
+
+// ===== MAP =====
+const map = L.map('map', { center: [20, 20], zoom: 2 });
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 18
+}).addTo(map);
+
+// Draw route lines
+for (let i = 0; i < stops.length - 1; i++) {
+  const a = stops[i], b = stops[i+1];
+  const key = `${a.num}-${b.num}`;
+  const isAir = airPairs.has(key);
+  const color = isAir ? '#e74c3c' : '#f39c12';
+  const opts = isAir
+    ? { color, weight: 2.5, dashArray: '8,6', opacity: 0.8 }
+    : { color, weight: 2.5, opacity: 0.75 };
+
+  // Curved line for flights
+  if (isAir) {
+    const latlngs = getCurvedPath([a.lat, a.lon], [b.lat, b.lon]);
+    L.polyline(latlngs, opts).addTo(map);
+  } else {
+    L.polyline([[a.lat, a.lon],[b.lat, b.lon]], opts).addTo(map);
+  }
+}
+
+// Add markers
+stops.forEach(s => {
+  const color = areaColors[s.area];
+  const icon = L.divIcon({
+    html: `<div style="
+      background:${color};
+      color:white;
+      border-radius:50%;
+      width:28px;height:28px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:800;
+      border:2px solid white;
+      box-shadow:0 2px 6px rgba(0,0,0,0.4);
+    ">${s.num}</div>`,
+    className: '',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -16]
+  });
+
+  const transport = s.transport ? `<div style="color:#888;font-size:12px;margin-bottom:4px">${s.transport}</div>` : '';
+  const days = s.days !== '-' ? `<div style="margin-top:6px;font-size:12px;background:#f0f0f0;display:inline-block;padding:2px 8px;border-radius:999px"><b>${s.days}泊</b></div>` : '';
+  const popup = `
+    <div style="min-width:200px;font-family:sans-serif">
+      ${transport}
+      <div style="font-weight:800;font-size:14px;margin-bottom:4px">${s.flag} ${s.name}</div>
+      <div style="color:${color};font-size:12px;font-weight:700;margin-bottom:6px">${s.area}</div>
+      <div style="font-size:12px;color:#555;line-height:1.6">${s.note}</div>
+      ${days}
+    </div>`;
+
+  L.marker([s.lat, s.lon], { icon }).addTo(map).bindPopup(popup);
+});
+
+function getCurvedPath(from, to) {
+  const pts = [];
+  const steps = 30;
+  const midLat = (from[0] + to[0]) / 2;
+  const midLon = (from[1] + to[1]) / 2;
+  // Offset midpoint slightly toward equator for arc effect
+  const dx = to[1] - from[1], dy = to[0] - from[0];
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const offsetLat = midLat + dist * 0.15;
+  const offsetLon = midLon;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const lat = (1-t)*(1-t)*from[0] + 2*(1-t)*t*offsetLat + t*t*to[0];
+    const lon = (1-t)*(1-t)*from[1] + 2*(1-t)*t*offsetLon + t*t*to[1];
+    pts.push([lat, lon]);
+  }
+  return pts;
+}
+
+// ===== ITINERARY TABLE =====
+const tbody = document.getElementById('itinerary-body');
+stops.forEach((s, i) => {
+  // Transport row (before this stop, except first)
+  if (i > 0 && s.transport) {
+    const tr = document.createElement('tr');
+    tr.className = 'transport-row';
+    tr.innerHTML = `<td></td><td colspan="6" style="text-align:center">↓ ${s.transport}</td>`;
+    tbody.appendChild(tr);
+  }
+  const tr = document.createElement('tr');
+  tr.className = areaCssClass[s.area] || '';
+  const badge = `<span class="area-badge" style="background:${areaColors[s.area]}">${s.area}</span>`;
+  tr.innerHTML = `
+    <td style="font-weight:700;text-align:center">${s.num}</td>
+    <td>${badge}</td>
+    <td>${s.flag} ${s.country}</td>
+    <td style="font-weight:600">${s.name}</td>
+    <td style="text-align:center;font-size:0.8rem">${i===0 || i===stops.length-1 ? '—' : (airPairs.has(`${stops[i-1]?.num}-${s.num}`) ? '✈️' : '🚌')}</td>
+    <td class="days-num">${s.days !== '-' ? s.days+'泊' : '—'}</td>
+    <td class="highlight-text">${s.note}</td>`;
+  tbody.appendChild(tr);
+});
+
+// ===== HIGHLIGHTS =====
+const highlightStops = stops.filter(s => s.days !== '-' && parseInt(s.days) >= 4);
+const grid = document.getElementById('highlights-grid');
+highlightStops.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'highlight-card';
+  card.innerHTML = `
+    <div class="highlight-card-top" style="background:${areaColors[s.area]}"></div>
+    <div class="highlight-card-body">
+      <div class="num">${s.num}</div>
+      <h3>${s.flag} ${s.name}</h3>
+      <div class="country" style="color:${areaColors[s.area]}">${s.area} · ${s.country}</div>
+      <p>${s.note}</p>
+      <span class="days-tag">${s.days}泊</span>
+    </div>`;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
