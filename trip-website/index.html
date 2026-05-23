@@ -246,104 +246,6 @@
     .packing-progress-bar { height: 100%; background: #302b63; border-radius: 999px; transition: width 0.4s; }
     .packing-progress-text { font-size: 0.8rem; color: #555; margin-bottom: 20px; }
 
-    /* ===== MESSAGES ===== */
-    .message-form-card {
-      background: white;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      margin-bottom: 28px;
-    }
-    .message-form-card input,
-    .message-form-card textarea {
-      width: 100%;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      margin-bottom: 10px;
-      transition: border-color 0.2s;
-      outline: none;
-      box-sizing: border-box;
-    }
-    .message-form-card input:focus,
-    .message-form-card textarea:focus { border-color: #302b63; }
-    .message-form-card textarea { resize: none; }
-    .char-count { text-align: right; font-size: 0.75rem; color: #aaa; margin-bottom: 12px; }
-    .submit-btn {
-      background: linear-gradient(135deg, #302b63, #8e44ad);
-      color: white; border: none; border-radius: 8px;
-      padding: 12px 28px; font-size: 0.95rem; font-weight: 700;
-      cursor: pointer; width: 100%; transition: opacity 0.2s;
-    }
-    .submit-btn:hover { opacity: 0.88; }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    /* ===== LANG TOGGLE ===== */
-    .lang-toggle { position: absolute; top: 16px; right: 20px; display: flex; gap: 6px; z-index: 10; }
-    .lang-btn {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-      color: white; padding: 5px 14px; border-radius: 999px;
-      font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-    .lang-btn.active { background: white; color: #302b63; }
-    .lang-btn:hover:not(.active) { background: rgba(255,255,255,0.28); }
-
-    /* ===== MESSAGES (enhanced) ===== */
-    .msg-summary {
-      background: linear-gradient(135deg, #302b63, #8e44ad);
-      color: white; border-radius: 14px; padding: 20px 24px;
-      margin-bottom: 24px; display: flex; align-items: center; gap: 16px;
-    }
-    .msg-summary-count { font-size: 2.6rem; font-weight: 900; line-height: 1; }
-    .msg-summary-label { font-size: 0.9rem; opacity: 0.85; }
-    .msg-card {
-      background: white; border-radius: 12px; padding: 16px 18px;
-      margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      display: flex; gap: 14px; align-items: flex-start;
-      transition: box-shadow 0.2s;
-    }
-    .msg-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-    .msg-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;
-    }
-    .msg-content { flex: 1; min-width: 0; }
-    .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .msg-name { font-weight: 700; font-size: 0.9rem; color: #302b63; }
-    .msg-time { font-size: 0.75rem; color: #aaa; white-space: nowrap; margin-left: 8px; }
-    .msg-body { font-size: 0.88rem; color: #444; line-height: 1.6; word-break: break-word; }
-    .msg-empty { text-align: center; color: #aaa; padding: 48px 0; font-size: 0.9rem; line-height: 2; }
-
-    /* ===== TODO LIST ===== */
-    .todo-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; background:#fff; border-radius:8px; margin-bottom:8px; border-left:4px solid #ddd; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
-    .todo-item.pri-red    { border-left-color:#e74c3c; }
-    .todo-item.pri-yellow { border-left-color:#e67e22; }
-    .todo-item.pri-green  { border-left-color:#27ae60; }
-    .todo-item.done { opacity:0.55; }
-    .todo-main { flex:1; min-width:0; }
-    .todo-task { font-weight:600; font-size:0.9rem; color:#2c3e50; margin-bottom:3px; }
-    .todo-meta { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px; }
-    .todo-cat  { font-size:0.72rem; background:#f0f0f0; color:#666; padding:1px 8px; border-radius:999px; }
-    .todo-deadline { font-size:0.72rem; color:#999; }
-    .todo-note { font-size:0.78rem; color:#777; line-height:1.5; margin-top:2px; }
-    .todo-status { flex-shrink:0; font-size:0.8rem; font-weight:700; padding:3px 10px; border-radius:999px; white-space:nowrap; }
-    .status-done    { background:#e8f8f0; color:#27ae60; }
-    .status-planned { background:#e8f0ff; color:#2980b9; }
-    .status-pending { background:#f5f5f5; color:#999; }
-
-    /* ===== VISA TABLE ===== */
-    .visa-badge { display:inline-block; padding:2px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; white-space:nowrap; }
-    .visa-badge.free { background:#e8f8f0; color:#27ae60; border:1px solid #27ae60; }
-    .visa-badge.req  { background:#fef3e0; color:#e67e22; border:1px solid #e67e22; }
-    .visa-tips { background:#f0f4ff; border-left:4px solid #2980b9; border-radius:8px; padding:16px 20px; margin-top:20px; }
-    .visa-tips h4 { margin-bottom:10px; color:#2c3e50; font-size:1rem; }
-    .visa-tips ul { list-style:none; padding:0; margin:0; }
-    .visa-tips li { padding:6px 0; font-size:0.88rem; color:#444; border-bottom:1px solid #dce8f8; }
-    .visa-tips li:last-child { border-bottom:none; }
-    .visa-total-note { margin-top:12px; padding:10px 14px; background:#fff; border-radius:6px; font-size:0.88rem; font-weight:600; color:#2c3e50; border:1px solid #c5d8f0; }
-
     @media (max-width: 600px) {
       .tab-btn { padding: 12px 10px; font-size: 0.78rem; }
       .route-table { font-size: 0.78rem; }
@@ -357,32 +259,26 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="lang-toggle">
-    <button class="lang-btn active" data-lang="ja" onclick="applyLang('ja')">JP</button>
-    <button class="lang-btn" data-lang="en" onclick="applyLang('en')">EN</button>
-  </div>
   <div class="hero-content">
     <div style="font-size:2rem;margin-bottom:10px;">✈️ 🌍 🎒</div>
-    <h1 id="hero-title">半年間バックパッカー世界一周</h1>
-    <p class="subtitle" id="hero-subtitle">2026年7月6日 〜 2027年1月6日</p>
+    <h1>半年間バックパッカー世界一周</h1>
+    <p class="subtitle">2026年7月6日 〜 2027年1月6日</p>
     <div class="stats">
-      <div class="stat-pill"><span id="stat-days">🗓️ 184日間</span><span id="stat-days-lbl">旅行期間</span></div>
-      <div class="stat-pill"><span id="stat-countries">🌐 17カ国</span><span id="stat-countries-lbl">訪問国</span></div>
-      <div class="stat-pill"><span id="stat-cities">📍 19都市</span><span id="stat-cities-lbl">主要ストップ</span></div>
-      <div class="stat-pill"><span id="stat-budget">💰 約200万円</span><span id="stat-budget-lbl">総予算</span></div>
+      <div class="stat-pill">🗓️ 184日間<span>旅行期間</span></div>
+      <div class="stat-pill">🌐 17カ国<span>訪問国</span></div>
+      <div class="stat-pill">📍 19都市<span>主要ストップ</span></div>
+      <div class="stat-pill">💰 約200万円<span>総予算</span></div>
     </div>
   </div>
 </div>
 
 <!-- TABS -->
 <div class="tabs-bar">
-  <button class="tab-btn active" id="tab-btn-map" onclick="switchTab('map')">🗺️ マップ</button>
-  <button class="tab-btn" id="tab-btn-itinerary" onclick="switchTab('itinerary')">📋 旅程</button>
-  <button class="tab-btn" id="tab-btn-budget" onclick="switchTab('budget')">💰 予算</button>
-  <button class="tab-btn" id="tab-btn-highlights" onclick="switchTab('highlights')">⭐ ハイライト</button>
-  <button class="tab-btn" id="tab-btn-packing" onclick="switchTab('packing')">🎒 持ち物</button>
-  <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">💬 応援</button>
-  <button class="tab-btn" id="tab-btn-todo" onclick="switchTab('todo')">✅ 出発前TODO</button>
+  <button class="tab-btn active" onclick="switchTab('map')">🗺️ マップ</button>
+  <button class="tab-btn" onclick="switchTab('itinerary')">📋 旅程</button>
+  <button class="tab-btn" onclick="switchTab('budget')">💰 予算</button>
+  <button class="tab-btn" onclick="switchTab('highlights')">⭐ ハイライト</button>
+  <button class="tab-btn" onclick="switchTab('packing')">🎒 持ち物</button>
 </div>
 
 <!-- ===== MAP TAB ===== -->
@@ -412,18 +308,18 @@
 
 <!-- ===== ITINERARY TAB ===== -->
 <div id="tab-itinerary" class="section">
-  <div class="section-title" id="title-itinerary">旅程スケジュール</div>
+  <div class="section-title">旅程スケジュール</div>
   <div style="overflow-x:auto;">
     <table class="route-table">
       <thead>
         <tr>
-          <th id="th-num">#</th>
-          <th id="th-area">エリア</th>
-          <th id="th-country">国</th>
-          <th id="th-city">都市・拠点</th>
-          <th id="th-transport">移動</th>
-          <th id="th-nights">泊数</th>
-          <th id="th-highlight">ハイライト</th>
+          <th>#</th>
+          <th>エリア</th>
+          <th>国</th>
+          <th>都市・拠点</th>
+          <th>移動</th>
+          <th>泊数</th>
+          <th>ハイライト</th>
         </tr>
       </thead>
       <tbody id="itinerary-body"></tbody>
@@ -433,12 +329,12 @@
 
 <!-- ===== BUDGET TAB ===== -->
 <div id="tab-budget" class="section">
-  <div class="section-title" id="title-budget">予算概要</div>
+  <div class="section-title">予算概要</div>
 
   <div class="total-box">
-    <div class="label" id="total-label">旅行総予算（目安）</div>
-    <div class="big" id="total-amount">約 200万円</div>
-    <div class="note" id="total-note">※ フライト・宿泊・食費・ツアー・ビザ等すべて含む概算</div>
+    <div class="label">旅行総予算（目安）</div>
+    <div class="big">約 200万円</div>
+    <div class="note">※ フライト・宿泊・食費・ツアー・ビザ等すべて含む概算</div>
   </div>
 
   <div class="budget-grid">
@@ -480,7 +376,7 @@
     </div>
   </div>
 
-  <div class="section-title" id="title-tours" style="margin-top:24px;">主要ツアー費用</div>
+  <div class="section-title" style="margin-top:24px;">主要ツアー費用</div>
   <div style="overflow-x:auto;">
     <table class="route-table">
       <thead>
@@ -549,67 +445,17 @@
       </tbody>
     </table>
   </div>
-
-  <div class="section-title" style="margin-top:28px;">🛂 ビザ情報・入国要件</div>
-  <div style="overflow-x:auto;">
-    <table class="route-table">
-      <thead>
-        <tr>
-          <th>国</th>
-          <th>ビザ</th>
-          <th>取得方法</th>
-          <th>費用(USD)</th>
-          <th>滞在上限</th>
-          <th>備考</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="area-as"><td>🇹🇭 タイ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>60日（+30日延長可）</td><td>Donmueang空港利用時は要確認</td></tr>
-        <tr class="area-as"><td>🇮🇳 インド</td><td><span class="visa-badge req">要</span></td><td>e-Visa（事前）</td><td>$25</td><td>60日</td><td>入国30日前〜申請可・二重入国も選択可</td></tr>
-        <tr class="area-ea"><td>🇪🇹 エチオピア</td><td><span class="visa-badge req">要</span></td><td>e-Visa（事前）</td><td>$52</td><td>90日</td><td>アディスアベバ空港経由必須</td></tr>
-        <tr class="area-ea"><td>🇰🇪 ケニア</td><td><span class="visa-badge req">要</span></td><td>e-Visa（事前）</td><td>$51</td><td>90日</td><td>EACビザ($100)でUG+TZ兼用可</td></tr>
-        <tr class="area-ea"><td>🇺🇬 ウガンダ</td><td><span class="visa-badge req">要</span></td><td>e-Visa（事前）</td><td>$50</td><td>90日</td><td>ゴリラ許可証$700は別途（Uganda Wildlife Auth.）</td></tr>
-        <tr class="area-ea"><td>🇷🇼 ルワンダ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>30日（延長可）</td><td>ゴリラ許可証$1,500 / ゴールデンモンキー$200</td></tr>
-        <tr class="area-ea"><td>🇹🇿 タンザニア</td><td><span class="visa-badge req">要</span></td><td>e-Visa（事前）</td><td>$50</td><td>90日</td><td>EACビザ利用でKE+UGも対応</td></tr>
-        <tr class="area-sa"><td>🇿🇲 ザンビア</td><td><span class="visa-badge req">要</span></td><td>KAZAビザ or VoA</td><td>$50</td><td>30日</td><td>KAZAビザでジンバブエも入国可</td></tr>
-        <tr class="area-sa"><td>🇿🇼 ジンバブエ</td><td><span class="visa-badge req">要</span></td><td>KAZAビザ or VoA</td><td>$50</td><td>30日</td><td>ザンビアのKAZAビザと共通利用</td></tr>
-        <tr class="area-sa"><td>🇧🇼 ボツワナ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>KAZAエリア内・国境越え多数</td></tr>
-        <tr class="area-sa"><td>🇳🇦 ナミビア</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>ヒッチハイク文化あり・安全</td></tr>
-        <tr class="area-sa"><td>🇿🇦 南アフリカ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>出国チケット必須・パスポート空きページ要確認</td></tr>
-        <tr class="area-sm"><td>🇧🇷 ブラジル</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>黄熱病ワクチン証明書推奨（アマゾン入域時は必須）</td></tr>
-        <tr class="area-sm"><td>🇦🇷 アルゼンチン</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>—</td></tr>
-        <tr class="area-sm"><td>🇨🇱 チリ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>—</td></tr>
-        <tr class="area-sm"><td>🇧🇴 ボリビア</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>高地のため高山病注意</td></tr>
-        <tr class="area-sm"><td>🇵🇪 ペルー</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>183日</td><td>マチュピチュはInkapassで事前予約推奨</td></tr>
-        <tr class="area-sm"><td>🇨🇴 コロンビア</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>—</td></tr>
-        <tr class="area-cm"><td>🇵🇦 パナマ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>180日</td><td>ダリエンギャップは飛行機で迂回（コロンビア→パナマ）</td></tr>
-        <tr class="area-cm"><td>🇨🇷 コスタリカ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>出国チケット必須・確認厳しい</td></tr>
-        <tr class="area-cm"><td>🇬🇹 グアテマラ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>90日</td><td>CA-4協定国（Honduras・El Salvador・Nicaragua含む・合計90日）</td></tr>
-        <tr class="area-cm"><td>🇲🇽 メキシコ</td><td><span class="visa-badge free">免除</span></td><td>入国時</td><td>$0</td><td>180日</td><td>FMM（入国カード）記入必要・空港でも配布</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="visa-tips">
-    <h4>💡 節約ポイント</h4>
-    <ul>
-      <li><b>EACユニビザ活用</b> — ケニア + ウガンダ + タンザニアを $100 でカバー（個別 $152）→ <b>$52 節約</b></li>
-      <li><b>KAZAユニビザ</b> — ザンビア + ジンバブエを $50 でカバー（個別 $100）→ <b>$50 節約</b></li>
-      <li><b>ルワンダ</b> — ゴールデンモンキー($200)選択でゴリラ($1,500)より <b>$1,300 節約</b></li>
-    </ul>
-    <div class="visa-total-note">💰 ビザ費用合計目安：$278（e-Visa等）＋ ゴリラ許可証 $700〜$2,200（別途）</div>
-  </div>
 </div>
 
 <!-- ===== HIGHLIGHTS TAB ===== -->
 <div id="tab-highlights" class="section">
-  <div class="section-title" id="title-highlights">旅のハイライト</div>
+  <div class="section-title">旅のハイライト</div>
   <div class="highlights-grid" id="highlights-grid"></div>
 </div>
 
 <!-- ===== PACKING TAB ===== -->
 <div id="tab-packing" class="section">
-  <div class="section-title" id="title-packing">持ち物リスト</div>
+  <div class="section-title">持ち物リスト</div>
   <div class="packing-progress">
     <div class="packing-progress-bar" id="progress-bar" style="width:0%"></div>
   </div>
@@ -627,48 +473,6 @@
   <div id="packing-list"></div>
 </div>
 
-<!-- ===== MESSAGES TAB ===== -->
-<div id="tab-messages" class="section">
-  <div class="section-title" id="title-messages">💬 応援メッセージ</div>
-  <p id="messages-subtitle" style="color:#888;font-size:0.88rem;margin-bottom:20px;">旅の応援メッセージを送ってね！世界のどこかで読んでます 🌍</p>
-
-  <div class="message-form-card">
-    <input type="text" id="msg-name" placeholder="お名前（最大20文字）" maxlength="20">
-    <textarea id="msg-body" placeholder="応援メッセージを書いてね！（最大200文字）" maxlength="200" rows="3"></textarea>
-    <div class="char-count"><span id="char-count">0</span> / 200</div>
-    <button class="submit-btn" id="submit-btn" onclick="submitMessage()">送る 🎉</button>
-  </div>
-
-  <div id="msg-summary" class="msg-summary" style="display:none">
-    <div class="msg-summary-count" id="msg-summary-count">0</div>
-    <div class="msg-summary-label" id="msg-summary-label">件の応援メッセージ</div>
-  </div>
-  <div id="messages-list"></div>
-</div>
-
-<!-- ===== TODO TAB ===== -->
-<div id="tab-todo" class="section">
-  <div class="section-title">✅ 出発前TODOリスト</div>
-  <div class="packing-progress">
-    <div class="packing-progress-bar" id="todo-progress-bar" style="width:0%"></div>
-  </div>
-  <div class="packing-progress-text" id="todo-progress-text">0 / 0 完了</div>
-  <div class="packing-filter" id="todo-filter">
-    <button class="filter-btn active" onclick="filterTodo('all')">すべて</button>
-    <button class="filter-btn" onclick="filterTodo('ワクチン')">💉 ワクチン</button>
-    <button class="filter-btn" onclick="filterTodo('航空券')">✈️ 航空券</button>
-    <button class="filter-btn" onclick="filterTodo('ビザ')">🛂 ビザ</button>
-    <button class="filter-btn" onclick="filterTodo('お金')">💰 お金</button>
-    <button class="filter-btn" onclick="filterTodo('書類')">📄 書類</button>
-    <button class="filter-btn" onclick="filterTodo('アプリ')">📱 アプリ</button>
-    <button class="filter-btn" onclick="filterTodo('装備')">🎒 装備</button>
-    <button class="filter-btn" onclick="filterTodo('保険')">🏥 保険</button>
-    <button class="filter-btn" onclick="filterTodo('キリマン')">🏔️ キリマン</button>
-    <button class="filter-btn" onclick="filterTodo('予約')">📅 予約</button>
-  </div>
-  <div id="todo-list"></div>
-</div>
-
 <footer>
   半年間バックパッカー旅 2026–2027 &nbsp;|&nbsp;
   <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank">🗺️ Google マイマップ</a>
@@ -678,95 +482,27 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ===== I18N =====
-let currentLang = localStorage.getItem('lang') || 'ja';
-
-const i18n = {
-  ja: {
-    heroTitle: '半年間バックパッカー世界一周',
-    heroSubtitle: '2026年7月6日 〜 2027年1月6日',
-    statDays: '🗓️ 184日間', statDaysLbl: '旅行期間',
-    statCountries: '🌐 17カ国', statCountriesLbl: '訪問国',
-    statCities: '📍 19都市', statCitiesLbl: '主要ストップ',
-    statBudget: '💰 約200万円', statBudgetLbl: '総予算',
-    tabMap: '🗺️ マップ', tabItinerary: '📋 旅程', tabBudget: '💰 予算',
-    tabHighlights: '⭐ ハイライト', tabPacking: '🎒 持ち物', tabMessages: '💬 応援',
-    titleItinerary: '旅程スケジュール', thNum: '#', thArea: 'エリア', thCountry: '国',
-    thCity: '都市・拠点', thTransport: '移動', thNights: '泊数', thHighlight: 'ハイライト',
-    titleBudget: '予算概要', totalLabel: '旅行総予算（目安）', totalAmount: '約 200万円',
-    totalNote: '※ フライト・宿泊・食費・ツアー・ビザ等すべて含む概算',
-    titleTours: '主要ツアー費用',
-    titleHighlights: '旅のハイライト', titlePacking: '持ち物リスト',
-    titleMessages: '💬 応援メッセージ',
-    msgSubtitle: '旅の応援メッセージを送ってね！世界のどこかで読んでます 🌍',
-    msgNamePh: 'お名前（最大20文字）', msgBodyPh: '応援メッセージを書いてね！（最大200文字）',
-    submitBtn: '送る 🎉', submitting: '送信中...', submitted: '送りました 🎉',
-    msgEmpty: 'まだ応援メッセージはありません。\n最初のメッセージを送ってみよう！',
-    msgSummaryLabel: (n) => `件の応援メッセージ`,
-    alertName: 'お名前を入力してください', alertMsg: 'メッセージを入力してください',
-    alertRate: (n) => `メッセージは1時間に1回まで送れます。あと約${n}分お待ちください。`,
-    alertFail: '送信に失敗しました。再度お試しください。',
-    nightsUnit: '泊', progressText: (d, t) => `${d} / ${t} チェック済み`,
-    agoSec: (n) => `${n}秒前`, agoMin: (n) => `${n}分前`,
-    agoHour: (n) => `${n}時間前`, agoDay: (n) => `${n}日前`,
-    nowIn: (c, ci, m, ago) => `現在地：${c}・${ci}　${m ? '「'+m+'」' : ''}　（更新：${ago}）`,
-    popupCurrent: '📍 現在地',
-  },
-  en: {
-    heroTitle: '6-Month Backpacker World Tour',
-    heroSubtitle: 'July 6, 2026 – January 6, 2027',
-    statDays: '🗓️ 184 Days', statDaysLbl: 'Travel Period',
-    statCountries: '🌐 17 Countries', statCountriesLbl: 'Visited',
-    statCities: '📍 19 Cities', statCitiesLbl: 'Major Stops',
-    statBudget: '💰 ~¥2M', statBudgetLbl: 'Total Budget',
-    tabMap: '🗺️ Map', tabItinerary: '📋 Itinerary', tabBudget: '💰 Budget',
-    tabHighlights: '⭐ Highlights', tabPacking: '🎒 Packing', tabMessages: '💬 Cheers',
-    titleItinerary: 'Itinerary Schedule', thNum: '#', thArea: 'Area', thCountry: 'Country',
-    thCity: 'City / Base', thTransport: 'Via', thNights: 'Nights', thHighlight: 'Highlights',
-    titleBudget: 'Budget Overview', totalLabel: 'Total Estimated Budget',
-    totalAmount: 'approx. ¥2,000,000',
-    totalNote: '※ Includes flights, accommodation, food, tours, visas, and all other expenses',
-    titleTours: 'Major Tour Costs',
-    titleHighlights: 'Trip Highlights', titlePacking: 'Packing List',
-    titleMessages: '💬 Cheering Messages',
-    msgSubtitle: "Send me your support — I'll read it somewhere in the world! 🌍",
-    msgNamePh: 'Your name (max 20 chars)', msgBodyPh: 'Write a cheering message! (max 200 chars)',
-    submitBtn: 'Send 🎉', submitting: 'Sending...', submitted: 'Sent! 🎉',
-    msgEmpty: "No messages yet.\nBe the first to cheer me on!",
-    msgSummaryLabel: (n) => n === 1 ? `cheering message` : `cheering messages`,
-    alertName: 'Please enter your name.', alertMsg: 'Please enter a message.',
-    alertRate: (n) => `One message per hour. Please wait ~${n} more minutes.`,
-    alertFail: 'Failed to send. Please try again.',
-    nightsUnit: ' nights', progressText: (d, t) => `${d} / ${t} checked`,
-    agoSec: (n) => `${n}s ago`, agoMin: (n) => `${n}m ago`,
-    agoHour: (n) => `${n}h ago`, agoDay: (n) => `${n}d ago`,
-    nowIn: (c, ci, m, ago) => `Now in: ${ci}, ${c}　${m ? '"'+m+'"' : ''}　(${ago})`,
-    popupCurrent: '📍 Current Location',
-  }
-};
-
-
 // ===== DATA =====
 const stops = [
-  {num:1,  name:"東京（出国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"成田発 Thai VietJet VZ831",                                    area:"日本",       country:"日本",       flag:"🇯🇵", transport:null,                          from:"7/6",   to:null},
-  {num:2,  name:"バンコク",                          lat:13.7563,  lon:100.5018, days:"11", note:"ワクチン一括接種・バンコク観光・スネークファーム（7/7予定）",    area:"アジア",     country:"タイ",       flag:"🇹🇭", transport:"✈️ Thai VietJet",             from:"7/6",   to:"7/17"},
-  {num:3,  name:"ムンバイ",                          lat:19.0760,  lon:72.8777,  days:"5",  note:"ゲートウェイオブインディア・エレファンタ島",                    area:"アジア",     country:"インド",     flag:"🇮🇳", transport:"✈️ Thai VietJet",             from:"7/17",  to:"7/22"},
-  {num:4,  name:"ナイロビ・マサイマラ",              lat:-1.2921,  lon:36.8219,  days:"14", note:"マサイマラサファリ（グレートマイグレーション）",                area:"東アフリカ", country:"ケニア",     flag:"🇰🇪", transport:"✈️ Kenya Airways",            from:"7/22",  to:"8/5"},
-  {num:5,  name:"カンパラ・ブウィンディ",            lat:0.3476,   lon:32.5825,  days:"8",  note:"ゴリラトレッキング・チンパンジートレッキング",                  area:"東アフリカ", country:"ウガンダ",   flag:"🇺🇬", transport:"🚌 陸路バス",                 from:"8/5",   to:"8/13"},
-  {num:6,  name:"キガリ",                            lat:-1.9441,  lon:30.0619,  days:"4",  note:"虐殺記念館・現代アフリカの街並み",                              area:"東アフリカ", country:"ルワンダ",   flag:"🇷🇼", transport:"🚌 陸路バス",                 from:"8/13",  to:"8/17"},
-  {num:7,  name:"ダルエスサラーム・ザンジバル・キリマンジャロ", lat:-6.7924, lon:39.2083, days:"24", note:"ザンジバル島（10日）・キリマンジャロ登山（8日マチャメルート）", area:"東アフリカ", country:"タンザニア", flag:"🇹🇿", transport:"🚌 陸路バス",  from:"8/17",  to:"9/10"},
-  {num:8,  name:"ビクトリアフォールズ",              lat:-17.9243, lon:25.8572,  days:"4",  note:"世界三大瀑布・バンジージャンプ・ラフティング（ヨハネスブルク経由）", area:"南部アフリカ",country:"ジンバブエ", flag:"🇿🇼", transport:"🚂 TAZARA鉄道",          from:"9/10",  to:"9/14"},
-  {num:9,  name:"ウィントフック・ナミブ砂漠",        lat:-22.5597, lon:17.0832,  days:"10", note:"ナミブ砂漠・デッドフレイ・ソーサスフレイ",                      area:"南部アフリカ",country:"ナミビア",   flag:"🇳🇦", transport:"🚌 陸路バス",                 from:"9/14",  to:"9/24"},
-  {num:10, name:"ケープタウン",                      lat:-33.9249, lon:18.4241,  days:"14", note:"テーブルマウンテン・喜望峰・ワインランド",                      area:"南部アフリカ",country:"南アフリカ", flag:"🇿🇦", transport:"🚌 陸路バス",                 from:"9/24",  to:"10/8"},
-  {num:11, name:"サンパウロ・リオ・イグアス",        lat:-23.5505, lon:-46.6333, days:"14", note:"コルコバード・コパカバーナ・イグアスの滝（ブラジル側）",        area:"南米",       country:"ブラジル",   flag:"🇧🇷", transport:"✈️ ケープタウン→サンパウロ", from:"10/8",  to:"10/22"},
-  {num:12, name:"ブエノスアイレス・イグアス",        lat:-34.6037, lon:-58.3816, days:"10", note:"イグアスの滝（アルゼンチン側）・タンゴショー",                  area:"南米",       country:"アルゼンチン",flag:"🇦🇷", transport:"🚌 陸路バス",                 from:"10/22", to:"11/1"},
-  {num:13, name:"サンティアゴ・アタカマ",            lat:-33.4489, lon:-70.6693, days:"8",  note:"アタカマ砂漠・月の谷・タティオ間欠泉・星空観測",                area:"南米",       country:"チリ",       flag:"🇨🇱", transport:"🚌 陸路バス",                 from:"11/1",  to:"11/9"},
-  {num:14, name:"ウユニ・ラパス",                    lat:-19.5832, lon:-65.7533, days:"8",  note:"ウユニ塩湖・星空ツアー・死の道路・ティワナク遺跡",              area:"南米",       country:"ボリビア",   flag:"🇧🇴", transport:"🚌 陸路バス（国境越え）",     from:"11/9",  to:"11/17"},
-  {num:15, name:"クスコ・マチュピチュ・リマ",        lat:-13.5319, lon:-71.9675, days:"14", note:"マチュピチュ・クスコ旧市街・レインボーマウンテン・ペルーレール", area:"南米",       country:"ペルー",     flag:"🇵🇪", transport:"🚌 陸路バス",                 from:"11/17", to:"12/1"},
-  {num:16, name:"カルタヘナ・メデジン・ボゴタ",      lat:4.7110,   lon:-74.0721, days:"12", note:"カルタヘナ旧市街・メデジン・コーヒー農園",                      area:"南米",       country:"コロンビア", flag:"🇨🇴", transport:"✈️ リマ→ボゴタ",              from:"12/1",  to:"12/13"},
-  {num:17, name:"アンティグア・アティトラン",        lat:14.5586,  lon:-90.7295, days:"10", note:"アンティグア旧市街・アティトラン湖・マヤ遺跡・ティカル・火山",  area:"中米",       country:"グアテマラ", flag:"🇬🇹", transport:"✈️ ボゴタ→グアテマラシティ", from:"12/13", to:"12/23"},
-  {num:18, name:"メキシコシティ・オアハカ・カンクン",lat:19.4326,  lon:-99.1332, days:"14", note:"テオティワカン・チチェンイッツァ・オアハカ・年越し",            area:"中米",       country:"メキシコ",   flag:"🇲🇽", transport:"🚌 陸路バス",                 from:"12/23", to:"1/6"},
-  {num:19, name:"東京（帰国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"メキシコシティ→成田 帰国",                                      area:"日本",       country:"日本",       flag:"🇯🇵", transport:"✈️ メキシコシティ→成田",      from:"1/6",   to:null},
+  {num:1,  name:"東京（出国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"成田発 Thai VietJet VZ831",                         area:"日本",       country:"日本",       flag:"🇯🇵", transport:null},
+  {num:2,  name:"バンコク",                          lat:13.7563,  lon:100.5018, days:"11", note:"ワクチン一括接種・バンコク観光",                      area:"アジア",     country:"タイ",       flag:"🇹🇭", transport:"✈️ Thai VietJet"},
+  {num:3,  name:"ムンバイ",                          lat:19.0760,  lon:72.8777,  days:"5",  note:"ゲートウェイオブインディア・エレファンタ島",           area:"アジア",     country:"インド",     flag:"🇮🇳", transport:"✈️ Thai VietJet"},
+  {num:4,  name:"ナイロビ・マサイマラ",              lat:-1.2921,  lon:36.8219,  days:"14", note:"マサイマラサファリ（グレートマイグレーション）",       area:"東アフリカ", country:"ケニア",     flag:"🇰🇪", transport:"✈️ Kenya Airways"},
+  {num:5,  name:"カンパラ・ブウィンディ",            lat:0.3476,   lon:32.5825,  days:"8",  note:"ゴリラトレッキング・チンパンジートレッキング",         area:"東アフリカ", country:"ウガンダ",   flag:"🇺🇬", transport:"🚌 陸路バス"},
+  {num:6,  name:"キガリ",                            lat:-1.9441,  lon:30.0619,  days:"4",  note:"虐殺記念館・現代アフリカの街並み",                    area:"東アフリカ", country:"ルワンダ",   flag:"🇷🇼", transport:"🚌 陸路バス"},
+  {num:7,  name:"ダルエスサラーム・ザンジバル・キリマンジャロ", lat:-6.7924, lon:39.2083, days:"24", note:"ザンジバル島（10日）・キリマンジャロ登山（8日マチャメルート）", area:"東アフリカ", country:"タンザニア", flag:"🇹🇿", transport:"🚌 陸路バス"},
+  {num:8,  name:"ビクトリアフォールズ",              lat:-17.9243, lon:25.8572,  days:"4",  note:"世界三大瀑布・バンジージャンプ・ラフティング",        area:"南部アフリカ",country:"ジンバブエ", flag:"🇿🇼", transport:"🚂 TAZARA鉄道"},
+  {num:9,  name:"ウィントフック・ナミブ砂漠",        lat:-22.5597, lon:17.0832,  days:"10", note:"ナミブ砂漠・デッドフレイ・ソーサスフレイ",            area:"南部アフリカ",country:"ナミビア",   flag:"🇳🇦", transport:"🚌 陸路バス"},
+  {num:10, name:"ケープタウン",                      lat:-33.9249, lon:18.4241,  days:"14", note:"テーブルマウンテン・喜望峰・ワインランド",            area:"南部アフリカ",country:"南アフリカ", flag:"🇿🇦", transport:"🚌 陸路バス"},
+  {num:11, name:"サンパウロ・リオ・イグアス",        lat:-23.5505, lon:-46.6333, days:"14", note:"コルコバード・コパカバーナ・イグアスの滝（ブラジル側）",area:"南米",      country:"ブラジル",   flag:"🇧🇷", transport:"✈️ ケープタウン→サンパウロ"},
+  {num:12, name:"ブエノスアイレス・イグアス",        lat:-34.6037, lon:-58.3816, days:"10", note:"イグアスの滝（アルゼンチン側）・タンゴショー",        area:"南米",       country:"アルゼンチン",flag:"🇦🇷", transport:"🚌 陸路バス"},
+  {num:13, name:"サンティアゴ・アタカマ",            lat:-33.4489, lon:-70.6693, days:"8",  note:"アタカマ砂漠・月の谷・タティオ間欠泉・星空観測",      area:"南米",       country:"チリ",       flag:"🇨🇱", transport:"🚌 陸路バス"},
+  {num:14, name:"ウユニ・ラパス",                    lat:-19.5832, lon:-65.7533, days:"8",  note:"ウユニ塩湖・星空ツアー・死の道路・ティワナク遺跡",    area:"南米",       country:"ボリビア",   flag:"🇧🇴", transport:"🚌 陸路バス（国境越え）"},
+  {num:15, name:"クスコ・マチュピチュ・リマ",        lat:-13.5319, lon:-71.9675, days:"14", note:"マチュピチュ・クスコ旧市街・レインボーマウンテン",     area:"南米",       country:"ペルー",     flag:"🇵🇪", transport:"🚌 陸路バス"},
+  {num:16, name:"カルタヘナ・メデジン・ボゴタ",      lat:4.7110,   lon:-74.0721, days:"12", note:"カルタヘナ旧市街・メデジン・コーヒー農園",            area:"南米",       country:"コロンビア", flag:"🇨🇴", transport:"✈️ リマ→ボゴタ"},
+  {num:17, name:"アンティグア・アティトラン",        lat:14.5586,  lon:-90.7295, days:"10", note:"アンティグア旧市街・アティトラン湖・マヤ遺跡・火山",  area:"中米",       country:"グアテマラ", flag:"🇬🇹", transport:"✈️ ボゴタ→グアテマラシティ"},
+  {num:18, name:"メキシコシティ・オアハカ・カンクン",lat:19.4326,  lon:-99.1332, days:"14", note:"テオティワカン・チチェンイッツァ・オアハカ・年越し",  area:"中米",       country:"メキシコ",   flag:"🇲🇽", transport:"🚌 陸路バス"},
+  {num:19, name:"東京（帰国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"メキシコシティ→成田 帰国",                           area:"日本",       country:"日本",       flag:"🇯🇵", transport:"✈️ メキシコシティ→成田"},
 ];
 
 const airPairs = new Set(["1-2","2-3","3-4","10-11","15-16","16-17","18-19"]);
@@ -844,8 +580,18 @@ stops.forEach(s => {
     popupAnchor: [0, -16]
   });
 
-  const m = L.marker([s.lat, s.lon], { icon }).addTo(map).bindPopup(buildPopup(s));
-  markerRefs.push({ marker: m, stop: s });
+  const transport = s.transport ? `<div style="color:#888;font-size:12px;margin-bottom:4px">${s.transport}</div>` : '';
+  const days = s.days !== '-' ? `<div style="margin-top:6px;font-size:12px;background:#f0f0f0;display:inline-block;padding:2px 8px;border-radius:999px"><b>${s.days}泊</b></div>` : '';
+  const popup = `
+    <div style="min-width:200px;font-family:sans-serif">
+      ${transport}
+      <div style="font-weight:800;font-size:14px;margin-bottom:4px">${s.flag} ${s.name}</div>
+      <div style="color:${color};font-size:12px;font-weight:700;margin-bottom:6px">${s.area}</div>
+      <div style="font-size:12px;color:#555;line-height:1.6">${s.note}</div>
+      ${days}
+    </div>`;
+
+  L.marker([s.lat, s.lon], { icon }).addTo(map).bindPopup(popup);
 });
 
 function getCurvedPath(from, to) {
@@ -885,46 +631,28 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let liveMarker = null;
-let liveMarkerData = null;
-const markerRefs = [];
 
 function timeAgo(ts) {
-  const T = i18n[currentLang];
   const diff = Math.floor((Date.now() - ts) / 1000);
-  if (diff < 60)    return T.agoSec(diff);
-  if (diff < 3600)  return T.agoMin(Math.floor(diff/60));
-  if (diff < 86400) return T.agoHour(Math.floor(diff/3600));
-  return T.agoDay(Math.floor(diff/86400));
-}
-
-function buildPopup(s) {
-  const color = areaColors[s.area];
-  const transport = s.transport ? `<div style="color:#888;font-size:12px;margin-bottom:4px">${s.transport}</div>` : '';
-  const dateLine = s.from ? `<div style="font-size:11px;color:#888;margin-bottom:6px">📅 ${s.from}${s.to ? '〜'+s.to : ''}</div>` : '';
-  const days = s.days !== '-' ? `<div style="margin-top:6px;font-size:12px;background:#f0f0f0;display:inline-block;padding:2px 8px;border-radius:999px"><b>${s.days}泊</b></div>` : '';
-  return `<div style="min-width:200px;font-family:sans-serif">${transport}
-    <div style="font-weight:800;font-size:14px;margin-bottom:4px">${s.flag} ${s.name}</div>
-    <div style="color:${color};font-size:12px;font-weight:700;margin-bottom:4px">${s.area}</div>
-    ${dateLine}<div style="font-size:12px;color:#555;line-height:1.6">${s.note}</div>${days}</div>`;
-}
-
-function updateLiveBanner(d) {
-  const T = i18n[currentLang];
-  const ago = timeAgo(d.updatedAt);
-  document.getElementById('location-text').textContent = T.nowIn(d.country, d.city, d.message, ago);
-  document.getElementById('location-banner').classList.add('visible');
-  if (liveMarker) {
-    liveMarker.setPopupContent(
-      `<b>${T.popupCurrent}</b><br>${d.country}・${d.city}${d.message ? '<br>'+d.message : ''}<br><small style="color:#888">${ago}</small>`
-    );
-  }
+  if (diff < 60)    return `${diff}秒前`;
+  if (diff < 3600)  return `${Math.floor(diff/60)}分前`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}時間前`;
+  return `${Math.floor(diff/86400)}日前`;
 }
 
 db.ref('location').on('value', snapshot => {
   const d = snapshot.val();
   if (!d) return;
-  liveMarkerData = d;
+
+  const banner = document.getElementById('location-banner');
+  const text   = document.getElementById('location-text');
+  const ago    = timeAgo(d.updatedAt);
+  const msg    = d.message ? `「${d.message}」` : '';
+  text.textContent = `現在地：${d.country}・${d.city}　${msg}　（更新：${ago}）`;
+  banner.classList.add('visible');
+
   if (liveMarker) map.removeLayer(liveMarker);
+
   if (d.lat && d.lon) {
     const icon = L.divIcon({
       html: `<div style="position:relative;width:36px;height:36px;">
@@ -933,38 +661,35 @@ db.ref('location').on('value', snapshot => {
       </div>`,
       className: '', iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]
     });
-    liveMarker = L.marker([d.lat, d.lon], { icon }).addTo(map);
+    liveMarker = L.marker([d.lat, d.lon], { icon })
+      .addTo(map)
+      .bindPopup(`<b>📍 現在地</b><br>${d.country}・${d.city}${d.message ? '<br>'+d.message : ''}<br><small style="color:#888">更新：${ago}</small>`);
   }
-  updateLiveBanner(d);
 });
 
 // ===== ITINERARY TABLE =====
-function renderItinerary() {
-  const tbody = document.getElementById('itinerary-body');
-  tbody.innerHTML = '';
-  stops.forEach((s, i) => {
-    if (i > 0 && s.transport) {
-      const row = document.createElement('tr');
-      row.className = 'transport-row';
-      row.innerHTML = `<td></td><td colspan="6" style="text-align:center">↓ ${s.transport}</td>`;
-      tbody.appendChild(row);
-    }
-    const row = document.createElement('tr');
-    row.className = areaCssClass[s.area] || '';
-    const badge = `<span class="area-badge" style="background:${areaColors[s.area]}">${s.area}</span>`;
-    const nightsTxt = s.days !== '-' ? s.days + '泊' : '—';
-    row.innerHTML = `
-      <td style="font-weight:700;text-align:center">${s.num}</td>
-      <td>${badge}</td>
-      <td>${s.flag} ${s.country}</td>
-      <td style="font-weight:600">${s.name}${s.from ? `<div style="font-size:0.72rem;color:#999;font-weight:400;margin-top:2px">${s.from}${s.to ? '〜'+s.to : ''}</div>` : ''}</td>
-      <td style="text-align:center;font-size:0.8rem">${i===0||i===stops.length-1?'—':(airPairs.has(`${stops[i-1]?.num}-${s.num}`)? '✈️':'🚌')}</td>
-      <td class="days-num">${nightsTxt}</td>
-      <td class="highlight-text">${s.note}</td>`;
-    tbody.appendChild(row);
-  });
-}
-renderItinerary();
+const tbody = document.getElementById('itinerary-body');
+stops.forEach((s, i) => {
+  // Transport row (before this stop, except first)
+  if (i > 0 && s.transport) {
+    const tr = document.createElement('tr');
+    tr.className = 'transport-row';
+    tr.innerHTML = `<td></td><td colspan="6" style="text-align:center">↓ ${s.transport}</td>`;
+    tbody.appendChild(tr);
+  }
+  const tr = document.createElement('tr');
+  tr.className = areaCssClass[s.area] || '';
+  const badge = `<span class="area-badge" style="background:${areaColors[s.area]}">${s.area}</span>`;
+  tr.innerHTML = `
+    <td style="font-weight:700;text-align:center">${s.num}</td>
+    <td>${badge}</td>
+    <td>${s.flag} ${s.country}</td>
+    <td style="font-weight:600">${s.name}</td>
+    <td style="text-align:center;font-size:0.8rem">${i===0 || i===stops.length-1 ? '—' : (airPairs.has(`${stops[i-1]?.num}-${s.num}`) ? '✈️' : '🚌')}</td>
+    <td class="days-num">${s.days !== '-' ? s.days+'泊' : '—'}</td>
+    <td class="highlight-text">${s.note}</td>`;
+  tbody.appendChild(tr);
+});
 
 // ===== PACKING LIST =====
 const packingData = [
@@ -973,36 +698,48 @@ const packingData = [
   {cat:"🎒 バッグ",             name:"ウエストポーチ（薄型・貴重品用）",     qty:"1",    priority:"red",    note:"パスポート・現金・カードは肌身離さず"},
   {cat:"🎒 バッグ",             name:"南京錠（TSAロック）",                  qty:"3",    priority:"red",    note:"バックパック・ロッカー・ジッパー用"},
   {cat:"🎒 バッグ",             name:"スタッフサック（防水・圧縮）",         qty:"5",    priority:"yellow", note:"衣類整理・防水管理"},
-  {cat:"👕 衣類（街・日常）",   name:"Tシャツ（速乾）",                        qty:"3",    priority:"red",    note:"ユニクロ速乾Tがコスパ最強"},
-  {cat:"👕 衣類（街・日常）",   name:"ロングシャツ（UVカット・虫刺され対策）",  qty:"2",    priority:"red",    note:"アフリカ蚊対策 / イスラム圏・寺院入場にも必要"},
-  {cat:"👕 衣類（街・日常）",   name:"ショートパンツ",                          qty:"1",    priority:"yellow", note:"ザンジバル・南米ビーチ"},
-  {cat:"👕 衣類（街・日常）",   name:"アンダーウェア（速乾・抗菌）・極暖上下",  qty:"3",    priority:"red",    note:"メリノウール推奨"},
-  {cat:"🏔️ キリマンジャロ装備", name:"フリース（厚手）",                        qty:"1",    priority:"red",    note:"山頂は氷点下 / 必須"},
-  {cat:"🏔️ キリマンジャロ装備", name:"薄手ダウンジャケット（コンパクト）",      qty:"1",    priority:"red",    note:"山頂アタック時に着込む"},
-  {cat:"🏔️ キリマンジャロ装備", name:"monbellトレッキングシューズ・keenサンダル",qty:"1",   priority:"red",    note:"キリマンジャロ・ゴリラトレッキング兼用 / 出発前に慣らし必須"},
-  {cat:"🏔️ キリマンジャロ装備", name:"ヘッドランプ（電池式）+ 予備電池",        qty:"1",    priority:"red",    note:"深夜出発の山頂アタックに必須"},
-  {cat:"💊 衛生・医療",          name:"高山病薬（ダイアモックス・処方）",        qty:"1コース",priority:"red",  note:"キリマンジャロ用 / 登山2日前から服用"},
-  {cat:"💊 衛生・医療",          name:"虫除けスプレー（DEET30〜50%高濃度）",    qty:"1本",  priority:"red",    note:"マラリア・デング熱対策"},
-  {cat:"💊 衛生・医療",          name:"整腸剤（ビオフェルミン等）",              qty:"1箱",  priority:"red",    note:"食あたり対策"},
-  {cat:"💊 衛生・医療",          name:"解熱鎮痛剤（ロキソニン等）",              qty:"1箱",  priority:"red",    note:"発熱・頭痛・筋肉痛対策"},
-  {cat:"💊 衛生・医療",          name:"下痢止め（ロペラミド）",                  qty:"1箱",  priority:"red",    note:"移動中緊急用（常用不可）"},
-  {cat:"💊 衛生・医療",          name:"抗生物質（医師処方）",                    qty:"1コース",priority:"red",  note:"感染症対策 / クリニックで処方依頼"},
-  {cat:"💊 衛生・医療",          name:"絆創膏・消毒薬・テーピング",              qty:"各1",  priority:"red",    note:"登山・トレッキング時の怪我対策"},
-  {cat:"📱 電子機器",            name:"スマートフォン（SIMフリー確認済み）",     qty:"1",    priority:"red",    note:"eSIM対応なら尚良し"},
-  {cat:"📱 電子機器",            name:"モバイルバッテリー（20,000mAh以上）",    qty:"1",    priority:"red",    note:"アフリカ停電対策 / キリマンジャロは充電不可"},
-  {cat:"📱 電子機器",            name:"マルチ変換プラグ",                        qty:"1",    priority:"red",    note:"アフリカ・南米でコンセント形状が異なる"},
-  {cat:"📱 電子機器",            name:"USBケーブル（Type-C）",                  qty:"2本",  priority:"red",    note:"スペア込み2本"},
-  {cat:"📱 電子機器",            name:"ヘッドランプ（電池式）",                  qty:"1",    priority:"red",    note:"停電対策"},
-  {cat:"📱 電子機器",            name:"ノイキャンイヤホン",                      qty:"1",    priority:"yellow", note:"長距離移動・飛行機用"},
-  {cat:"📄 書類・貴重品",        name:"パスポート",                              qty:"1",    priority:"red",    note:"2028年3月有効"},
-  {cat:"📄 書類・貴重品",        name:"イエローカード（黄熱病接種証明書）",      qty:"1",    priority:"red",    note:"アフリカ入国時必須 / 絶対紛失禁止"},
-  {cat:"📄 書類・貴重品",        name:"海外旅行保険証書（コピー含む）",          qty:"1",    priority:"red",    note:"クラウドにもバックアップ"},
-  {cat:"📄 書類・貴重品",        name:"クレジットカード（Visa/Mastercard）",    qty:"2枚",  priority:"red",    note:"メイン＋サブ / 別々の場所に保管"},
-  {cat:"📄 書類・貴重品",        name:"USD現金（$400〜500）",                   qty:"1",    priority:"red",    note:"アフリカビザ代・緊急用"},
-  {cat:"📄 書類・貴重品",        name:"証明写真（4枚）",                         qty:"4枚",  priority:"yellow", note:"現地ビザ申請で必要な場合あり"},
-  {cat:"🔧 その他",              name:"速乾タオル（マイクロファイバー）",        qty:"1",    priority:"red",    note:"安宿にはタオルなし多い"},
-  {cat:"🔧 その他",              name:"日焼け止め（SPF50+）",                    qty:"2本",  priority:"yellow", note:"アタカマ・アンデス・キリマンジャロは強烈"},
-  {cat:"🔧 その他",              name:"洗濯ロープ（コンパクト）",                qty:"1",    priority:"yellow", note:"手洗い洗濯用"},
+  {cat:"👕 衣類（街・日常）",   name:"Tシャツ（速乾）",                      qty:"3",    priority:"red",    note:"ユニクロ速乾Tがコスパ最強"},
+  {cat:"👕 衣類（街・日常）",   name:"ロングシャツ（UVカット・虫刺され対策）",qty:"2",   priority:"red",    note:"アフリカ蚊対策 / イスラム圏・寺院入場にも必要"},
+  {cat:"👕 衣類（街・日常）",   name:"トレッキングパンツ（速乾・脱着可）",   qty:"2",    priority:"red",    note:"キリマンジャロ・ゴリラトレッキング兼用"},
+  {cat:"👕 衣類（街・日常）",   name:"ショートパンツ",                       qty:"1",    priority:"yellow", note:"ザンジバル・南米ビーチ"},
+  {cat:"👕 衣類（街・日常）",   name:"アンダーウェア（速乾・抗菌）",         qty:"3",    priority:"red",    note:"メリノウール推奨"},
+  {cat:"👕 衣類（街・日常）",   name:"薄手レインジャケット（防風兼用）",     qty:"1",    priority:"red",    note:"雨季対策 / 軽量コンパクト"},
+  {cat:"👕 衣類（街・日常）",   name:"水着",                                 qty:"1",    priority:"yellow", note:"ザンジバル・南米ビーチ"},
+  {cat:"🏔️ キリマンジャロ装備", name:"フリース（厚手）",                     qty:"1",    priority:"red",    note:"山頂は氷点下 / 必須"},
+  {cat:"🏔️ キリマンジャロ装備", name:"薄手ダウンジャケット（コンパクト）",   qty:"1",    priority:"red",    note:"山頂アタック時に着込む"},
+  {cat:"🏔️ キリマンジャロ装備", name:"防水トレッキングシューズ（ハイカット）",qty:"1",   priority:"red",    note:"キリマンジャロ・ゴリラトレッキング兼用 / 出発前に慣らし必須"},
+  {cat:"🏔️ キリマンジャロ装備", name:"防水グローブ",                         qty:"1組",  priority:"red",    note:"山頂は手が凍える"},
+  {cat:"🏔️ キリマンジャロ装備", name:"ネックウォーマー・バラクラバ",         qty:"1",    priority:"red",    note:"山頂用"},
+  {cat:"🏔️ キリマンジャロ装備", name:"トレッキングポール",                   qty:"2本",  priority:"yellow", note:"下山時の膝保護に有効 / 現地レンタル可"},
+  {cat:"🏔️ キリマンジャロ装備", name:"ゲイター（スパッツ）",                qty:"1組",  priority:"yellow", note:"雨・泥・雪対策"},
+  {cat:"🏔️ キリマンジャロ装備", name:"サングラス（UV400）",                  qty:"1",    priority:"red",    note:"高山UV・雪目対策"},
+  {cat:"🏔️ キリマンジャロ装備", name:"保温水筒（1L以上）",                   qty:"1",    priority:"red",    note:"山頂では水が凍る / 保温必須"},
+  {cat:"🏔️ キリマンジャロ装備", name:"ヘッドランプ（電池式）+ 予備電池",    qty:"1",    priority:"red",    note:"深夜出発の山頂アタックに必須"},
+  {cat:"💊 衛生・医療",          name:"マラリア予防薬（処方）",               qty:"半年分",priority:"red",   note:"アフリカ滞在中は毎日服用"},
+  {cat:"💊 衛生・医療",          name:"高山病薬（ダイアモックス・処方）",     qty:"1コース",priority:"red",  note:"キリマンジャロ用 / 登山2日前から服用"},
+  {cat:"💊 衛生・医療",          name:"虫除けスプレー（DEET30〜50%高濃度）", qty:"2本",  priority:"red",    note:"マラリア・デング熱対策"},
+  {cat:"💊 衛生・医療",          name:"整腸剤（ビオフェルミン等）",           qty:"1箱",  priority:"red",    note:"食あたり対策"},
+  {cat:"💊 衛生・医療",          name:"解熱鎮痛剤（ロキソニン等）",           qty:"1箱",  priority:"red",    note:"発熱・頭痛・筋肉痛対策"},
+  {cat:"💊 衛生・医療",          name:"下痢止め（ロペラミド）",               qty:"1箱",  priority:"red",    note:"移動中緊急用（常用不可）"},
+  {cat:"💊 衛生・医療",          name:"抗生物質（医師処方）",                 qty:"1コース",priority:"red",  note:"感染症対策 / クリニックで処方依頼"},
+  {cat:"💊 衛生・医療",          name:"絆創膏・消毒薬・テーピング",           qty:"各1",  priority:"red",    note:"登山・トレッキング時の怪我対策"},
+  {cat:"💊 衛生・医療",          name:"携帯浄水器（ソーヤーミニ等）",         qty:"1",    priority:"yellow", note:"キリマンジャロ・アフリカ僻地用"},
+  {cat:"💊 衛生・医療",          name:"蚊帳（コンパクト）",                   qty:"1",    priority:"yellow", note:"アフリカ安宿は蚊帳なし多い"},
+  {cat:"📱 電子機器",            name:"スマートフォン（SIMフリー確認済み）",  qty:"1",    priority:"red",    note:"eSIM対応なら尚良し"},
+  {cat:"📱 電子機器",            name:"モバイルバッテリー（20,000mAh以上）", qty:"1",    priority:"red",    note:"アフリカ停電対策 / キリマンジャロは充電不可"},
+  {cat:"📱 電子機器",            name:"マルチ変換プラグ",                     qty:"1",    priority:"red",    note:"アフリカ・南米でコンセント形状が異なる"},
+  {cat:"📱 電子機器",            name:"USBケーブル（Type-C）",               qty:"2本",  priority:"red",    note:"スペア込み2本"},
+  {cat:"📱 電子機器",            name:"ノイキャンイヤホン",                   qty:"1",    priority:"yellow", note:"長距離移動・飛行機用"},
+  {cat:"📄 書類・貴重品",        name:"パスポート",                           qty:"1",    priority:"red",    note:"2028年3月有効"},
+  {cat:"📄 書類・貴重品",        name:"イエローカード（黄熱病接種証明書）",   qty:"1",    priority:"red",    note:"アフリカ入国時必須 / 絶対紛失禁止"},
+  {cat:"📄 書類・貴重品",        name:"海外旅行保険証書（コピー含む）",       qty:"1",    priority:"red",    note:"クラウドにもバックアップ"},
+  {cat:"📄 書類・貴重品",        name:"クレジットカード（Visa/Mastercard）", qty:"2枚",  priority:"red",    note:"メイン＋サブ / 別々の場所に保管"},
+  {cat:"📄 書類・貴重品",        name:"USD現金（$400〜500）",                qty:"1",    priority:"red",    note:"アフリカビザ代・緊急用"},
+  {cat:"📄 書類・貴重品",        name:"証明写真（4枚）",                      qty:"4枚",  priority:"yellow", note:"現地ビザ申請で必要な場合あり"},
+  {cat:"🔧 その他",              name:"速乾タオル（マイクロファイバー）",     qty:"1",    priority:"red",    note:"安宿にはタオルなし多い"},
+  {cat:"🔧 その他",              name:"日焼け止め（SPF50+）",                 qty:"2本",  priority:"yellow", note:"アタカマ・アンデス・キリマンジャロは強烈"},
+  {cat:"🔧 その他",              name:"ジップロック（各サイズ）",             qty:"10枚", priority:"yellow", note:"防水・書類保護・液体管理"},
+  {cat:"🔧 その他",              name:"洗濯ロープ（コンパクト）",             qty:"1",    priority:"yellow", note:"手洗い洗濯用"},
 ];
 
 const checkedItems = new Set(JSON.parse(localStorage.getItem('packing_checked') || '[]'));
@@ -1015,7 +752,7 @@ function updateProgress() {
   const total = packingData.length;
   const done = checkedItems.size;
   document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
-  document.getElementById('progress-text').textContent = i18n[currentLang].progressText(done, total);
+  document.getElementById('progress-text').textContent = `${done} / ${total} チェック済み`;
 }
 
 function renderPacking(filterCat) {
@@ -1067,257 +804,23 @@ function filterPacking(cat) {
 
 renderPacking('all');
 
-// ===== MESSAGES =====
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function avatarColor(name) {
-  const palette = ['#e74c3c','#e67e22','#27ae60','#2980b9','#8e44ad','#16a085','#d35400','#c0392b'];
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
-  return palette[Math.abs(h) % palette.length];
-}
-
-function formatMsgDate(ts) {
-  if (Date.now() - ts < 86400000) return timeAgo(ts);
-  const d = new Date(ts);
-  return currentLang === 'en'
-    ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    : `${d.getMonth()+1}/${d.getDate()}`;
-}
-
-document.getElementById('msg-body').addEventListener('input', function() {
-  document.getElementById('char-count').textContent = this.value.length;
-});
-
-function submitMessage() {
-  const T = i18n[currentLang];
-  const name = document.getElementById('msg-name').value.trim();
-  const message = document.getElementById('msg-body').value.trim();
-  if (!name)    { alert(T.alertName); return; }
-  if (!message) { alert(T.alertMsg); return; }
-
-  const lastSubmit = parseInt(localStorage.getItem('msg_last_submit') || '0');
-  const cooldown = 60 * 60 * 1000;
-  if (Date.now() - lastSubmit < cooldown) {
-    alert(T.alertRate(Math.ceil((cooldown - (Date.now() - lastSubmit)) / 60000)));
-    return;
-  }
-
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = T.submitting;
-
-  db.ref('messages').push({ name, message, createdAt: Date.now() })
-    .then(() => {
-      localStorage.setItem('msg_last_submit', Date.now().toString());
-      document.getElementById('msg-name').value = '';
-      document.getElementById('msg-body').value = '';
-      document.getElementById('char-count').textContent = '0';
-      btn.textContent = T.submitted;
-      setTimeout(() => { btn.disabled = false; btn.textContent = i18n[currentLang].submitBtn; }, 3000);
-    })
-    .catch(() => {
-      alert(T.alertFail);
-      btn.disabled = false;
-      btn.textContent = T.submitBtn;
-    });
-}
-
-let cachedMessages = null;
-
-function renderMessages() {
-  const T = i18n[currentLang];
-  const list = document.getElementById('messages-list');
-  const summary = document.getElementById('msg-summary');
-  const countEl = document.getElementById('msg-summary-count');
-  const labelEl = document.getElementById('msg-summary-label');
-
-  if (!cachedMessages || cachedMessages.length === 0) {
-    summary.style.display = 'none';
-    list.innerHTML = `<div class="msg-empty">${escapeHtml(T.msgEmpty).replace('\n','<br>')}</div>`;
-    return;
-  }
-
-  summary.style.display = 'flex';
-  countEl.textContent = cachedMessages.length;
-  labelEl.textContent = T.msgSummaryLabel(cachedMessages.length);
-
-  list.innerHTML = cachedMessages.map(m => {
-    const initials = [...m.name].slice(0,2).join('').toUpperCase();
-    const color = avatarColor(m.name);
-    return `<div class="msg-card">
-      <div class="msg-avatar" style="background:${color}">${escapeHtml(initials)}</div>
-      <div class="msg-content">
-        <div class="msg-header">
-          <span class="msg-name">${escapeHtml(m.name)}</span>
-          <span class="msg-time">${formatMsgDate(m.createdAt)}</span>
-        </div>
-        <div class="msg-body">${escapeHtml(m.message)}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-db.ref('messages').orderByChild('createdAt').on('value', snapshot => {
-  const data = snapshot.val();
-  cachedMessages = data ? Object.values(data).sort((a, b) => b.createdAt - a.createdAt) : [];
-  renderMessages();
-});
-
-// ===== APPLY LANGUAGE =====
-function applyLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('lang', lang);
-  const T = i18n[lang];
-
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-
-  const ids = {
-    'hero-title': 'heroTitle', 'hero-subtitle': 'heroSubtitle',
-    'stat-days': 'statDays', 'stat-days-lbl': 'statDaysLbl',
-    'stat-countries': 'statCountries', 'stat-countries-lbl': 'statCountriesLbl',
-    'stat-cities': 'statCities', 'stat-cities-lbl': 'statCitiesLbl',
-    'stat-budget': 'statBudget', 'stat-budget-lbl': 'statBudgetLbl',
-    'tab-btn-map': 'tabMap', 'tab-btn-itinerary': 'tabItinerary',
-    'tab-btn-budget': 'tabBudget', 'tab-btn-highlights': 'tabHighlights',
-    'tab-btn-packing': 'tabPacking', 'tab-btn-messages': 'tabMessages',
-    'title-itinerary': 'titleItinerary',
-    'th-num': 'thNum', 'th-area': 'thArea', 'th-country': 'thCountry',
-    'th-city': 'thCity', 'th-transport': 'thTransport', 'th-nights': 'thNights', 'th-highlight': 'thHighlight',
-    'title-budget': 'titleBudget', 'total-label': 'totalLabel',
-    'total-amount': 'totalAmount', 'total-note': 'totalNote', 'title-tours': 'titleTours',
-    'title-highlights': 'titleHighlights', 'title-packing': 'titlePacking',
-    'title-messages': 'titleMessages', 'messages-subtitle': 'msgSubtitle',
-  };
-  Object.entries(ids).forEach(([id, key]) => {
-    const el = document.getElementById(id);
-    if (el && typeof T[key] === 'string') el.textContent = T[key];
-  });
-
-  document.getElementById('msg-name').placeholder = T.msgNamePh;
-  document.getElementById('msg-body').placeholder = T.msgBodyPh;
-  document.getElementById('submit-btn').textContent = T.submitBtn;
-
-  renderItinerary();
-  renderHighlights();
-  renderMessages();
-  markerRefs.forEach(({ marker, stop }) => marker.setPopupContent(buildPopup(stop)));
-  if (liveMarkerData) updateLiveBanner(liveMarkerData);
-  updateProgress();
-}
-
-applyLang(currentLang);
-
 // ===== HIGHLIGHTS =====
-function renderHighlights() {
-  const grid = document.getElementById('highlights-grid');
-  grid.innerHTML = '';
-  stops.filter(s => s.days !== '-' && parseInt(s.days) >= 4).forEach(s => {
-    const card = document.createElement('div');
-    card.className = 'highlight-card';
-    const dateStr = s.from ? `${s.from}${s.to ? '〜'+s.to : ''}` : '';
-    card.innerHTML = `
-      <div class="highlight-card-top" style="background:${areaColors[s.area]}"></div>
-      <div class="highlight-card-body">
-        <div class="num">${s.num}</div>
-        <h3>${s.flag} ${s.name}</h3>
-        <div class="country" style="color:${areaColors[s.area]}">${s.area} · ${s.country}</div>
-        ${dateStr ? `<div style="font-size:0.78rem;color:#999;margin-bottom:6px">📅 ${dateStr}</div>` : ''}
-        <p>${s.note}</p>
-        <span class="days-tag">${s.days}泊</span>
-      </div>`;
-    grid.appendChild(card);
-  });
-}
-renderHighlights();
-
-// ===== TODO LIST =====
-const todoData = [
-  {pri:"red",    cat:"ワクチン", task:"クリニックフォア池袋 予約済み",                        deadline:"2026/3/22",  status:"✅ 完了",  note:"3/22 11:30 トラベル外来"},
-  {pri:"red",    cat:"ワクチン", task:"狂犬病1回目接種",                                       deadline:"2026/3/22",  status:"📅 予定",  note:"クリニックフォア池袋"},
-  {pri:"red",    cat:"ワクチン", task:"狂犬病2回目接種",                                       deadline:"2026/3/29頃", status:"⬜ 未着手", note:"1回目の7日後"},
-  {pri:"red",    cat:"ワクチン", task:"マラリア予防薬 処方依頼",                               deadline:"2026/3/22",  status:"📅 予定",  note:"クリニックで相談 / 半年分"},
-  {pri:"red",    cat:"ワクチン", task:"スネークファーム一括接種（バンコク7/7）",               deadline:"2026/7/7",   status:"⬜ 未着手", note:"黄熱病・A型肝炎・破傷風・腸チフス・髄膜炎菌・狂犬病3回目 / 現金+パスポート"},
-  {pri:"red",    cat:"ワクチン", task:"キリマンジャロ用高山病薬（ダイアモックス）処方",        deadline:"出発前",     status:"⬜ 未着手", note:"医師に処方依頼 / 登山2日前から服用"},
-  {pri:"red",    cat:"航空券",   task:"日本→バンコク（Thai VietJet VZ831）",                  deadline:"取得済み",   status:"✅ 完了",  note:"7/6 NRT→BKK / 受託15kg / 2万円台"},
-  {pri:"red",    cat:"航空券",   task:"バンコク→ムンバイ",                                     deadline:"取得済み",   status:"✅ 完了",  note:"受託20kg込み / 19,500円"},
-  {pri:"red",    cat:"航空券",   task:"ムンバイ→ナイロビ（直行便）",                           deadline:"2026/7/10まで", status:"⬜ 未着手", note:"Kenya Airways / Ethiopian等 / 約2.7万円〜 / インド入国の出国証明にも使用"},
-  {pri:"yellow", cat:"航空券",   task:"南アフリカ（ケープタウン）→サンパウロ",                deadline:"2026/9月頃", status:"⬜ 未着手", note:"CPT→GRU / エチオピア航空等 / 南アフリカ滞在中に手配"},
-  {pri:"yellow", cat:"航空券",   task:"リマ→ボゴタ（コロンビア）",                             deadline:"2026/11月頃", status:"⬜ 未着手", note:"Avianca・LATAM等"},
-  {pri:"yellow", cat:"航空券",   task:"ボゴタ→グアテマラシティ",                               deadline:"2026/11月頃", status:"⬜ 未着手", note:"直行便あり"},
-  {pri:"yellow", cat:"航空券",   task:"メキシコシティ→成田（帰国便）",                         deadline:"2026/11月頃", status:"⬜ 未着手", note:"MEX→NRT / 1/6出発"},
-  {pri:"red",    cat:"ビザ",     task:"インドeVisa（5年マルチプル）",                          deadline:"取得済み",   status:"✅ 完了",  note:"承認メール→クラウド保存済みか確認"},
-  {pri:"yellow", cat:"ビザ",     task:"ケニアeTA",                                             deadline:"7/7以降（タイ滞在中）", status:"⬜ 未着手", note:"etakenya.go.ke / $50 / 承認90日以内に入国"},
-  {pri:"yellow", cat:"ビザ",     task:"ウガンダ・ルワンダ（東アフリカ共通ビザ）",             deadline:"タイ滞在中", status:"⬜ 未着手", note:"visas.go.ug / $100（ケニア・ウガンダ・ルワンダ3カ国共通）"},
-  {pri:"green",  cat:"ビザ",     task:"タンザニア（アライバルビザ）",                          deadline:"現地",       status:"⬜ 未着手", note:"国境/空港 / $50 / USD現金"},
-  {pri:"green",  cat:"ビザ",     task:"ジンバブエ（アライバルビザ）",                          deadline:"現地",       status:"⬜ 未着手", note:"$30〜75 / USD現金"},
-  {pri:"green",  cat:"ビザ",     task:"ナミビア（アライバルビザ）",                            deadline:"現地",       status:"⬜ 未着手", note:"無料〜少額"},
-  {pri:"red",    cat:"保険",     task:"海外旅行保険（半年・治療費＆緊急搬送無制限）",           deadline:"2026/6月末", status:"⬜ 未着手", note:"t@bihoまたはAIG損保 / キリマンジャロ登山カバー確認必須 / 約10万円"},
-  {pri:"red",    cat:"お金",     task:"Wiseアカウント開設・カード発行",                         deadline:"出発前",     status:"⬜ 未着手", note:"両替・送金・決済 / バックパッカー必須"},
-  {pri:"red",    cat:"お金",     task:"海外キャッシング対応カード（Visa/Mastercard複数枚）確認", deadline:"出発前",   status:"⬜ 未着手", note:"メイン+サブ2枚 / 別々に保管"},
-  {pri:"yellow", cat:"お金",     task:"USD現金準備（$400〜500）",                              deadline:"出発前",     status:"⬜ 未着手", note:"アフリカビザ代($280〜)+緊急予備費"},
-  {pri:"red",    cat:"書類",     task:"パスポート確認",                                         deadline:"確認済み",   status:"✅ 完了",  note:"2028年3月まで有効 / 残10ページ以上"},
-  {pri:"red",    cat:"書類",     task:"重要書類クラウドバックアップ（GoogleDrive）",            deadline:"出発前",     status:"⬜ 未着手", note:"パスポート・イエローカード・保険証書・各ビザ承認書のPDFを保存"},
-  {pri:"yellow", cat:"書類",     task:"たびレジ登録（外務省）",                                deadline:"出発前",     status:"⬜ 未着手", note:"anzen.mofa.go.jp / 危険情報プッシュ通知"},
-  {pri:"yellow", cat:"書類",     task:"歯科検診・治療",                                         deadline:"出発前",     status:"⬜ 未着手", note:"旅中の歯トラブルは致命的 / 必ず受診"},
-  {pri:"red",    cat:"アプリ",   task:"Maps.me（オフライン地図）",                              deadline:"出発前",     status:"⬜ 未着手", note:"SIMなしで使用可 / アフリカ・南米のマップ事前DL"},
-  {pri:"red",    cat:"アプリ",   task:"WhatsApp",                                               deadline:"出発前",     status:"⬜ 未着手", note:"アフリカ・南米の現地連絡手段 / 宿・ツアー会社との連絡必須"},
-  {pri:"red",    cat:"アプリ",   task:"Wise",                                                   deadline:"出発前",     status:"⬜ 未着手", note:"両替・決済"},
-  {pri:"yellow", cat:"アプリ",   task:"inDrive / Bolt / Uber",                                 deadline:"出発前",     status:"⬜ 未着手", note:"配車 / アフリカはinDrive・Bolt / 南米はUber"},
-  {pri:"yellow", cat:"アプリ",   task:"Airalo（eSIM）",                                        deadline:"出発前",     status:"⬜ 未着手", note:"現地SIM代替 / 各国eSIM事前購入"},
-  {pri:"yellow", cat:"アプリ",   task:"Hostelworld / Booking.com",                             deadline:"出発前",     status:"⬜ 未着手", note:"宿泊予約"},
-  {pri:"yellow", cat:"アプリ",   task:"SafariBookings（サファリ予約）",                         deadline:"出発前",     status:"⬜ 未着手", note:"マサイマラ・セレンゲティのツアー事前予約"},
-  {pri:"yellow", cat:"アプリ",   task:"Google翻訳（スペイン語・スワヒリ語オフラインDL）",      deadline:"出発前",     status:"⬜ 未着手", note:"南米はスペイン語必須 / 東アフリカはスワヒリ語"},
-  {pri:"yellow", cat:"アプリ",   task:"Busbud / Rome2rio",                                     deadline:"出発前",     status:"⬜ 未着手", note:"南米長距離バス予約・移動手段検索"},
-  {pri:"yellow", cat:"アプリ",   task:"エチオピア航空（Ethiopian Airlines）",                   deadline:"出発前",     status:"⬜ 未着手", note:"アフリカ域内移動で多用"},
-  {pri:"green",  cat:"アプリ",   task:"Duolingo（スペイン語学習）",                             deadline:"今すぐ",     status:"⬜ 未着手", note:"今から始めると南米旅が大きく変わる"},
-  {pri:"red",    cat:"装備",     task:"虫除けスプレー（DEET30〜50%）",                          deadline:"出発前",     status:"⬜ 未着手", note:"マラリア・デング熱対策 / 必須"},
-  {pri:"red",    cat:"装備",     task:"トレッキングシューズ（防水）",                           deadline:"出発前",     status:"⬜ 未着手", note:"キリマンジャロ・ゴリラトレッキング・アンデス必須"},
-  {pri:"red",    cat:"装備",     task:"フリース＋薄手ダウン（コンパクト）",                    deadline:"出発前",     status:"⬜ 未着手", note:"キリマンジャロ山頂は氷点下 / アンデスも夜間冷え込む"},
-  {pri:"red",    cat:"装備",     task:"ヘッドランプ（電池式）",                                 deadline:"出発前",     status:"⬜ 未着手", note:"キリマンジャロ深夜登頂・停電対策に必須"},
-  {pri:"red",    cat:"装備",     task:"マラリア予防薬（処方済み）",                             deadline:"出発前",     status:"⬜ 未着手", note:"アフリカ滞在中は毎日服用"},
-  {pri:"yellow", cat:"装備",     task:"登山用レインウェア（上下）",                             deadline:"出発前",     status:"⬜ 未着手", note:"キリマンジャロは急な降雨・雪あり"},
-  {pri:"yellow", cat:"装備",     task:"携帯浄水器（ソーヤーミニ等）",                           deadline:"出発前",     status:"⬜ 未着手", note:"アフリカ僻地・キリマンジャロ登山用"},
-  {pri:"yellow", cat:"装備",     task:"経口補水塩（20〜30袋）",                                 deadline:"出発前",     status:"⬜ 未着手", note:"下痢・脱水・高山病対策"},
-  {pri:"yellow", cat:"装備",     task:"蚊帳（コンパクト）",                                     deadline:"出発前",     status:"⬜ 未着手", note:"アフリカ安宿に蚊帳がない場合あり"},
-  {pri:"yellow", cat:"装備",     task:"スタッキング式ウォーターボトル（1L以上）",              deadline:"出発前",     status:"⬜ 未着手", note:"キリマンジャロは1日3〜4L必要"},
-  {pri:"green",  cat:"キリマン", task:"キリマンジャロ登山会社の事前予約",                       deadline:"2026/5〜6月", status:"⬜ 未着手", note:"ZARA Tours等 / 7泊8日マチャメルート / 約30〜50万円"},
-  {pri:"green",  cat:"キリマン", task:"ゴリラトレッキング許可証（ウガンダ）",                   deadline:"2026/5〜6月", status:"⬜ 未着手", note:"ブウィンディ / $800〜 / 事前予約必須・人数制限あり"},
-  {pri:"green",  cat:"予約",     task:"マサイマラ サファリ事前予約",                             deadline:"2026/5〜6月", status:"⬜ 未着手", note:"8月はグレートマイグレーションの最盛期 / 人気のロッジは早期完売"},
-];
-
-let currentTodoCat = 'all';
-function filterTodo(cat) {
-  currentTodoCat = cat;
-  document.querySelectorAll('#todo-filter .filter-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(cat) || (cat==='all' && b.textContent.includes('すべて'))));
-  renderTodo();
-}
-function renderTodo() {
-  const list = document.getElementById('todo-list');
-  const items = currentTodoCat === 'all' ? todoData : todoData.filter(t => t.cat === currentTodoCat);
-  const done = items.filter(t => t.status === '✅ 完了').length;
-  document.getElementById('todo-progress-bar').style.width = items.length ? (done/items.length*100)+'%' : '0%';
-  document.getElementById('todo-progress-text').textContent = `${done} / ${items.length} 完了`;
-  list.innerHTML = items.map(t => {
-    const priClass = t.pri === 'red' ? 'pri-red' : t.pri === 'yellow' ? 'pri-yellow' : 'pri-green';
-    const doneClass = t.status === '✅ 完了' ? 'done' : '';
-    const statusClass = t.status === '✅ 完了' ? 'status-done' : t.status === '📅 予定' ? 'status-planned' : 'status-pending';
-    return `<div class="todo-item ${priClass} ${doneClass}">
-      <div class="todo-main">
-        <div class="todo-task">${t.task}</div>
-        <div class="todo-meta">
-          <span class="todo-cat">${t.cat}</span>
-          ${t.deadline ? `<span class="todo-deadline">📅 ${t.deadline}</span>` : ''}
-        </div>
-        ${t.note ? `<div class="todo-note">${t.note}</div>` : ''}
-      </div>
-      <span class="todo-status ${statusClass}">${t.status}</span>
+const highlightStops = stops.filter(s => s.days !== '-' && parseInt(s.days) >= 4);
+const grid = document.getElementById('highlights-grid');
+highlightStops.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'highlight-card';
+  card.innerHTML = `
+    <div class="highlight-card-top" style="background:${areaColors[s.area]}"></div>
+    <div class="highlight-card-body">
+      <div class="num">${s.num}</div>
+      <h3>${s.flag} ${s.name}</h3>
+      <div class="country" style="color:${areaColors[s.area]}">${s.area} · ${s.country}</div>
+      <p>${s.note}</p>
+      <span class="days-tag">${s.days}泊</span>
     </div>`;
-  }).join('');
-}
-renderTodo();
+  grid.appendChild(card);
+});
 </script>
 </body>
 </html>
