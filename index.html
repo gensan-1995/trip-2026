@@ -1477,7 +1477,7 @@ function renderMsgList() {
       <div class="msg-card-meta">${metPrefix}: ${metFlag} ${escapeHtml(metLabel)} &nbsp;·&nbsp; ${howPrefix}: ${escapeHtml(howLabel)}</div>
       <div class="msg-card-body">${escapeHtml(msg.body).replace(/\n/g,'<br>')}</div>
       <div class="msg-card-date">${date}</div>`;
-    if (isAdmin && msg._key) {
+    if (isAdmin) {
       const delBtn = document.createElement('button');
       delBtn.className = 'msg-delete-btn';
       delBtn.textContent = '×';
@@ -1536,7 +1536,10 @@ async function submitMessage() {
 
 db.ref('messages').orderByChild('createdAt').on('value', snapshot => {
   allMessages = [];
-  snapshot.forEach(child => { allMessages.unshift({ ...child.val(), _key: child.key }); });
+  snapshot.forEach(child => {
+    const val = child.val();
+    if (val) allMessages.unshift(Object.assign({}, val, { _key: child.key }));
+  });
   renderMsgList();
 });
 
