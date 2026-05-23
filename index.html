@@ -1,1082 +1,826 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Trip — Vol. 01 · 2026</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap"
-  rel="stylesheet"
-/>
-<style>
-  :root {
-    --cream: #F2EDE4;
-    --ink: #1C1C1C;
-    --ink-line: rgba(28, 28, 28, 0.14);
-    --terracotta: #B85C2C;
-    --sage: #6B7C6E;
-    --serif: "Playfair Display", Georgia, serif;
-    --sans: "DM Sans", system-ui, sans-serif;
-    --mono: "DM Mono", ui-monospace, monospace;
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0;
-    background: var(--cream);
-    color: var(--ink);
-    font-family: var(--sans);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  a { color: inherit; }
-  button { font: inherit; color: inherit; }
-  button, a, input, .card, [class*="card"], img, div { border-radius: 0; }
-  * { box-shadow: none !important; }
-  ::selection { background: var(--terracotta); color: var(--cream); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>半年間バックパッカー旅 2026–2027</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --jp:  #e74c3c;
+      --as:  #e67e22;
+      --ea:  #27ae60;
+      --sa:  #16a085;
+      --sm:  #2980b9;
+      --cm:  #8e44ad;
+    }
+    body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background: #f5f5f5; color: #333; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><circle cx="30" cy="30" r="1" fill="rgba(255,255,255,0.15)"/></svg>') repeat;
+      animation: stars 20s linear infinite;
+    }
+    @keyframes stars { from { transform: translateY(0); } to { transform: translateY(-60px); } }
+    .hero-content { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(1.6rem, 5vw, 2.8rem); font-weight: 800; letter-spacing: 0.02em; margin-bottom: 8px; }
+    .hero .subtitle { font-size: clamp(0.9rem, 2.5vw, 1.1rem); opacity: 0.85; margin-bottom: 28px; }
+    .stats { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .stat-pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(8px);
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .stat-pill span { opacity: 0.7; font-weight: 400; font-size: 0.8rem; display: block; }
+
+    /* ===== TABS ===== */
+    .tabs-bar {
+      background: #fff;
+      border-bottom: 2px solid #e0e0e0;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .tab-btn {
+      padding: 14px 28px;
+      border: none;
+      background: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #888;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active { color: #302b63; border-bottom-color: #302b63; }
+    .tab-btn:hover:not(.active) { color: #555; background: #f8f8f8; }
+
+    /* ===== SECTIONS ===== */
+    .section { display: none; padding: 24px 16px 48px; max-width: 1100px; margin: 0 auto; }
+    .section.active { display: block; }
+
+    /* ===== MAP ===== */
+    #map-section { padding: 0; max-width: 100%; }
+    #map-section.active { display: flex; flex-direction: column; }
+    #map { height: calc(100vh - 130px); min-height: 500px; }
+    .current-location-banner {
+      display: none;
+      background: linear-gradient(90deg, #302b63, #27ae60);
+      color: white;
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .current-location-banner.visible { display: flex; }
+    .pulse-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #7fff7f;
+      animation: pulse 1.5s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(127,255,127,0.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(127,255,127,0); }
+      100% { box-shadow: 0 0 0 0 rgba(127,255,127,0); }
+    }
+    .map-legend {
+      background: white;
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      border-top: 1px solid #e0e0e0;
+      font-size: 0.82rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .legend-line { width: 24px; height: 3px; flex-shrink: 0; }
+    .locate-btn {
+      background: #302b63; color: white; border: none; border-radius: 8px;
+      padding: 6px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      margin-left: 8px; transition: background 0.2s;
+    }
+    .locate-btn:hover { background: #24243e; }
+
+    /* ===== ITINERARY ===== */
+    .section-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; color: #302b63; border-left: 4px solid #302b63; padding-left: 12px; }
+    .route-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .route-table th { background: #302b63; color: white; padding: 10px 12px; text-align: left; white-space: nowrap; }
+    .route-table td { padding: 9px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    .route-table tr.transport-row td { background: #fafafa; color: #888; font-style: italic; font-size: 0.82rem; }
+    .area-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+    }
+    .days-num { font-weight: 700; text-align: center; }
+    .highlight-text { color: #555; font-size: 0.82rem; }
+
+    /* Area row colors */
+    tr.area-jp td { background: #fef5f5; }
+    tr.area-as td { background: #fdf6ec; }
+    tr.area-ea td { background: #f0faf3; }
+    tr.area-sa td { background: #edf8f6; }
+    tr.area-sm td { background: #edf4fb; }
+    tr.area-cm td { background: #f5f0fb; }
+
+    /* ===== BUDGET ===== */
+    .budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .budget-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-top: 4px solid var(--c);
+    }
+    .budget-card h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .budget-card .amount { font-size: 1.6rem; font-weight: 800; color: var(--c); }
+    .budget-card .detail { font-size: 0.8rem; color: #888; margin-top: 4px; }
+    .budget-bar-wrap { margin-top: 8px; background: #eee; border-radius: 4px; height: 8px; overflow: hidden; }
+    .budget-bar { height: 100%; border-radius: 4px; background: var(--c); transition: width 1s ease; }
+
+    .total-box {
+      background: linear-gradient(135deg, #302b63, #24243e);
+      color: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .total-box .label { font-size: 0.9rem; opacity: 0.75; margin-bottom: 6px; }
+    .total-box .big { font-size: 2.4rem; font-weight: 900; }
+    .total-box .note { font-size: 0.85rem; opacity: 0.8; margin-top: 8px; }
+
+    /* ===== HIGHLIGHTS ===== */
+    .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .highlight-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .highlight-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+    .highlight-card-top { height: 8px; }
+    .highlight-card-body { padding: 18px; }
+    .highlight-card .num { font-size: 1.4rem; font-weight: 900; opacity: 0.2; float: right; }
+    .highlight-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .highlight-card .country { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
+    .highlight-card p { font-size: 0.82rem; color: #555; line-height: 1.6; }
+    .highlight-card .days-tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: #f0f0f0;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #302b63;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 20px;
+      font-size: 0.82rem;
+      margin-top: 40px;
+    }
+    footer a { color: rgba(255,255,255,0.9); }
+
+    /* ===== PACKING LIST ===== */
+    .packing-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn {
+      padding: 6px 16px; border-radius: 999px; border: 2px solid #ddd;
+      background: white; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; color: #555;
+    }
+    .filter-btn.active { border-color: #302b63; background: #302b63; color: white; }
+    .packing-category { margin-bottom: 28px; }
+    .packing-category-title {
+      font-size: 1.05rem; font-weight: 800; padding: 8px 14px;
+      background: #302b63; color: white; border-radius: 8px; margin-bottom: 10px;
+    }
+    .packing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+    .packing-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: white; border-radius: 10px; padding: 12px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      border-left: 4px solid #ddd;
+    }
+    .packing-item.priority-red { border-left-color: #e74c3c; }
+    .packing-item.priority-yellow { border-left-color: #f39c12; }
+    .packing-item-check { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; cursor: pointer; accent-color: #302b63; }
+    .packing-item-body { flex: 1; }
+    .packing-item-name { font-size: 0.88rem; font-weight: 600; }
+    .packing-item-name.checked { text-decoration: line-through; color: #aaa; }
+    .packing-item-meta { font-size: 0.76rem; color: #888; margin-top: 2px; }
+    .packing-item-qty { font-size: 0.75rem; background: #f0f0f0; border-radius: 999px; padding: 1px 8px; font-weight: 600; }
+    .packing-progress { background: #eee; border-radius: 999px; height: 10px; overflow: hidden; margin-bottom: 6px; }
+    .packing-progress-bar { height: 100%; background: #302b63; border-radius: 999px; transition: width 0.4s; }
+    .packing-progress-text { font-size: 0.8rem; color: #555; margin-bottom: 20px; }
+
+    @media (max-width: 600px) {
+      .tab-btn { padding: 12px 10px; font-size: 0.78rem; }
+      .route-table { font-size: 0.78rem; }
+      .route-table td { padding: 7px 8px; }
+      .highlight-text { display: none; }
+      .packing-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div id="root"></div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-
-<script type="text/babel">
-/* global React, ReactDOM */
-const { useState, useEffect, useRef, useMemo } = React;
-
-// ============================================================
-// TWEAKS PANEL
-// ============================================================
-
-const __TWEAKS_STYLE = `
-  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
-    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
-    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
-    background:rgba(250,249,247,.78);color:#29261b;
-    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
-    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
-    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
-  .twk-hd{display:flex;align-items:center;justify-content:space-between;
-    padding:10px 8px 10px 14px;cursor:move;user-select:none}
-  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
-  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
-    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
-  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
-  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
-    overflow-y:auto;overflow-x:hidden;min-height:0}
-  .twk-row{display:flex;flex-direction:column;gap:5px}
-  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}
-  .twk-lbl>span:first-child{font-weight:500}
-  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-    color:rgba(41,38,27,.45);padding:10px 0 0}
-  .twk-sect:first-child{padding-top:0}
-  .twk-chips{display:flex;gap:6px}
-  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
-    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
-    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06) !important;
-    transition:transform .12s}
-  .twk-chip:hover{transform:translateY(-1px)}
-  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),0 2px 6px rgba(0,0,0,.15) !important}
-  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
-    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
-`;
-
-function useTweaks(defaults) {
-  const [values, setValues] = useState(defaults);
-  const setTweak = React.useCallback((keyOrEdits, val) => {
-    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
-      ? keyOrEdits : { [keyOrEdits]: val };
-    setValues((prev) => ({ ...prev, ...edits }));
-  }, []);
-  return [values, setTweak];
-}
-
-function TweaksPanel({ title = 'Tweaks', children }) {
-  const [open, setOpen] = useState(false);
-  const dragRef = useRef(null);
-  const offsetRef = useRef({ x: 16, y: 16 });
-
-  useEffect(() => {
-    const onMsg = (e) => {
-      if (e?.data?.type === '__activate_edit_mode') setOpen(true);
-      else if (e?.data?.type === '__deactivate_edit_mode') setOpen(false);
-    };
-    window.addEventListener('message', onMsg);
-    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-    return () => window.removeEventListener('message', onMsg);
-  }, []);
-
-  const onDragStart = (e) => {
-    const panel = dragRef.current;
-    if (!panel) return;
-    const r = panel.getBoundingClientRect();
-    const sx = e.clientX, sy = e.clientY;
-    const startRight = window.innerWidth - r.right;
-    const startBottom = window.innerHeight - r.bottom;
-    const move = (ev) => {
-      offsetRef.current = { x: startRight - (ev.clientX - sx), y: startBottom - (ev.clientY - sy) };
-      panel.style.right = Math.max(16, offsetRef.current.x) + 'px';
-      panel.style.bottom = Math.max(16, offsetRef.current.y) + 'px';
-    };
-    const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', up);
-  };
-
-  if (!open) return null;
-  return (
-    <>
-      <style>{__TWEAKS_STYLE}</style>
-      <div ref={dragRef} className="twk-panel" style={{ right: 16, bottom: 16 }}>
-        <div className="twk-hd" onMouseDown={onDragStart}>
-          <b>{title}</b>
-          <button className="twk-x" onClick={() => { setOpen(false); window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); }}>✕</button>
-        </div>
-        <div className="twk-body">{children}</div>
-      </div>
-    </>
-  );
-}
-
-function TweakSection({ label }) {
-  return <div className="twk-sect">{label}</div>;
-}
-
-function TweakColor({ label, value, options, onChange }) {
-  const key = (o) => String(JSON.stringify(o)).toLowerCase();
-  const cur = key(value);
-  return (
-    <div className="twk-row">
-      <div className="twk-lbl"><span>{label}</span></div>
-      <div className="twk-chips" role="radiogroup">
-        {options.map((o, i) => {
-          const on = key(o) === cur;
-          return (
-            <button key={i} type="button" className="twk-chip" data-on={on ? '1' : '0'}
-                    style={{ background: o }} onClick={() => onChange(o)}>
-              {on && (
-                <svg viewBox="0 0 14 14" aria-hidden="true">
-                  <path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2"
-                        strokeLinecap="round" strokeLinejoin="round" stroke="#fff" />
-                </svg>
-              )}
-            </button>
-          );
-        })}
-      </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div style="font-size:2rem;margin-bottom:10px;">✈️ 🌍 🎒</div>
+    <h1>半年間バックパッカー世界一周</h1>
+    <p class="subtitle">2026年7月6日 〜 2027年1月6日</p>
+    <div class="stats">
+      <div class="stat-pill">🗓️ 184日間<span>旅行期間</span></div>
+      <div class="stat-pill">🌐 17カ国<span>訪問国</span></div>
+      <div class="stat-pill">📍 19都市<span>主要ストップ</span></div>
+      <div class="stat-pill">💰 約200万円<span>総予算</span></div>
     </div>
-  );
-}
+  </div>
+</div>
 
-// ============================================================
-// DATA
-// ============================================================
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('map')">🗺️ マップ</button>
+  <button class="tab-btn" onclick="switchTab('itinerary')">📋 旅程</button>
+  <button class="tab-btn" onclick="switchTab('budget')">💰 予算</button>
+  <button class="tab-btn" onclick="switchTab('highlights')">⭐ ハイライト</button>
+  <button class="tab-btn" onclick="switchTab('packing')">🎒 持ち物</button>
+</div>
 
-const DESTINATIONS = [
-  {
-    id: "bangkok",
-    no: "01",
-    city: "Bangkok",
-    country: "Thailand",
-    region: "Asia",
-    months: "Jul 2026",
-    days: 11,
-    pin: "13.7563° N, 100.5018° E",
-    blurb: "First city after departure. Vaccines at the hospital on Sukhumvit, evenings on Yaowarat, the overnight train north that was almost missed. A city that rewards the unhurried.",
-    swatch: "#B85C2C",
-  },
-  {
-    id: "nairobi",
-    no: "02",
-    city: "Nairobi",
-    country: "Kenya",
-    region: "East Africa",
-    months: "Jul — Aug",
-    days: 14,
-    pin: "1.2921° S, 36.8219° E",
-    blurb: "The Maasai Mara at first light: six vehicles at the crossing, two thousand wildebeest, one river. The city itself comes after — coffee in Karen, an afternoon at the National Museum.",
-    swatch: "#6B7C6E",
-  },
-  {
-    id: "kilimanjaro",
-    no: "03",
-    city: "Kilimanjaro",
-    country: "Tanzania",
-    region: "East Africa",
-    months: "Aug — Sep",
-    days: 8,
-    pin: "3.0674° S, 37.3556° E",
-    blurb: "The Machame route over eight days. Summit at 5,895 metres at 6 a.m., the crater rim in cloud, the slow descent through every climate zone. One pair of gloves was not enough.",
-    swatch: "#B85C2C",
-  },
-  {
-    id: "capetown",
-    no: "04",
-    city: "Cape Town",
-    country: "South Africa",
-    region: "Southern Africa",
-    months: "Sep — Oct",
-    days: 14,
-    pin: "33.9249° S, 18.4241° E",
-    blurb: "The end of the continent in three directions. Table Mountain on a clear day, the wine farms of the Winelands, a morning drive to Cape Point. The light here is different from anywhere else.",
-    swatch: "#6B7C6E",
-  },
-  {
-    id: "buenosaires",
-    no: "05",
-    city: "Buenos Aires",
-    country: "Argentina",
-    region: "South America",
-    months: "Oct — Nov",
-    days: 10,
-    pin: "34.6037° S, 58.3816° W",
-    blurb: "Iguazú first, then the city. A milonga in San Telmo on a Wednesday — the tango lesson that preceded it was a necessary humiliation. Late dinners, the bookshops of Palermo, the wide avenues.",
-    swatch: "#B85C2C",
-  },
-  {
-    id: "cusco",
-    no: "06",
-    city: "Cusco",
-    country: "Peru",
-    region: "South America",
-    months: "Nov — Dec",
-    days: 14,
-    pin: "13.5319° S, 71.9675° W",
-    blurb: "The altitude takes one full day. The Inca stonework takes longer to understand. A dawn visit to the Sun Gate above Machu Picchu, the cloud forest on the return, a notebook almost full.",
-    swatch: "#6B7C6E",
-  },
-];
-
-const REGIONS = ["All", "Asia", "East Africa", "Southern Africa", "South America"];
-
-const STATS = [
-  { value: "17", label: "Countries visited" },
-  { value: "184", label: "Days in motion" },
-  { value: "07", label: "Flights booked" },
-  { value: "19", label: "Cities & stops" },
-  { value: "03", label: "Continents" },
-  { value: "01", label: "Summit reached" },
-];
-
-const DISPATCHES = [
-  {
-    id: "d1",
-    no: "Dispatch 01",
-    date: "July 6, Bangkok",
-    title: "On the practice of beginning.",
-    excerpt:
-      "The flight lands at 6 a.m. and the city is already awake. A taxi, a guesthouse in Banglamphu, a ceiling fan that works intermittently. The notebook is open but nothing has been written yet. There is nothing to write yet.",
-    body:
-      "The first day of a long trip is not the first day of the trip. It is the last day of preparation, conducted in another country. You are still the person who packed the bag, worried about the routing, re-read the visa requirements at midnight. The trip begins somewhere in the second week, when you stop converting currency in your head and start measuring distance in bus journeys. Bangkok is where I go to become someone who is actually travelling.",
-  },
-  {
-    id: "d2",
-    no: "Dispatch 02",
-    date: "August 24, Kilimanjaro",
-    title: "The summit at first light.",
-    excerpt:
-      "We left base camp at midnight. By 3 a.m., the headlamp ahead of me on the path was the only fixed point in the world. By 5 a.m., the horizon was pink and I was sitting at Stella Point, eating a biscuit very slowly because eating quickly requires effort I did not have.",
-    body:
-      "The summit is not a metaphor. It is a specific place at a specific elevation where your body reminds you, in considerable detail, that it was not designed for this. The view is extraordinary. The cold is extraordinary. The headache is extraordinary. What stays with you afterward is not the view — the view is in a hundred photographs — but the memory of moving very slowly uphill in the dark, one step at a time, for eight hours, and finding that this was, against all evidence, something you were capable of.",
-  },
-  {
-    id: "d3",
-    no: "Dispatch 03",
-    date: "October 3, Cape Town",
-    title: "At the end of the continent.",
-    excerpt:
-      "Cape Point is not technically the southernmost tip of Africa — that is Cape Agulhas, two hours east — but it feels like the end of something. The two oceans do not visibly meet. The wind has no opinion about this distinction.",
-    body:
-      "I have been travelling for three months. The bag is lighter than it started — several things have been left at hostels, given away, worn through — and heavier in the ways that matter: a notebook mostly full, a phone full of photographs that will take months to look at, a sense of scale that was previously theoretical. Africa is large in the way that rearranges other understandings of distance. I will think about this for a long time.",
-  },
-];
-
-const READING = [
-  { author: "John Burdett", title: "Bangkok 8", pair: "Bangkok" },
-  { author: "Karen Blixen", title: "Out of Africa", pair: "Nairobi" },
-  { author: "Ernest Hemingway", title: "The Snows of Kilimanjaro", pair: "Kilimanjaro" },
-  { author: "Nelson Mandela", title: "Long Walk to Freedom", pair: "Cape Town" },
-  { author: "Bruce Chatwin", title: "In Patagonia", pair: "Buenos Aires" },
-  { author: "Mark Adams", title: "Turn Right at Machu Picchu", pair: "Cusco" },
-];
-
-const NAV = [
-  { id: "masthead",    label: "Masthead" },
-  { id: "contents",   label: "Contents" },
-  { id: "destinations", label: "Destinations" },
-  { id: "numbers",    label: "By the Numbers" },
-  { id: "dispatches", label: "Field Notes" },
-  { id: "reading",    label: "Reading List" },
-  { id: "colophon",   label: "Colophon" },
-];
-
-// ============================================================
-// SMALL PIECES
-// ============================================================
-
-function Rule({ thick = false, color }) {
-  return (
-    <div style={{ height: thick ? 2 : 1, background: color || "var(--ink)", width: "100%" }} />
-  );
-}
-
-function Eyebrow({ children, color }) {
-  return (
-    <div style={{
-      fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.18em",
-      textTransform: "uppercase", color: color || "var(--ink)",
-    }}>
-      {children}
+<!-- ===== MAP TAB ===== -->
+<div id="tab-map" class="section active" id="map-section" style="padding:0;max-width:100%;">
+  <div class="current-location-banner" id="location-banner">
+    <div class="pulse-dot"></div>
+    <span id="location-text">現在地を取得中...</span>
+  </div>
+  <div id="map"></div>
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--jp)"></div> 日本</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--as)"></div> アジア</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--ea)"></div> 東アフリカ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sa)"></div> 南部アフリカ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--sm)"></div> 南米</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cm)"></div> 中米</div>
+    <div class="legend-item"><div class="legend-line" style="background:#e74c3c;"></div> ✈️ 飛行機</div>
+    <div class="legend-item"><div class="legend-line" style="background:#f39c12;"></div> 🚌 陸路</div>
+    <div style="margin-left:8px;">
+      <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank"
+         style="font-size:0.82rem;color:#302b63;text-decoration:none;font-weight:600;">
+        🗺️ Google マイマップで開く →
+      </a>
     </div>
-  );
-}
+  </div>
+</div>
 
-function SectionLabel({ no, title, kicker }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 18 }}>
-        <Eyebrow color="var(--terracotta)">§ {no}</Eyebrow>
-        <div style={{ flex: 1, height: 1, background: "var(--ink-line)" }} />
-        <Eyebrow>{kicker}</Eyebrow>
-      </div>
-      <h2 style={{
-        fontFamily: "var(--serif)", fontWeight: 600,
-        fontSize: "clamp(40px, 5.4vw, 76px)", lineHeight: 1.02,
-        letterSpacing: "-0.015em", margin: 0, maxWidth: "16ch",
-      }}>
-        {title}
-      </h2>
+<!-- ===== ITINERARY TAB ===== -->
+<div id="tab-itinerary" class="section">
+  <div class="section-title">旅程スケジュール</div>
+  <div style="overflow-x:auto;">
+    <table class="route-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>エリア</th>
+          <th>国</th>
+          <th>都市・拠点</th>
+          <th>移動</th>
+          <th>泊数</th>
+          <th>ハイライト</th>
+        </tr>
+      </thead>
+      <tbody id="itinerary-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== BUDGET TAB ===== -->
+<div id="tab-budget" class="section">
+  <div class="section-title">予算概要</div>
+
+  <div class="total-box">
+    <div class="label">旅行総予算（目安）</div>
+    <div class="big">約 200万円</div>
+    <div class="note">※ フライト・宿泊・食費・ツアー・ビザ等すべて含む概算</div>
+  </div>
+
+  <div class="budget-grid">
+    <div class="budget-card" style="--c: var(--as)">
+      <h3>🇹🇭🇮🇳 アジア</h3>
+      <div class="amount">約 20万円</div>
+      <div class="detail">タイ 11日 + インド 5日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:10%"></div></div>
     </div>
-  );
-}
-
-function Placeholder({ label, height = 320, accent }) {
-  const c = accent || "var(--ink-line)";
-  return (
-    <div style={{
-      height, border: "1px solid var(--ink-line)",
-      background: `repeating-linear-gradient(135deg, transparent 0 14px, ${c} 14px 15px)`,
-      position: "relative", overflow: "hidden",
-    }}>
-      <div style={{
-        position: "absolute", left: 16, bottom: 14,
-        fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em",
-        textTransform: "uppercase", background: "var(--cream)",
-        padding: "4px 8px", border: "1px solid var(--ink-line)",
-      }}>
-        {label}
-      </div>
+    <div class="budget-card" style="--c: var(--ea)">
+      <h3>🇰🇪🇺🇬🇷🇼🇹🇿 東アフリカ</h3>
+      <div class="amount">約 80万円</div>
+      <div class="detail">ケニア・ウガンダ・ルワンダ・タンザニア 50日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:40%"></div></div>
     </div>
-  );
-}
+    <div class="budget-card" style="--c: var(--sa)">
+      <h3>🇿🇼🇳🇦🇿🇦 南部アフリカ</h3>
+      <div class="amount">約 35万円</div>
+      <div class="detail">ジンバブエ・ナミビア・南アフリカ 28日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:17%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: var(--sm)">
+      <h3>🇧🇷🇦🇷🇨🇱🇧🇴🇵🇪🇨🇴 南米</h3>
+      <div class="amount">約 40万円</div>
+      <div class="detail">6カ国 66日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:20%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: var(--cm)">
+      <h3>🇬🇹🇲🇽 中米</h3>
+      <div class="amount">約 15万円</div>
+      <div class="detail">グアテマラ・メキシコ 24日</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:7.5%"></div></div>
+    </div>
+    <div class="budget-card" style="--c: #e74c3c">
+      <h3>✈️ フライト合計</h3>
+      <div class="amount">約 35万円</div>
+      <div class="detail">国際線 7区間</div>
+      <div class="budget-bar-wrap"><div class="budget-bar" style="width:17%"></div></div>
+    </div>
+  </div>
 
-// ============================================================
-// SECTIONS
-// ============================================================
+  <div class="section-title" style="margin-top:24px;">主要ツアー費用</div>
+  <div style="overflow-x:auto;">
+    <table class="route-table">
+      <thead>
+        <tr>
+          <th>ツアー名</th>
+          <th>エリア</th>
+          <th>費用（目安）</th>
+          <th>日数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="area-ea">
+          <td>🦁 マサイマラ サファリ（グレートマイグレーション）</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 10万円</td>
+          <td>5日</td>
+        </tr>
+        <tr class="area-ea">
+          <td>🦍 ゴリラトレッキング（ブウィンディ）</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 12万円</td>
+          <td>2日</td>
+        </tr>
+        <tr class="area-ea">
+          <td>🏔️ キリマンジャロ登山（マチャメルート）</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 40万円</td>
+          <td>8日</td>
+        </tr>
+        <tr class="area-ea">
+          <td>🏝️ ザンジバル島滞在</td>
+          <td><span class="area-badge" style="background:var(--ea)">東アフリカ</span></td>
+          <td>約 8万円</td>
+          <td>10日</td>
+        </tr>
+        <tr class="area-sa">
+          <td>🌊 ビクトリアフォールズ アクティビティ</td>
+          <td><span class="area-badge" style="background:var(--sa)">南部アフリカ</span></td>
+          <td>約 5万円</td>
+          <td>2日</td>
+        </tr>
+        <tr class="area-sa">
+          <td>🏜️ ナミブ砂漠ツアー</td>
+          <td><span class="area-badge" style="background:var(--sa)">南部アフリカ</span></td>
+          <td>約 14万円</td>
+          <td>3日</td>
+        </tr>
+        <tr class="area-sm">
+          <td>🏛️ マチュピチュ</td>
+          <td><span class="area-badge" style="background:var(--sm)">南米</span></td>
+          <td>約 2万円</td>
+          <td>1日</td>
+        </tr>
+        <tr class="area-sm">
+          <td>🪞 ウユニ塩湖ツアー</td>
+          <td><span class="area-badge" style="background:var(--sm)">南米</span></td>
+          <td>約 3万円</td>
+          <td>2日</td>
+        </tr>
+        <tr class="area-sm">
+          <td>🌋 アタカマ砂漠ツアー</td>
+          <td><span class="area-badge" style="background:var(--sm)">南米</span></td>
+          <td>約 3万円</td>
+          <td>2日</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-function TopBar({ activeId, onNav }) {
-  return (
-    <nav style={{
-      position: "sticky", top: 0, zIndex: 40,
-      background: "var(--cream)", borderBottom: "1px solid var(--ink-line)",
-    }}>
-      <div style={{
-        maxWidth: 1280, margin: "0 auto", padding: "14px 48px",
-        display: "flex", alignItems: "center", gap: 32,
-      }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-          <span style={{ fontFamily: "var(--serif)", fontSize: 20, fontWeight: 700, letterSpacing: "-0.01em" }}>
-            Trip
-          </span>
-          <span style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", color: "var(--sage)" }}>
-            VOL. 01 · 2026
-          </span>
-        </div>
-        <div style={{ flex: 1 }} />
-        <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-          {NAV.map((n) => (
-            <button key={n.id} onClick={() => onNav(n.id)} style={{
-              appearance: "none", background: "transparent", border: 0,
-              padding: 0, cursor: "pointer", fontFamily: "var(--mono)",
-              fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase",
-              color: activeId === n.id ? "var(--terracotta)" : "var(--ink)",
-            }}>
-              {n.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </nav>
-  );
-}
+<!-- ===== HIGHLIGHTS TAB ===== -->
+<div id="tab-highlights" class="section">
+  <div class="section-title">旅のハイライト</div>
+  <div class="highlights-grid" id="highlights-grid"></div>
+</div>
 
-function Masthead() {
-  return (
-    <section id="masthead" data-screen-label="01 Masthead" style={{
-      padding: "120px 48px 140px", maxWidth: 1280, margin: "0 auto",
-    }}>
-      <div style={{
-        display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 24,
-        paddingBottom: 18, borderBottom: "1px solid var(--ink-line)", marginBottom: 56,
-      }}>
-        {[
-          { label: "Issue", value: "№ 2026 / I" },
-          { label: "Edition", value: "Annual — Summer" },
-          { label: "Days", value: "184" },
-          { label: "Departed from", value: "35.6762° N, 139.6503° E" },
-        ].map((m) => (
-          <div key={m.label}>
-            <Eyebrow>{m.label}</Eyebrow>
-            <div style={{ fontFamily: "var(--mono)", fontSize: 13, marginTop: 6 }}>{m.value}</div>
-          </div>
-        ))}
-      </div>
+<!-- ===== PACKING TAB ===== -->
+<div id="tab-packing" class="section">
+  <div class="section-title">持ち物リスト</div>
+  <div class="packing-progress">
+    <div class="packing-progress-bar" id="progress-bar" style="width:0%"></div>
+  </div>
+  <div class="packing-progress-text" id="progress-text">0 / 0 チェック済み</div>
+  <div class="packing-filter">
+    <button class="filter-btn active" onclick="filterPacking('all')">すべて</button>
+    <button class="filter-btn" onclick="filterPacking('🎒 バッグ')">🎒 バッグ</button>
+    <button class="filter-btn" onclick="filterPacking('👕 衣類（街・日常）')">👕 衣類</button>
+    <button class="filter-btn" onclick="filterPacking('🏔️ キリマンジャロ装備')">🏔️ 登山装備</button>
+    <button class="filter-btn" onclick="filterPacking('💊 衛生・医療')">💊 衛生・医療</button>
+    <button class="filter-btn" onclick="filterPacking('📱 電子機器')">📱 電子機器</button>
+    <button class="filter-btn" onclick="filterPacking('📄 書類・貴重品')">📄 書類</button>
+    <button class="filter-btn" onclick="filterPacking('🔧 その他')">🔧 その他</button>
+  </div>
+  <div id="packing-list"></div>
+</div>
 
-      <div style={{
-        display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr)",
-        gap: 64, alignItems: "end",
-      }}>
-        <div>
-          <Eyebrow color="var(--terracotta)">
-            A travel record · Six months · Seventeen countries
-          </Eyebrow>
-          <h1 style={{
-            fontFamily: "var(--serif)", fontWeight: 700,
-            fontSize: "clamp(72px, 11vw, 168px)", lineHeight: 0.92,
-            letterSpacing: "-0.025em", margin: "28px 0 36px", textAlign: "left",
-          }}>
-            A Year
-            <br />
-            <span style={{ fontStyle: "italic", fontWeight: 500 }}>in Motion</span>
-            <span style={{ color: "var(--terracotta)" }}>.</span>
-          </h1>
-          <p style={{
-            fontFamily: "var(--sans)", fontSize: 19, lineHeight: 1.55,
-            maxWidth: "52ch", margin: 0, color: "var(--ink)",
-          }}>
-            Six months, seventeen countries, one bag. A slow itinerary across three
-            continents — Asia to East Africa to South America — built around safari
-            seasons, altitude windows, and the kind of journey that changes your
-            relationship to the word "home."
-          </p>
-          <div style={{ marginTop: 56, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-            <a href="#destinations" style={{
-              fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.18em",
-              textTransform: "uppercase", color: "var(--cream)", background: "var(--ink)",
-              padding: "16px 22px", textDecoration: "none", border: "1px solid var(--ink)",
-            }}>
-              Read the Itinerary →
-            </a>
-            <a href="#dispatches" style={{
-              fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.18em",
-              textTransform: "uppercase", color: "var(--ink)", background: "transparent",
-              padding: "16px 22px", textDecoration: "none", border: "1px solid var(--ink)",
-            }}>
-              Open the Field Notes
-            </a>
-          </div>
-        </div>
+<footer>
+  半年間バックパッカー旅 2026–2027 &nbsp;|&nbsp;
+  <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank">🗺️ Google マイマップ</a>
+</footer>
 
-        <div>
-          <Placeholder label="Cover · Editorial photograph" height={520} accent="rgba(184,92,44,0.22)" />
-          <div style={{
-            display: "flex", justifyContent: "space-between", marginTop: 14,
-            fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: "var(--sage)",
-          }}>
-            <span>Plate I</span>
-            <span>35mm · Portra 400</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ===== DATA =====
+const stops = [
+  {num:1,  name:"東京（出国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"成田発 Thai VietJet VZ831",                         area:"日本",       country:"日本",       flag:"🇯🇵", transport:null},
+  {num:2,  name:"バンコク",                          lat:13.7563,  lon:100.5018, days:"11", note:"ワクチン一括接種・バンコク観光",                      area:"アジア",     country:"タイ",       flag:"🇹🇭", transport:"✈️ Thai VietJet"},
+  {num:3,  name:"ムンバイ",                          lat:19.0760,  lon:72.8777,  days:"5",  note:"ゲートウェイオブインディア・エレファンタ島",           area:"アジア",     country:"インド",     flag:"🇮🇳", transport:"✈️ Thai VietJet"},
+  {num:4,  name:"ナイロビ・マサイマラ",              lat:-1.2921,  lon:36.8219,  days:"14", note:"マサイマラサファリ（グレートマイグレーション）",       area:"東アフリカ", country:"ケニア",     flag:"🇰🇪", transport:"✈️ Kenya Airways"},
+  {num:5,  name:"カンパラ・ブウィンディ",            lat:0.3476,   lon:32.5825,  days:"8",  note:"ゴリラトレッキング・チンパンジートレッキング",         area:"東アフリカ", country:"ウガンダ",   flag:"🇺🇬", transport:"🚌 陸路バス"},
+  {num:6,  name:"キガリ",                            lat:-1.9441,  lon:30.0619,  days:"4",  note:"虐殺記念館・現代アフリカの街並み",                    area:"東アフリカ", country:"ルワンダ",   flag:"🇷🇼", transport:"🚌 陸路バス"},
+  {num:7,  name:"ダルエスサラーム・ザンジバル・キリマンジャロ", lat:-6.7924, lon:39.2083, days:"24", note:"ザンジバル島（10日）・キリマンジャロ登山（8日マチャメルート）", area:"東アフリカ", country:"タンザニア", flag:"🇹🇿", transport:"🚌 陸路バス"},
+  {num:8,  name:"ビクトリアフォールズ",              lat:-17.9243, lon:25.8572,  days:"4",  note:"世界三大瀑布・バンジージャンプ・ラフティング",        area:"南部アフリカ",country:"ジンバブエ", flag:"🇿🇼", transport:"🚂 TAZARA鉄道"},
+  {num:9,  name:"ウィントフック・ナミブ砂漠",        lat:-22.5597, lon:17.0832,  days:"10", note:"ナミブ砂漠・デッドフレイ・ソーサスフレイ",            area:"南部アフリカ",country:"ナミビア",   flag:"🇳🇦", transport:"🚌 陸路バス"},
+  {num:10, name:"ケープタウン",                      lat:-33.9249, lon:18.4241,  days:"14", note:"テーブルマウンテン・喜望峰・ワインランド",            area:"南部アフリカ",country:"南アフリカ", flag:"🇿🇦", transport:"🚌 陸路バス"},
+  {num:11, name:"サンパウロ・リオ・イグアス",        lat:-23.5505, lon:-46.6333, days:"14", note:"コルコバード・コパカバーナ・イグアスの滝（ブラジル側）",area:"南米",      country:"ブラジル",   flag:"🇧🇷", transport:"✈️ ケープタウン→サンパウロ"},
+  {num:12, name:"ブエノスアイレス・イグアス",        lat:-34.6037, lon:-58.3816, days:"10", note:"イグアスの滝（アルゼンチン側）・タンゴショー",        area:"南米",       country:"アルゼンチン",flag:"🇦🇷", transport:"🚌 陸路バス"},
+  {num:13, name:"サンティアゴ・アタカマ",            lat:-33.4489, lon:-70.6693, days:"8",  note:"アタカマ砂漠・月の谷・タティオ間欠泉・星空観測",      area:"南米",       country:"チリ",       flag:"🇨🇱", transport:"🚌 陸路バス"},
+  {num:14, name:"ウユニ・ラパス",                    lat:-19.5832, lon:-65.7533, days:"8",  note:"ウユニ塩湖・星空ツアー・死の道路・ティワナク遺跡",    area:"南米",       country:"ボリビア",   flag:"🇧🇴", transport:"🚌 陸路バス（国境越え）"},
+  {num:15, name:"クスコ・マチュピチュ・リマ",        lat:-13.5319, lon:-71.9675, days:"14", note:"マチュピチュ・クスコ旧市街・レインボーマウンテン",     area:"南米",       country:"ペルー",     flag:"🇵🇪", transport:"🚌 陸路バス"},
+  {num:16, name:"カルタヘナ・メデジン・ボゴタ",      lat:4.7110,   lon:-74.0721, days:"12", note:"カルタヘナ旧市街・メデジン・コーヒー農園",            area:"南米",       country:"コロンビア", flag:"🇨🇴", transport:"✈️ リマ→ボゴタ"},
+  {num:17, name:"アンティグア・アティトラン",        lat:14.5586,  lon:-90.7295, days:"10", note:"アンティグア旧市街・アティトラン湖・マヤ遺跡・火山",  area:"中米",       country:"グアテマラ", flag:"🇬🇹", transport:"✈️ ボゴタ→グアテマラシティ"},
+  {num:18, name:"メキシコシティ・オアハカ・カンクン",lat:19.4326,  lon:-99.1332, days:"14", note:"テオティワカン・チチェンイッツァ・オアハカ・年越し",  area:"中米",       country:"メキシコ",   flag:"🇲🇽", transport:"🚌 陸路バス"},
+  {num:19, name:"東京（帰国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"メキシコシティ→成田 帰国",                           area:"日本",       country:"日本",       flag:"🇯🇵", transport:"✈️ メキシコシティ→成田"},
+];
 
-function Contents() {
-  const items = [
-    { no: "01", title: "Masthead",       page: "002", note: "Departure note" },
-    { no: "02", title: "Contents",       page: "006", note: "This page" },
-    { no: "03", title: "Destinations",   page: "012", note: "Six entries, by season" },
-    { no: "04", title: "By the Numbers", page: "036", note: "An accounting" },
-    { no: "05", title: "Field Notes",    page: "044", note: "Three short dispatches" },
-    { no: "06", title: "Reading List",   page: "060", note: "Paired by city" },
-    { no: "07", title: "Colophon",       page: "070", note: "Type, paper, thanks" },
-  ];
+const airPairs = new Set(["1-2","2-3","3-4","10-11","15-16","16-17","18-19"]);
 
-  return (
-    <section id="contents" data-screen-label="02 Contents" style={{
-      padding: "120px 48px", maxWidth: 1280, margin: "0 auto",
-    }}>
-      <SectionLabel no="02" kicker="Index · Seven entries" title="Contents." />
-      <div style={{ height: 64 }} />
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr)", gap: 80 }}>
-        <div>
-          {items.map((it, i) => (
-            <a key={it.no} href={`#${NAV[i]?.id || ""}`} style={{
-              display: "grid", gridTemplateColumns: "60px 1fr auto 80px", gap: 24,
-              alignItems: "baseline", padding: "22px 0",
-              borderTop: i === 0 ? "1px solid var(--ink)" : "none",
-              borderBottom: "1px solid var(--ink-line)",
-              textDecoration: "none", color: "var(--ink)",
-            }}>
-              <span style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--terracotta)", letterSpacing: "0.14em" }}>
-                § {it.no}
-              </span>
-              <span style={{ fontFamily: "var(--serif)", fontSize: 28, fontWeight: 500, letterSpacing: "-0.01em" }}>
-                {it.title}
-              </span>
-              <span style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--sage)" }}>
-                {it.note}
-              </span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: 12, textAlign: "right", letterSpacing: "0.1em" }}>
-                p. {it.page}
-              </span>
-            </a>
-          ))}
-        </div>
-        <aside>
-          <Eyebrow color="var(--sage)">Departure note</Eyebrow>
-          <p style={{
-            fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 22,
-            lineHeight: 1.4, marginTop: 18, color: "var(--ink)",
-          }}>
-            "The plan is not the trip. The plan is the thing the trip happens to."
-          </p>
-          <div style={{
-            marginTop: 24, fontFamily: "var(--mono)", fontSize: 11,
-            letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--sage)",
-          }}>
-            — Tokyo, July 2026
-          </div>
-        </aside>
-      </div>
-    </section>
-  );
-}
-
-function Destinations() {
-  const [region, setRegion] = useState("All");
-  const [active, setActive] = useState(DESTINATIONS[0].id);
-
-  const filtered = useMemo(
-    () => region === "All" ? DESTINATIONS : DESTINATIONS.filter((d) => d.region === region),
-    [region]
-  );
-
-  const cur = DESTINATIONS.find((d) => d.id === active) || filtered[0];
-
-  return (
-    <section id="destinations" data-screen-label="03 Destinations" style={{
-      padding: "120px 48px", maxWidth: 1280, margin: "0 auto",
-    }}>
-      <SectionLabel no="03" kicker="Itinerary · Six entries" title="Destinations, by season." />
-
-      <div style={{
-        marginTop: 48, display: "flex", alignItems: "center", gap: 0,
-        borderTop: "1px solid var(--ink-line)", borderBottom: "1px solid var(--ink-line)",
-      }}>
-        <Eyebrow>Filter by region</Eyebrow>
-        <div style={{ flex: 1 }} />
-        {REGIONS.map((r) => (
-          <button key={r} onClick={() => setRegion(r)} style={{
-            appearance: "none",
-            background: r === region ? "var(--ink)" : "transparent",
-            color: r === region ? "var(--cream)" : "var(--ink)",
-            border: 0, borderLeft: "1px solid var(--ink-line)",
-            padding: "18px 22px", fontFamily: "var(--mono)", fontSize: 11,
-            letterSpacing: "0.14em", textTransform: "uppercase", cursor: "pointer",
-          }}>
-            {r}
-          </button>
-        ))}
-      </div>
-
-      <div style={{
-        marginTop: 64, display: "grid",
-        gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 1fr)", gap: 64, alignItems: "start",
-      }}>
-        <div>
-          <Placeholder
-            label={`${cur.city} · plate`} height={520}
-            accent={cur.swatch === "#B85C2C" ? "rgba(184,92,44,0.22)" : "rgba(107,124,110,0.22)"}
-          />
-          <div style={{
-            display: "flex", justifyContent: "space-between", marginTop: 14,
-            fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: "var(--sage)",
-          }}>
-            <span>Plate {cur.no}</span>
-            <span>{cur.pin}</span>
-          </div>
-        </div>
-
-        <div>
-          <Eyebrow color="var(--terracotta)">Entry № {cur.no}</Eyebrow>
-          <div style={{
-            fontFamily: "var(--serif)", fontSize: 72, fontWeight: 600,
-            lineHeight: 1, letterSpacing: "-0.02em", marginTop: 16,
-          }}>
-            {cur.city}<span style={{ color: "var(--terracotta)" }}>.</span>
-          </div>
-          <div style={{
-            fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 28,
-            fontWeight: 400, color: "var(--sage)", marginTop: 6,
-          }}>
-            {cur.country}
-          </div>
-
-          <div style={{
-            marginTop: 32, display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 0, border: "1px solid var(--ink-line)",
-          }}>
-            {[
-              { k: "Season", v: cur.months },
-              { k: "Days", v: String(cur.days).padStart(2, "0") },
-              { k: "Region", v: cur.region },
-            ].map((s, i) => (
-              <div key={s.k} style={{
-                padding: "18px 20px",
-                borderLeft: i === 0 ? "none" : "1px solid var(--ink-line)",
-              }}>
-                <Eyebrow color="var(--sage)">{s.k}</Eyebrow>
-                <div style={{ fontFamily: "var(--mono)", fontSize: 18, marginTop: 8 }}>{s.v}</div>
-              </div>
-            ))}
-          </div>
-
-          <p style={{
-            fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.6,
-            marginTop: 28, maxWidth: "44ch",
-          }}>
-            {cur.blurb}
-          </p>
-        </div>
-      </div>
-
-      <div style={{ marginTop: 80 }}>
-        <Eyebrow>The full index</Eyebrow>
-        <div style={{ height: 18 }} />
-        <Rule />
-        {filtered.map((d) => {
-          const isActive = d.id === active;
-          return (
-            <button key={d.id} onClick={() => setActive(d.id)} style={{
-              appearance: "none",
-              background: isActive ? "var(--ink)" : "transparent",
-              color: isActive ? "var(--cream)" : "var(--ink)",
-              border: 0, borderBottom: "1px solid var(--ink-line)",
-              width: "100%", textAlign: "left", cursor: "pointer",
-              display: "grid",
-              gridTemplateColumns: "60px 1.4fr 1fr 1fr 1fr 24px",
-              gap: 24, alignItems: "baseline", padding: "22px 18px",
-            }}>
-              <span style={{
-                fontFamily: "var(--mono)", fontSize: 12,
-                color: isActive ? "var(--cream)" : "var(--terracotta)",
-              }}>
-                № {d.no}
-              </span>
-              <span style={{ fontFamily: "var(--serif)", fontSize: 24, fontWeight: 500, letterSpacing: "-0.01em" }}>
-                {d.city}
-                <span style={{
-                  fontFamily: "var(--sans)", fontSize: 14, marginLeft: 10,
-                  color: isActive ? "rgba(242,237,228,0.6)" : "var(--sage)",
-                }}>
-                  {d.country}
-                </span>
-              </span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{d.months}</span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: 12 }}>{String(d.days).padStart(2, "0")} days</span>
-              <span style={{
-                fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em",
-                color: isActive ? "rgba(242,237,228,0.6)" : "var(--sage)",
-              }}>
-                {d.pin}
-              </span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: 14, textAlign: "right" }}>→</span>
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function Numbers() {
-  return (
-    <section id="numbers" data-screen-label="04 By the Numbers" style={{
-      background: "var(--ink)", color: "var(--cream)", marginTop: 40,
-    }}>
-      <div style={{ padding: "140px 48px", maxWidth: 1280, margin: "0 auto" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 18 }}>
-            <Eyebrow color="var(--terracotta)">§ 04</Eyebrow>
-            <div style={{ flex: 1, height: 1, background: "rgba(242,237,228,0.18)" }} />
-            <Eyebrow color="rgba(242,237,228,0.6)">An accounting · As of filing</Eyebrow>
-          </div>
-          <h2 style={{
-            fontFamily: "var(--serif)", fontWeight: 600,
-            fontSize: "clamp(40px, 5.4vw, 76px)", lineHeight: 1.02,
-            letterSpacing: "-0.015em", margin: 0, maxWidth: "16ch", color: "var(--cream)",
-          }}>
-            By the numbers.
-          </h2>
-        </div>
-
-        <div style={{
-          marginTop: 80, display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-          borderTop: "1px solid rgba(242,237,228,0.18)", borderLeft: "1px solid rgba(242,237,228,0.18)",
-        }}>
-          {STATS.map((s) => (
-            <div key={s.label} style={{
-              padding: "48px 32px 40px",
-              borderRight: "1px solid rgba(242,237,228,0.18)",
-              borderBottom: "1px solid rgba(242,237,228,0.18)",
-            }}>
-              <div style={{
-                fontFamily: "var(--mono)", fontSize: "clamp(64px, 7.5vw, 112px)",
-                lineHeight: 0.95, letterSpacing: "-0.04em", color: "var(--cream)",
-              }}>
-                {s.value}
-              </div>
-              <div style={{
-                marginTop: 18, fontFamily: "var(--mono)", fontSize: 11,
-                letterSpacing: "0.18em", textTransform: "uppercase",
-                color: "rgba(242,237,228,0.6)",
-              }}>
-                {s.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{
-          marginTop: 56, display: "flex", justifyContent: "space-between",
-          fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em",
-          textTransform: "uppercase", color: "rgba(242,237,228,0.6)",
-        }}>
-          <span>Source: travel ledger</span>
-          <span>Updated weekly · Filed Tokyo</span>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Dispatches() {
-  const [openId, setOpenId] = useState("d1");
-
-  return (
-    <section id="dispatches" data-screen-label="05 Field Notes" style={{
-      padding: "140px 48px", maxWidth: 1280, margin: "0 auto",
-    }}>
-      <SectionLabel no="05" kicker="Field Notes · Three dispatches" title="Postcards from the year." />
-
-      <div style={{
-        marginTop: 80, display: "grid",
-        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr)", gap: 80, alignItems: "start",
-      }}>
-        <aside>
-          <Eyebrow color="var(--sage)">Filed under</Eyebrow>
-          <p style={{
-            fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 24,
-            lineHeight: 1.4, marginTop: 16, color: "var(--ink)",
-          }}>
-            Short pieces written in transit. None are about the trip. All of them are about the trip.
-          </p>
-          <div style={{
-            marginTop: 32, borderTop: "1px solid var(--ink-line)", paddingTop: 18,
-            fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em",
-            textTransform: "uppercase", color: "var(--sage)",
-          }}>
-            Format · 300 words or so
-            <br />Frequency · Monthly
-            <br />Photography · Tipped in
-          </div>
-        </aside>
-
-        <div>
-          {DISPATCHES.map((d, i) => {
-            const open = d.id === openId;
-            return (
-              <article key={d.id} style={{
-                borderTop: i === 0 ? "2px solid var(--ink)" : "none",
-                borderBottom: "1px solid var(--ink-line)",
-              }}>
-                <button onClick={() => setOpenId(open ? null : d.id)} style={{
-                  appearance: "none", background: "transparent", border: 0,
-                  width: "100%", textAlign: "left", padding: "28px 0", cursor: "pointer",
-                  display: "grid", gridTemplateColumns: "140px 1fr 32px",
-                  gap: 24, alignItems: "baseline",
-                }}>
-                  <span style={{
-                    fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em",
-                    textTransform: "uppercase", color: "var(--terracotta)",
-                  }}>
-                    {d.no}
-                  </span>
-                  <div>
-                    <div style={{
-                      fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em",
-                      textTransform: "uppercase", color: "var(--sage)",
-                    }}>
-                      {d.date}
-                    </div>
-                    <h3 style={{
-                      fontFamily: "var(--serif)", fontSize: 34, fontWeight: 500,
-                      letterSpacing: "-0.01em", margin: "8px 0 0", lineHeight: 1.15,
-                    }}>
-                      {d.title}
-                    </h3>
-                  </div>
-                  <span style={{
-                    fontFamily: "var(--mono)", fontSize: 18, textAlign: "right",
-                    transform: open ? "rotate(45deg)" : "none",
-                    transition: "transform 220ms ease", display: "inline-block",
-                  }}>
-                    +
-                  </span>
-                </button>
-                <div style={{
-                  maxHeight: open ? 720 : 0, overflow: "hidden",
-                  transition: "max-height 360ms ease",
-                }}>
-                  <div style={{
-                    padding: "0 0 36px",
-                    display: "grid", gridTemplateColumns: "140px 1fr", gap: 24,
-                  }}>
-                    <div />
-                    <div style={{ maxWidth: "60ch" }}>
-                      <p style={{
-                        fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 22,
-                        lineHeight: 1.45, margin: 0, color: "var(--terracotta)",
-                      }}>
-                        {d.excerpt}
-                      </p>
-                      <p style={{
-                        fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.65,
-                        marginTop: 22, color: "var(--ink)",
-                      }}>
-                        {d.body}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Reading() {
-  return (
-    <section id="reading" data-screen-label="06 Reading List" style={{
-      padding: "140px 48px", maxWidth: 1280, margin: "0 auto",
-    }}>
-      <SectionLabel no="06" kicker="Reading List · Six titles" title="What to read where." />
-
-      <div style={{
-        marginTop: 72, display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 0, border: "1px solid var(--ink-line)",
-      }}>
-        {READING.map((b, i) => (
-          <div key={b.title} style={{
-            padding: "36px 28px 32px",
-            borderRight: (i + 1) % 3 === 0 ? "none" : "1px solid var(--ink-line)",
-            borderBottom: i < READING.length - 3 ? "1px solid var(--ink-line)" : "none",
-            display: "flex", flexDirection: "column", gap: 14, minHeight: 220,
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <Eyebrow color="var(--terracotta)">Pair with {b.pair}</Eyebrow>
-              <span style={{
-                fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.14em", color: "var(--sage)",
-              }}>
-                № {String(i + 1).padStart(2, "0")}
-              </span>
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{
-                fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em",
-                textTransform: "uppercase", color: "var(--sage)", marginBottom: 8,
-              }}>
-                {b.author}
-              </div>
-              <div style={{
-                fontFamily: "var(--serif)", fontSize: 26, fontWeight: 500,
-                lineHeight: 1.15, letterSpacing: "-0.005em",
-              }}>
-                {b.title}
-              </div>
-            </div>
-            <div style={{
-              fontFamily: "var(--mono)", fontSize: 10, letterSpacing: "0.16em",
-              textTransform: "uppercase", color: "var(--ink)",
-              paddingTop: 12, borderTop: "1px solid var(--ink-line)",
-            }}>
-              Paperback · Travel
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Colophon() {
-  return (
-    <section id="colophon" data-screen-label="07 Colophon" style={{
-      padding: "140px 48px 100px", maxWidth: 1280, margin: "0 auto",
-      borderTop: "1px solid var(--ink-line)", marginTop: 80,
-    }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 48 }}>
-        <div>
-          <div style={{
-            fontFamily: "var(--serif)", fontSize: 56, fontWeight: 700,
-            letterSpacing: "-0.02em", lineHeight: 1,
-          }}>
-            Trip<span style={{ color: "var(--terracotta)" }}>.</span>
-          </div>
-          <div style={{
-            marginTop: 12, fontFamily: "var(--mono)", fontSize: 11,
-            letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--sage)",
-          }}>
-            Vol. 01 · Issue 2026
-          </div>
-          <p style={{
-            fontFamily: "var(--sans)", fontSize: 15, lineHeight: 1.6,
-            marginTop: 28, maxWidth: "38ch", color: "var(--ink)",
-          }}>
-            A private travel journal, printed once a year, in an edition of one.
-            Filed from wherever the trip happens to be.
-          </p>
-        </div>
-        <div>
-          <Eyebrow>Type</Eyebrow>
-          <div style={{ marginTop: 14, fontFamily: "var(--sans)", fontSize: 14, lineHeight: 1.7 }}>
-            Playfair Display<br />DM Sans<br />DM Mono
-          </div>
-        </div>
-        <div>
-          <Eyebrow>Route</Eyebrow>
-          <div style={{ marginTop: 14, fontFamily: "var(--sans)", fontSize: 14, lineHeight: 1.7 }}>
-            Tokyo → Bangkok<br />→ East Africa<br />→ Southern Africa<br />→ South America
-          </div>
-        </div>
-        <div>
-          <Eyebrow>With thanks</Eyebrow>
-          <div style={{ marginTop: 14, fontFamily: "var(--sans)", fontSize: 14, lineHeight: 1.7 }}>
-            For the maps<br />For the early reads<br />The friend with the satellite phone
-          </div>
-        </div>
-      </div>
-
-      <div style={{
-        marginTop: 80, paddingTop: 22, borderTop: "1px solid var(--ink-line)",
-        display: "flex", justifyContent: "space-between",
-        fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em",
-        textTransform: "uppercase", color: "var(--sage)",
-      }}>
-        <span>© 2026 — Edition of one</span>
-        <span>End of issue</span>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================
-// TWEAKS UI
-// ============================================================
-
-const TWEAK_DEFAULTS = {
-  accent: "#B85C2C",
-  secondary: "#6B7C6E",
-  bg: "#F2EDE4",
+const areaColors = {
+  "日本":        "#e74c3c",
+  "アジア":      "#e67e22",
+  "東アフリカ":  "#27ae60",
+  "南部アフリカ":"#16a085",
+  "南米":        "#2980b9",
+  "中米":        "#8e44ad",
 };
 
-function TweaksUI() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+const areaCssClass = {
+  "日本":        "area-jp",
+  "アジア":      "area-as",
+  "東アフリカ":  "area-ea",
+  "南部アフリカ":"area-sa",
+  "南米":        "area-sm",
+  "中米":        "area-cm",
+};
 
-  useEffect(() => {
-    const r = document.documentElement.style;
-    r.setProperty("--terracotta", t.accent);
-    r.setProperty("--sage", t.secondary);
-    r.setProperty("--cream", t.bg);
-  }, [t.accent, t.secondary, t.bg]);
-
-  return (
-    <TweaksPanel title="Tweaks">
-      <TweakSection label="Palette" />
-      <TweakColor
-        label="Accent"
-        value={t.accent}
-        options={["#B85C2C", "#9C4A6E", "#7A5A2E", "#3E5C4A"]}
-        onChange={(v) => setTweak("accent", v)}
-      />
-      <TweakColor
-        label="Secondary"
-        value={t.secondary}
-        options={["#6B7C6E", "#8A8576", "#5A5A5C", "#7E6B57"]}
-        onChange={(v) => setTweak("secondary", v)}
-      />
-      <TweakColor
-        label="Paper"
-        value={t.bg}
-        options={["#F2EDE4", "#EDE6D6", "#F5F2EC", "#E8E2D4"]}
-        onChange={(v) => setTweak("bg", v)}
-      />
-    </TweaksPanel>
-  );
+// ===== TAB SWITCHING =====
+function switchTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'map') { setTimeout(() => map.invalidateSize(), 100); }
 }
 
-// ============================================================
-// APP
-// ============================================================
+// ===== MAP =====
+const map = L.map('map', { center: [20, 20], zoom: 2 });
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 18
+}).addTo(map);
 
-function App() {
-  const [activeId, setActiveId] = useState("masthead");
+// Draw route lines
+for (let i = 0; i < stops.length - 1; i++) {
+  const a = stops[i], b = stops[i+1];
+  const key = `${a.num}-${b.num}`;
+  const isAir = airPairs.has(key);
+  const color = isAir ? '#e74c3c' : '#f39c12';
+  const opts = isAir
+    ? { color, weight: 2.5, dashArray: '8,6', opacity: 0.8 }
+    : { color, weight: 2.5, opacity: 0.75 };
 
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) setActiveId(e.target.id); });
-      },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
-    );
-    NAV.forEach((n) => { const el = document.getElementById(n.id); if (el) obs.observe(el); });
-    return () => obs.disconnect();
-  }, []);
-
-  const onNav = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 70;
-    window.scrollTo({ top, behavior: "smooth" });
-  };
-
-  return (
-    <>
-      <TopBar activeId={activeId} onNav={onNav} />
-      <Masthead />
-      <Contents />
-      <Destinations />
-      <Numbers />
-      <Dispatches />
-      <Reading />
-      <Colophon />
-      <TweaksUI />
-    </>
-  );
+  // Curved line for flights
+  if (isAir) {
+    const latlngs = getCurvedPath([a.lat, a.lon], [b.lat, b.lon]);
+    L.polyline(latlngs, opts).addTo(map);
+  } else {
+    L.polyline([[a.lat, a.lon],[b.lat, b.lon]], opts).addTo(map);
+  }
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+// Add markers
+stops.forEach(s => {
+  const color = areaColors[s.area];
+  const icon = L.divIcon({
+    html: `<div style="
+      background:${color};
+      color:white;
+      border-radius:50%;
+      width:28px;height:28px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:800;
+      border:2px solid white;
+      box-shadow:0 2px 6px rgba(0,0,0,0.4);
+    ">${s.num}</div>`,
+    className: '',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -16]
+  });
+
+  const transport = s.transport ? `<div style="color:#888;font-size:12px;margin-bottom:4px">${s.transport}</div>` : '';
+  const days = s.days !== '-' ? `<div style="margin-top:6px;font-size:12px;background:#f0f0f0;display:inline-block;padding:2px 8px;border-radius:999px"><b>${s.days}泊</b></div>` : '';
+  const popup = `
+    <div style="min-width:200px;font-family:sans-serif">
+      ${transport}
+      <div style="font-weight:800;font-size:14px;margin-bottom:4px">${s.flag} ${s.name}</div>
+      <div style="color:${color};font-size:12px;font-weight:700;margin-bottom:6px">${s.area}</div>
+      <div style="font-size:12px;color:#555;line-height:1.6">${s.note}</div>
+      ${days}
+    </div>`;
+
+  L.marker([s.lat, s.lon], { icon }).addTo(map).bindPopup(popup);
+});
+
+function getCurvedPath(from, to) {
+  const pts = [];
+  const steps = 30;
+  // 経度差が180度超の場合は逆方向（太平洋越え等）に修正
+  let toLon = to[1];
+  const lonDiff = to[1] - from[1];
+  if (lonDiff > 180) toLon = to[1] - 360;
+  if (lonDiff < -180) toLon = to[1] + 360;
+  const midLat = (from[0] + to[0]) / 2;
+  const midLon = (from[1] + toLon) / 2;
+  const dx = toLon - from[1], dy = to[0] - from[0];
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const offsetLat = midLat + dist * 0.15;
+  const offsetLon = midLon;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const lat = (1-t)*(1-t)*from[0] + 2*(1-t)*t*offsetLat + t*t*to[0];
+    const lon = (1-t)*(1-t)*from[1] + 2*(1-t)*t*offsetLon + t*t*toLon;
+    pts.push([lat, lon]);
+  }
+  return pts;
+}
+
+// ===== FIREBASE 現在地 =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDBYGmx12_Rdcc1K4dNbaCV4fuKU211OVc",
+  authDomain: "trip-2026-5a4d8.firebaseapp.com",
+  databaseURL: "https://trip-2026-5a4d8-default-rtdb.firebaseio.com",
+  projectId: "trip-2026-5a4d8",
+  storageBucket: "trip-2026-5a4d8.firebasestorage.app",
+  messagingSenderId: "372431238996",
+  appId: "1:372431238996:web:337f3957e3ecbf5ff97ac1"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let liveMarker = null;
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60)    return `${diff}秒前`;
+  if (diff < 3600)  return `${Math.floor(diff/60)}分前`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}時間前`;
+  return `${Math.floor(diff/86400)}日前`;
+}
+
+db.ref('location').on('value', snapshot => {
+  const d = snapshot.val();
+  if (!d) return;
+
+  const banner = document.getElementById('location-banner');
+  const text   = document.getElementById('location-text');
+  const ago    = timeAgo(d.updatedAt);
+  const msg    = d.message ? `「${d.message}」` : '';
+  text.textContent = `現在地：${d.country}・${d.city}　${msg}　（更新：${ago}）`;
+  banner.classList.add('visible');
+
+  if (liveMarker) map.removeLayer(liveMarker);
+
+  if (d.lat && d.lon) {
+    const icon = L.divIcon({
+      html: `<div style="position:relative;width:36px;height:36px;">
+        <div style="position:absolute;inset:0;border-radius:50%;background:rgba(39,174,96,0.3);animation:pulse 1.5s infinite;"></div>
+        <div style="position:absolute;inset:6px;border-radius:50%;background:#27ae60;border:3px solid white;display:flex;align-items:center;justify-content:center;font-size:11px;">✈️</div>
+      </div>`,
+      className: '', iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]
+    });
+    liveMarker = L.marker([d.lat, d.lon], { icon })
+      .addTo(map)
+      .bindPopup(`<b>📍 現在地</b><br>${d.country}・${d.city}${d.message ? '<br>'+d.message : ''}<br><small style="color:#888">更新：${ago}</small>`);
+  }
+});
+
+// ===== ITINERARY TABLE =====
+const tbody = document.getElementById('itinerary-body');
+stops.forEach((s, i) => {
+  // Transport row (before this stop, except first)
+  if (i > 0 && s.transport) {
+    const tr = document.createElement('tr');
+    tr.className = 'transport-row';
+    tr.innerHTML = `<td></td><td colspan="6" style="text-align:center">↓ ${s.transport}</td>`;
+    tbody.appendChild(tr);
+  }
+  const tr = document.createElement('tr');
+  tr.className = areaCssClass[s.area] || '';
+  const badge = `<span class="area-badge" style="background:${areaColors[s.area]}">${s.area}</span>`;
+  tr.innerHTML = `
+    <td style="font-weight:700;text-align:center">${s.num}</td>
+    <td>${badge}</td>
+    <td>${s.flag} ${s.country}</td>
+    <td style="font-weight:600">${s.name}</td>
+    <td style="text-align:center;font-size:0.8rem">${i===0 || i===stops.length-1 ? '—' : (airPairs.has(`${stops[i-1]?.num}-${s.num}`) ? '✈️' : '🚌')}</td>
+    <td class="days-num">${s.days !== '-' ? s.days+'泊' : '—'}</td>
+    <td class="highlight-text">${s.note}</td>`;
+  tbody.appendChild(tr);
+});
+
+// ===== PACKING LIST =====
+const packingData = [
+  {cat:"🎒 バッグ",             name:"バックパック（45〜55L）",              qty:"1",    priority:"red",    note:"キリマンジャロ登山装備も入る大きさ / 南京錠対応"},
+  {cat:"🎒 バッグ",             name:"デイパック（20〜25L）",                qty:"1",    priority:"red",    note:"観光・キリマンジャロ山頂アタック時のサブ"},
+  {cat:"🎒 バッグ",             name:"ウエストポーチ（薄型・貴重品用）",     qty:"1",    priority:"red",    note:"パスポート・現金・カードは肌身離さず"},
+  {cat:"🎒 バッグ",             name:"南京錠（TSAロック）",                  qty:"3",    priority:"red",    note:"バックパック・ロッカー・ジッパー用"},
+  {cat:"🎒 バッグ",             name:"スタッフサック（防水・圧縮）",         qty:"5",    priority:"yellow", note:"衣類整理・防水管理"},
+  {cat:"👕 衣類（街・日常）",   name:"Tシャツ（速乾）",                      qty:"3",    priority:"red",    note:"ユニクロ速乾Tがコスパ最強"},
+  {cat:"👕 衣類（街・日常）",   name:"ロングシャツ（UVカット・虫刺され対策）",qty:"2",   priority:"red",    note:"アフリカ蚊対策 / イスラム圏・寺院入場にも必要"},
+  {cat:"👕 衣類（街・日常）",   name:"トレッキングパンツ（速乾・脱着可）",   qty:"2",    priority:"red",    note:"キリマンジャロ・ゴリラトレッキング兼用"},
+  {cat:"👕 衣類（街・日常）",   name:"ショートパンツ",                       qty:"1",    priority:"yellow", note:"ザンジバル・南米ビーチ"},
+  {cat:"👕 衣類（街・日常）",   name:"アンダーウェア（速乾・抗菌）",         qty:"3",    priority:"red",    note:"メリノウール推奨"},
+  {cat:"👕 衣類（街・日常）",   name:"薄手レインジャケット（防風兼用）",     qty:"1",    priority:"red",    note:"雨季対策 / 軽量コンパクト"},
+  {cat:"👕 衣類（街・日常）",   name:"水着",                                 qty:"1",    priority:"yellow", note:"ザンジバル・南米ビーチ"},
+  {cat:"🏔️ キリマンジャロ装備", name:"フリース（厚手）",                     qty:"1",    priority:"red",    note:"山頂は氷点下 / 必須"},
+  {cat:"🏔️ キリマンジャロ装備", name:"薄手ダウンジャケット（コンパクト）",   qty:"1",    priority:"red",    note:"山頂アタック時に着込む"},
+  {cat:"🏔️ キリマンジャロ装備", name:"防水トレッキングシューズ（ハイカット）",qty:"1",   priority:"red",    note:"キリマンジャロ・ゴリラトレッキング兼用 / 出発前に慣らし必須"},
+  {cat:"🏔️ キリマンジャロ装備", name:"防水グローブ",                         qty:"1組",  priority:"red",    note:"山頂は手が凍える"},
+  {cat:"🏔️ キリマンジャロ装備", name:"ネックウォーマー・バラクラバ",         qty:"1",    priority:"red",    note:"山頂用"},
+  {cat:"🏔️ キリマンジャロ装備", name:"トレッキングポール",                   qty:"2本",  priority:"yellow", note:"下山時の膝保護に有効 / 現地レンタル可"},
+  {cat:"🏔️ キリマンジャロ装備", name:"ゲイター（スパッツ）",                qty:"1組",  priority:"yellow", note:"雨・泥・雪対策"},
+  {cat:"🏔️ キリマンジャロ装備", name:"サングラス（UV400）",                  qty:"1",    priority:"red",    note:"高山UV・雪目対策"},
+  {cat:"🏔️ キリマンジャロ装備", name:"保温水筒（1L以上）",                   qty:"1",    priority:"red",    note:"山頂では水が凍る / 保温必須"},
+  {cat:"🏔️ キリマンジャロ装備", name:"ヘッドランプ（電池式）+ 予備電池",    qty:"1",    priority:"red",    note:"深夜出発の山頂アタックに必須"},
+  {cat:"💊 衛生・医療",          name:"マラリア予防薬（処方）",               qty:"半年分",priority:"red",   note:"アフリカ滞在中は毎日服用"},
+  {cat:"💊 衛生・医療",          name:"高山病薬（ダイアモックス・処方）",     qty:"1コース",priority:"red",  note:"キリマンジャロ用 / 登山2日前から服用"},
+  {cat:"💊 衛生・医療",          name:"虫除けスプレー（DEET30〜50%高濃度）", qty:"2本",  priority:"red",    note:"マラリア・デング熱対策"},
+  {cat:"💊 衛生・医療",          name:"整腸剤（ビオフェルミン等）",           qty:"1箱",  priority:"red",    note:"食あたり対策"},
+  {cat:"💊 衛生・医療",          name:"解熱鎮痛剤（ロキソニン等）",           qty:"1箱",  priority:"red",    note:"発熱・頭痛・筋肉痛対策"},
+  {cat:"💊 衛生・医療",          name:"下痢止め（ロペラミド）",               qty:"1箱",  priority:"red",    note:"移動中緊急用（常用不可）"},
+  {cat:"💊 衛生・医療",          name:"抗生物質（医師処方）",                 qty:"1コース",priority:"red",  note:"感染症対策 / クリニックで処方依頼"},
+  {cat:"💊 衛生・医療",          name:"絆創膏・消毒薬・テーピング",           qty:"各1",  priority:"red",    note:"登山・トレッキング時の怪我対策"},
+  {cat:"💊 衛生・医療",          name:"携帯浄水器（ソーヤーミニ等）",         qty:"1",    priority:"yellow", note:"キリマンジャロ・アフリカ僻地用"},
+  {cat:"💊 衛生・医療",          name:"蚊帳（コンパクト）",                   qty:"1",    priority:"yellow", note:"アフリカ安宿は蚊帳なし多い"},
+  {cat:"📱 電子機器",            name:"スマートフォン（SIMフリー確認済み）",  qty:"1",    priority:"red",    note:"eSIM対応なら尚良し"},
+  {cat:"📱 電子機器",            name:"モバイルバッテリー（20,000mAh以上）", qty:"1",    priority:"red",    note:"アフリカ停電対策 / キリマンジャロは充電不可"},
+  {cat:"📱 電子機器",            name:"マルチ変換プラグ",                     qty:"1",    priority:"red",    note:"アフリカ・南米でコンセント形状が異なる"},
+  {cat:"📱 電子機器",            name:"USBケーブル（Type-C）",               qty:"2本",  priority:"red",    note:"スペア込み2本"},
+  {cat:"📱 電子機器",            name:"ノイキャンイヤホン",                   qty:"1",    priority:"yellow", note:"長距離移動・飛行機用"},
+  {cat:"📄 書類・貴重品",        name:"パスポート",                           qty:"1",    priority:"red",    note:"2028年3月有効"},
+  {cat:"📄 書類・貴重品",        name:"イエローカード（黄熱病接種証明書）",   qty:"1",    priority:"red",    note:"アフリカ入国時必須 / 絶対紛失禁止"},
+  {cat:"📄 書類・貴重品",        name:"海外旅行保険証書（コピー含む）",       qty:"1",    priority:"red",    note:"クラウドにもバックアップ"},
+  {cat:"📄 書類・貴重品",        name:"クレジットカード（Visa/Mastercard）", qty:"2枚",  priority:"red",    note:"メイン＋サブ / 別々の場所に保管"},
+  {cat:"📄 書類・貴重品",        name:"USD現金（$400〜500）",                qty:"1",    priority:"red",    note:"アフリカビザ代・緊急用"},
+  {cat:"📄 書類・貴重品",        name:"証明写真（4枚）",                      qty:"4枚",  priority:"yellow", note:"現地ビザ申請で必要な場合あり"},
+  {cat:"🔧 その他",              name:"速乾タオル（マイクロファイバー）",     qty:"1",    priority:"red",    note:"安宿にはタオルなし多い"},
+  {cat:"🔧 その他",              name:"日焼け止め（SPF50+）",                 qty:"2本",  priority:"yellow", note:"アタカマ・アンデス・キリマンジャロは強烈"},
+  {cat:"🔧 その他",              name:"ジップロック（各サイズ）",             qty:"10枚", priority:"yellow", note:"防水・書類保護・液体管理"},
+  {cat:"🔧 その他",              name:"洗濯ロープ（コンパクト）",             qty:"1",    priority:"yellow", note:"手洗い洗濯用"},
+];
+
+const checkedItems = new Set(JSON.parse(localStorage.getItem('packing_checked') || '[]'));
+
+function saveChecked() {
+  localStorage.setItem('packing_checked', JSON.stringify([...checkedItems]));
+}
+
+function updateProgress() {
+  const total = packingData.length;
+  const done = checkedItems.size;
+  document.getElementById('progress-bar').style.width = (done / total * 100) + '%';
+  document.getElementById('progress-text').textContent = `${done} / ${total} チェック済み`;
+}
+
+function renderPacking(filterCat) {
+  const container = document.getElementById('packing-list');
+  container.innerHTML = '';
+  const categories = [...new Set(packingData.map(i => i.cat))];
+  categories.forEach(cat => {
+    const items = packingData.filter(i => i.cat === cat && (filterCat === 'all' || filterCat === cat));
+    if (!items.length) return;
+    const section = document.createElement('div');
+    section.className = 'packing-category';
+    section.innerHTML = `<div class="packing-category-title">${cat}</div><div class="packing-grid" id="grid-${CSS.escape(cat)}"></div>`;
+    container.appendChild(section);
+    const grid = section.querySelector('.packing-grid');
+    items.forEach((item, idx) => {
+      const key = item.cat + '|' + item.name;
+      const isChecked = checkedItems.has(key);
+      const div = document.createElement('div');
+      div.className = `packing-item priority-${item.priority}`;
+      div.innerHTML = `
+        <input type="checkbox" class="packing-item-check" ${isChecked ? 'checked' : ''} onchange="toggleItem('${key.replace(/'/g,"\\'")}', this)">
+        <div class="packing-item-body">
+          <div class="packing-item-name ${isChecked ? 'checked' : ''}">${item.name} <span class="packing-item-qty">${item.qty}</span></div>
+          <div class="packing-item-meta">${item.note}</div>
+        </div>`;
+      grid.appendChild(div);
+    });
+  });
+  updateProgress();
+}
+
+function toggleItem(key, checkbox) {
+  if (checkbox.checked) {
+    checkedItems.add(key);
+  } else {
+    checkedItems.delete(key);
+  }
+  saveChecked();
+  const nameEl = checkbox.closest('.packing-item').querySelector('.packing-item-name');
+  nameEl.classList.toggle('checked', checkbox.checked);
+  updateProgress();
+}
+
+function filterPacking(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderPacking(cat);
+}
+
+renderPacking('all');
+
+// ===== HIGHLIGHTS =====
+const highlightStops = stops.filter(s => s.days !== '-' && parseInt(s.days) >= 4);
+const grid = document.getElementById('highlights-grid');
+highlightStops.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'highlight-card';
+  card.innerHTML = `
+    <div class="highlight-card-top" style="background:${areaColors[s.area]}"></div>
+    <div class="highlight-card-body">
+      <div class="num">${s.num}</div>
+      <h3>${s.flag} ${s.name}</h3>
+      <div class="country" style="color:${areaColors[s.area]}">${s.area} · ${s.country}</div>
+      <p>${s.note}</p>
+      <span class="days-tag">${s.days}泊</span>
+    </div>`;
+  grid.appendChild(card);
+});
 </script>
 </body>
 </html>
