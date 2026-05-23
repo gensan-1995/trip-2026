@@ -44,7 +44,7 @@
 
     /* ===== SUPPORT BUTTON ===== */
     .support-btn {
-      display: inline-block; padding: 10px 24px; margin-top: 28px;
+      display: inline-block; padding: 10px 24px;
       border: 1.5px solid rgba(242,237,228,0.4); color: var(--cream);
       font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
       text-decoration: none; letter-spacing: 0.04em;
@@ -291,9 +291,13 @@
       <div class="stat-pill"><span class="stat-value">19</span><span class="stat-label" data-i18n="stat_cities">都市</span></div>
       <div class="stat-pill"><span class="stat-value">200万</span><span class="stat-label" data-i18n="stat_budget">円 / 総予算</span></div>
     </div>
-    <a href="https://paypal.me/genyasan" target="_blank" rel="noopener" class="support-btn">
-      <span data-i18n="support_btn">☕ 旅を応援する</span>
-    </a>
+    <div style="margin-top:28px;">
+      <div style="font-family:var(--mono);font-size:0.72rem;opacity:0.4;letter-spacing:0.08em;margin-bottom:10px;" data-i18n="support_btn">☕ 旅を応援する</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="https://paypal.me/genyasan" target="_blank" rel="noopener" class="support-btn">PayPal</a>
+        <a href="https://qr.paypay.ne.jp/p2p01_dBaoZp1ywlTR0NJU" target="_blank" rel="noopener" class="support-btn">PayPay</a>
+      </div>
+    </div>
   </div>
 </div>
 
