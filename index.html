@@ -42,6 +42,24 @@
       display: block; font-size: 0.75rem; opacity: 0.5; margin-top: 2px; letter-spacing: 0.04em;
     }
 
+    /* ===== SUPPORT BUTTON ===== */
+    .support-btn {
+      display: inline-block; padding: 10px 24px;
+      border: 1.5px solid rgba(242,237,228,0.4); color: var(--cream);
+      font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .support-btn:hover { background: rgba(242,237,228,0.12); border-color: rgba(242,237,228,0.7); }
+    .msg-support-btn {
+      display: inline-block; padding: 9px 22px;
+      border: 1.5px solid var(--ink); color: var(--ink);
+      font-family: var(--sans); font-size: 0.85rem; font-weight: 600;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: background 0.15s;
+    }
+    .msg-support-btn:hover { background: var(--ink); color: var(--cream); }
+
     /* ===== TABS ===== */
     .tabs-bar {
       background: var(--cream); border-bottom: 1px solid var(--line);
@@ -215,6 +233,58 @@
     .packing-progress-bar { height: 100%; background: var(--accent); transition: width 0.4s; }
     .packing-progress-text { font-family: var(--mono); font-size: 0.78rem; color: var(--sage); margin-bottom: 24px; }
 
+    /* ===== MESSAGES ===== */
+    .msg-layout { display: flex; flex-direction: column; gap: 40px; }
+    .msg-form-box { border: 1px solid var(--line); padding: 28px 32px; }
+    .msg-form-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+    .msg-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .msg-field { display: flex; flex-direction: column; gap: 6px; }
+    .msg-field label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--sage); }
+    .msg-field input, .msg-field select, .msg-field textarea {
+      border: 1px solid var(--line); background: var(--cream);
+      font-family: var(--sans); font-size: 0.88rem; color: var(--ink);
+      padding: 9px 11px; outline: none; transition: border-color 0.15s;
+    }
+    .msg-field select {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B7C6E'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px;
+    }
+    .msg-field input:focus, .msg-field select:focus, .msg-field textarea:focus { border-color: var(--accent); }
+    .msg-field textarea { resize: vertical; min-height: 90px; }
+    .msg-submit {
+      background: var(--ink); color: var(--cream); border: none; padding: 11px 28px;
+      font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s; float: right; margin-top: 4px;
+    }
+    .msg-submit:hover { opacity: 0.75; }
+    .msg-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .msg-status { font-size: 0.84rem; margin-top: 10px; clear: both; min-height: 20px; }
+    .msg-status.success { color: var(--sage); }
+    .msg-status.error { color: var(--accent); }
+    .msg-list-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+    .msg-count { font-family: var(--mono); font-size: 0.85rem; color: var(--sage); margin-left: 8px; font-weight: 400; }
+    .msg-cards { display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .msg-card { position: relative; background: var(--cream); padding: 20px 24px; border-left: 3px solid var(--accent); transition: background 0.15s; }
+    .msg-card:hover { background: rgba(28,28,28,0.02); }
+    .msg-card-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .msg-card-name { font-weight: 700; font-size: 1rem; }
+    .msg-card-meta { font-family: var(--mono); font-size: 0.72rem; color: var(--sage); margin-bottom: 10px; }
+    .msg-card-body { font-size: 0.88rem; line-height: 1.75; color: var(--ink); }
+    .msg-card-date { font-family: var(--mono); font-size: 0.7rem; color: rgba(28,28,28,0.35); margin-top: 10px; }
+    .msg-empty { text-align: center; padding: 48px 24px; color: var(--sage); font-size: 0.88rem; }
+    .msg-delete-btn { position: absolute; top: 10px; right: 12px; background: none; border: 1px solid var(--accent); color: var(--accent); font-size: 0.72rem; width: 22px; height: 22px; cursor: pointer; opacity: 0.55; transition: opacity 0.15s, background 0.15s; line-height: 1; padding: 0; }
+    .msg-delete-btn:hover { opacity: 1; background: var(--accent); color: #fff; }
+    .admin-area { display: none; align-items: center; gap: 8px; padding: 14px 0 2px; }
+    .admin-pw-input { font-family: var(--mono); font-size: 0.78rem; border: 1px solid var(--line); background: none; padding: 6px 10px; color: var(--ink); outline: none; width: 150px; }
+    .admin-pw-input:focus { border-color: var(--sage); }
+    .admin-pw-btn { font-family: var(--mono); font-size: 0.72rem; border: 1px solid var(--line); background: none; padding: 6px 12px; cursor: pointer; color: var(--sage); letter-spacing: 0.04em; transition: border-color 0.15s; }
+    .admin-pw-btn:hover { border-color: var(--sage); }
+    .admin-pw-error { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+    .admin-toggle-btn { display: block; margin-top: 18px; font-family: var(--mono); font-size: 0.62rem; color: rgba(28,28,28,0.18); background: none; border: none; cursor: pointer; letter-spacing: 0.06em; padding: 0; transition: color 0.15s; }
+    .admin-toggle-btn:hover { color: var(--sage); }
+    .admin-toggle-btn.active { color: var(--accent); }
+
     @media (max-width: 600px) {
       .tab-btn { padding: 12px 8px; font-size: 0.76rem; }
       .lang-toggle { padding: 0 12px; font-size: 0.7rem; }
@@ -222,6 +292,8 @@
       .route-table td { padding: 7px 8px; }
       .highlight-text { display: none; }
       .packing-grid { grid-template-columns: 1fr; }
+      .msg-form-grid { grid-template-columns: 1fr; }
+      .msg-form-box { padding: 20px 16px; }
     }
   </style>
 </head>
@@ -238,6 +310,13 @@
       <div class="stat-pill"><span class="stat-value">19</span><span class="stat-label" data-i18n="stat_cities">都市</span></div>
       <div class="stat-pill"><span class="stat-value">200万</span><span class="stat-label" data-i18n="stat_budget">円 / 総予算</span></div>
     </div>
+    <div style="margin-top:28px;">
+      <div style="font-family:var(--mono);font-size:0.72rem;opacity:0.4;letter-spacing:0.08em;margin-bottom:10px;" data-i18n="support_btn">☕ 旅を応援する</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="https://paypal.me/genyasan" target="_blank" rel="noopener" class="support-btn">PayPal</a>
+        <a href="https://qr.paypay.ne.jp/p2p01_dBaoZp1ywlTR0NJU" target="_blank" rel="noopener" class="support-btn">PayPay</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -249,6 +328,7 @@
     <button class="tab-btn" onclick="switchTab('budget')" data-i18n="tab_budget">予算</button>
     <button class="tab-btn" onclick="switchTab('highlights')" data-i18n="tab_hl">ハイライト</button>
     <button class="tab-btn" onclick="switchTab('packing')" data-i18n="tab_pack">持ち物</button>
+    <button class="tab-btn" onclick="switchTab('messages')" data-i18n="tab_msg">メッセージ</button>
   </div>
   <button class="lang-toggle" onclick="toggleLang()">EN</button>
 </div>
@@ -350,6 +430,62 @@
   <div id="packing-list"></div>
 </div>
 
+<!-- ===== MESSAGES TAB ===== -->
+<div id="tab-messages" class="section">
+  <div class="section-title" data-i18n="sec_msg">応援メッセージ</div>
+  <div class="msg-layout">
+
+    <!-- FORM -->
+    <div class="msg-form-box">
+      <div class="msg-form-title" data-i18n="msg_form_title">✉ 応援メッセージを送る</div>
+      <div class="msg-form-grid">
+        <div class="msg-field">
+          <label data-i18n="msg_name">お名前</label>
+          <input type="text" id="msg-name" maxlength="50">
+        </div>
+        <div class="msg-field">
+          <label data-i18n="msg_home">母国</label>
+          <select id="msg-home"></select>
+        </div>
+        <div class="msg-field">
+          <label data-i18n="msg_met">知り合った国</label>
+          <select id="msg-met"></select>
+        </div>
+        <div class="msg-field">
+          <label data-i18n="msg_how">出会い方</label>
+          <select id="msg-how"></select>
+        </div>
+      </div>
+      <div class="msg-field" style="margin-bottom:16px">
+        <label data-i18n="msg_body">メッセージ</label>
+        <textarea id="msg-body" maxlength="500"></textarea>
+      </div>
+      <button id="msg-submit" class="msg-submit" onclick="submitMessage()" data-i18n="msg_send">送信する</button>
+      <div id="msg-status" class="msg-status"></div>
+      <div style="clear:both;margin-top:24px;padding-top:20px;border-top:1px solid var(--line);">
+        <div style="font-family:var(--mono);font-size:0.72rem;color:var(--sage);letter-spacing:0.06em;margin-bottom:10px;" data-i18n="support_btn">☕ 旅を応援する</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="https://paypal.me/genyasan" target="_blank" rel="noopener" class="msg-support-btn">PayPal</a>
+          <a href="https://qr.paypay.ne.jp/p2p01_dBaoZp1ywlTR0NJU" target="_blank" rel="noopener" class="msg-support-btn">PayPay</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div>
+      <div class="msg-list-title" data-i18n="msg_list_title">📬 みんなからの応援<span class="msg-count" id="msg-count"></span></div>
+      <div id="msg-cards" class="msg-cards"></div>
+      <div id="admin-area" class="admin-area">
+        <input type="password" id="admin-pw" class="admin-pw-input" placeholder="パスワード" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="admin-pw-btn" onclick="adminLogin()">ログイン</button>
+        <span id="admin-error" class="admin-pw-error"></span>
+      </div>
+      <button id="admin-toggle-btn" class="admin-toggle-btn" onclick="toggleAdminArea()">管理者</button>
+    </div>
+
+  </div>
+</div>
+
 <footer>
   <span data-i18n="footer_txt">半年間バックパッカー旅 2026–2027</span> &nbsp;|&nbsp;
   <a href="https://www.google.com/maps/d/u/0/edit?mid=1_nP1oru7eZV1_h_AWOfGXkmlc0QyNIY&usp=sharing" target="_blank" data-i18n="footer_map">Google マイマップ</a>
@@ -419,6 +555,17 @@ const T = {
   loc_prefix:  { ja:'現在地：',     en:'Location: ' },
   loc_updated: { ja:'更新：',       en:'Updated: ' },
   loc_popup:   { ja:'現在地',       en:'Current Location' },
+  support_btn: { ja:'☕ 旅を応援する', en:'☕ Support the Trip' },
+  tab_msg:     { ja:'メッセージ',   en:'Messages' },
+  sec_msg:     { ja:'応援メッセージ', en:'Messages of Support' },
+  msg_form_title: { ja:'✉ 応援メッセージを送る', en:'✉ Send a Message' },
+  msg_name:    { ja:'お名前',       en:'Name' },
+  msg_home:    { ja:'母国',         en:'Home Country' },
+  msg_met:     { ja:'知り合った国', en:'Country We Met' },
+  msg_how:     { ja:'出会い方',     en:'How We Met' },
+  msg_body:    { ja:'メッセージ',   en:'Message' },
+  msg_send:    { ja:'送信する',     en:'Send' },
+  msg_list_title: { ja:'📬 みんなからの応援', en:'📬 Messages from Friends' },
   time_sec:    { ja:'秒前',         en:'s ago' },
   time_min:    { ja:'分前',         en:'m ago' },
   time_hr:     { ja:'時間前',       en:'h ago' },
@@ -688,6 +835,243 @@ const packingData = [
    note:"手洗い洗濯用"},
 ];
 
+// ===== COUNTRIES =====
+const countries = [
+  // ア行
+  {flag:'🇮🇸',ja:'アイスランド',en:'Iceland'},
+  {flag:'🇮🇪',ja:'アイルランド',en:'Ireland'},
+  {flag:'🇦🇿',ja:'アゼルバイジャン',en:'Azerbaijan'},
+  {flag:'🇦🇫',ja:'アフガニスタン',en:'Afghanistan'},
+  {flag:'🇺🇸',ja:'アメリカ',en:'USA'},
+  {flag:'🇦🇪',ja:'アラブ首長国連邦',en:'UAE'},
+  {flag:'🇩🇿',ja:'アルジェリア',en:'Algeria'},
+  {flag:'🇦🇷',ja:'アルゼンチン',en:'Argentina'},
+  {flag:'🇦🇱',ja:'アルバニア',en:'Albania'},
+  {flag:'🇦🇲',ja:'アルメニア',en:'Armenia'},
+  {flag:'🇦🇴',ja:'アンゴラ',en:'Angola'},
+  {flag:'🇦🇩',ja:'アンドラ',en:'Andorra'},
+  {flag:'🇦🇬',ja:'アンティグア・バーブーダ',en:'Antigua & Barbuda'},
+  // イ行
+  {flag:'🇾🇪',ja:'イエメン',en:'Yemen'},
+  {flag:'🇬🇧',ja:'イギリス',en:'UK'},
+  {flag:'🇮🇱',ja:'イスラエル',en:'Israel'},
+  {flag:'🇮🇹',ja:'イタリア',en:'Italy'},
+  {flag:'🇮🇶',ja:'イラク',en:'Iraq'},
+  {flag:'🇮🇷',ja:'イラン',en:'Iran'},
+  {flag:'🇮🇳',ja:'インド',en:'India'},
+  {flag:'🇮🇩',ja:'インドネシア',en:'Indonesia'},
+  // ウ行
+  {flag:'🇺🇬',ja:'ウガンダ',en:'Uganda'},
+  {flag:'🇺🇦',ja:'ウクライナ',en:'Ukraine'},
+  {flag:'🇺🇿',ja:'ウズベキスタン',en:'Uzbekistan'},
+  {flag:'🇺🇾',ja:'ウルグアイ',en:'Uruguay'},
+  // エ行
+  {flag:'🇪🇨',ja:'エクアドル',en:'Ecuador'},
+  {flag:'🇪🇬',ja:'エジプト',en:'Egypt'},
+  {flag:'🇪🇪',ja:'エストニア',en:'Estonia'},
+  {flag:'🇸🇿',ja:'エスワティニ',en:'Eswatini'},
+  {flag:'🇪🇹',ja:'エチオピア',en:'Ethiopia'},
+  {flag:'🇪🇷',ja:'エリトリア',en:'Eritrea'},
+  // オ行
+  {flag:'🇦🇺',ja:'オーストラリア',en:'Australia'},
+  {flag:'🇦🇹',ja:'オーストリア',en:'Austria'},
+  {flag:'🇴🇲',ja:'オマーン',en:'Oman'},
+  {flag:'🇳🇱',ja:'オランダ',en:'Netherlands'},
+  // カ行
+  {flag:'🇨🇻',ja:'カーボベルデ',en:'Cape Verde'},
+  {flag:'🇬🇭',ja:'ガーナ',en:'Ghana'},
+  {flag:'🇰🇿',ja:'カザフスタン',en:'Kazakhstan'},
+  {flag:'🇶🇦',ja:'カタール',en:'Qatar'},
+  {flag:'🇨🇦',ja:'カナダ',en:'Canada'},
+  {flag:'🇨🇲',ja:'カメルーン',en:'Cameroon'},
+  {flag:'🇬🇦',ja:'ガボン',en:'Gabon'},
+  {flag:'🇰🇭',ja:'カンボジア',en:'Cambodia'},
+  {flag:'🇬🇲',ja:'ガンビア',en:'Gambia'},
+  // キ行
+  {flag:'🇨🇾',ja:'キプロス',en:'Cyprus'},
+  {flag:'🇨🇺',ja:'キューバ',en:'Cuba'},
+  {flag:'🇬🇳',ja:'ギニア',en:'Guinea'},
+  {flag:'🇬🇼',ja:'ギニアビサウ',en:'Guinea-Bissau'},
+  {flag:'🇰🇮',ja:'キリバス',en:'Kiribati'},
+  {flag:'🇰🇬',ja:'キルギス',en:'Kyrgyzstan'},
+  // ク行
+  {flag:'🇰🇼',ja:'クウェート',en:'Kuwait'},
+  {flag:'🇬🇩',ja:'グレナダ',en:'Grenada'},
+  {flag:'🇭🇷',ja:'クロアチア',en:'Croatia'},
+  // ケ行
+  {flag:'🇰🇪',ja:'ケニア',en:'Kenya'},
+  // コ行
+  {flag:'🇨🇮',ja:'コートジボワール',en:"Côte d'Ivoire"},
+  {flag:'🇽🇰',ja:'コソボ',en:'Kosovo'},
+  {flag:'🇨🇷',ja:'コスタリカ',en:'Costa Rica'},
+  {flag:'🇰🇲',ja:'コモロ',en:'Comoros'},
+  {flag:'🇨🇴',ja:'コロンビア',en:'Colombia'},
+  {flag:'🇨🇬',ja:'コンゴ共和国',en:'Congo'},
+  {flag:'🇨🇩',ja:'コンゴ民主共和国',en:'DR Congo'},
+  // サ行
+  {flag:'🇸🇦',ja:'サウジアラビア',en:'Saudi Arabia'},
+  {flag:'🇼🇸',ja:'サモア',en:'Samoa'},
+  {flag:'🇸🇹',ja:'サントメ・プリンシペ',en:'São Tomé & Príncipe'},
+  {flag:'🇿🇲',ja:'ザンビア',en:'Zambia'},
+  {flag:'🇸🇲',ja:'サンマリノ',en:'San Marino'},
+  // シ行
+  {flag:'🇸🇱',ja:'シエラレオネ',en:'Sierra Leone'},
+  {flag:'🇸🇾',ja:'シリア',en:'Syria'},
+  {flag:'🇸🇬',ja:'シンガポール',en:'Singapore'},
+  {flag:'🇩🇯',ja:'ジブチ',en:'Djibouti'},
+  {flag:'🇯🇲',ja:'ジャマイカ',en:'Jamaica'},
+  {flag:'🇬🇪',ja:'ジョージア',en:'Georgia'},
+  {flag:'🇿🇼',ja:'ジンバブエ',en:'Zimbabwe'},
+  // ス行
+  {flag:'🇨🇭',ja:'スイス',en:'Switzerland'},
+  {flag:'🇸🇪',ja:'スウェーデン',en:'Sweden'},
+  {flag:'🇸🇩',ja:'スーダン',en:'Sudan'},
+  {flag:'🇪🇸',ja:'スペイン',en:'Spain'},
+  {flag:'🇸🇷',ja:'スリナム',en:'Suriname'},
+  {flag:'🇱🇰',ja:'スリランカ',en:'Sri Lanka'},
+  {flag:'🇸🇰',ja:'スロバキア',en:'Slovakia'},
+  {flag:'🇸🇮',ja:'スロベニア',en:'Slovenia'},
+  // セ行
+  {flag:'🇬🇶',ja:'赤道ギニア',en:'Equatorial Guinea'},
+  {flag:'🇸🇳',ja:'セネガル',en:'Senegal'},
+  {flag:'🇷🇸',ja:'セルビア',en:'Serbia'},
+  {flag:'🇰🇳',ja:'セントキッツ・ネイビス',en:'Saint Kitts & Nevis'},
+  {flag:'🇻🇨',ja:'セントビンセント',en:'Saint Vincent'},
+  {flag:'🇱🇨',ja:'セントルシア',en:'Saint Lucia'},
+  // ソ行
+  {flag:'🇸🇴',ja:'ソマリア',en:'Somalia'},
+  {flag:'🇸🇧',ja:'ソロモン諸島',en:'Solomon Islands'},
+  // タ行
+  {flag:'🇹🇭',ja:'タイ',en:'Thailand'},
+  {flag:'🇹🇼',ja:'台湾',en:'Taiwan'},
+  {flag:'🇹🇯',ja:'タジキスタン',en:'Tajikistan'},
+  {flag:'🇹🇿',ja:'タンザニア',en:'Tanzania'},
+  // チ行
+  {flag:'🇨🇿',ja:'チェコ',en:'Czech Republic'},
+  {flag:'🇹🇩',ja:'チャド',en:'Chad'},
+  {flag:'🇨🇱',ja:'チリ',en:'Chile'},
+  {flag:'🇨🇫',ja:'中央アフリカ',en:'Central African Republic'},
+  {flag:'🇨🇳',ja:'中国',en:'China'},
+  // ツ行
+  {flag:'🇹🇻',ja:'ツバル',en:'Tuvalu'},
+  // テ行
+  {flag:'🇩🇰',ja:'デンマーク',en:'Denmark'},
+  {flag:'🇹🇱',ja:'東ティモール',en:'Timor-Leste'},
+  // ト行
+  {flag:'🇩🇪',ja:'ドイツ',en:'Germany'},
+  {flag:'🇩🇲',ja:'ドミニカ国',en:'Dominica'},
+  {flag:'🇩🇴',ja:'ドミニカ共和国',en:'Dominican Republic'},
+  {flag:'🇹🇬',ja:'トーゴ',en:'Togo'},
+  {flag:'🇹🇹',ja:'トリニダード・トバゴ',en:'Trinidad & Tobago'},
+  {flag:'🇹🇲',ja:'トルクメニスタン',en:'Turkmenistan'},
+  {flag:'🇹🇷',ja:'トルコ',en:'Turkey'},
+  {flag:'🇹🇴',ja:'トンガ',en:'Tonga'},
+  // ナ行
+  {flag:'🇳🇬',ja:'ナイジェリア',en:'Nigeria'},
+  {flag:'🇳🇷',ja:'ナウル',en:'Nauru'},
+  {flag:'🇳🇦',ja:'ナミビア',en:'Namibia'},
+  {flag:'🇸🇸',ja:'南スーダン',en:'South Sudan'},
+  // ニ行
+  {flag:'🇳🇮',ja:'ニカラグア',en:'Nicaragua'},
+  {flag:'🇳🇪',ja:'ニジェール',en:'Niger'},
+  {flag:'🇯🇵',ja:'日本',en:'Japan'},
+  {flag:'🇳🇿',ja:'ニュージーランド',en:'New Zealand'},
+  // ネ行
+  {flag:'🇳🇵',ja:'ネパール',en:'Nepal'},
+  // ノ行
+  {flag:'🇳🇴',ja:'ノルウェー',en:'Norway'},
+  // ハ行
+  {flag:'🇧🇭',ja:'バーレーン',en:'Bahrain'},
+  {flag:'🇭🇹',ja:'ハイチ',en:'Haiti'},
+  {flag:'🇵🇰',ja:'パキスタン',en:'Pakistan'},
+  {flag:'🇻🇦',ja:'バチカン',en:'Vatican'},
+  {flag:'🇵🇦',ja:'パナマ',en:'Panama'},
+  {flag:'🇻🇺',ja:'バヌアツ',en:'Vanuatu'},
+  {flag:'🇧🇸',ja:'バハマ',en:'Bahamas'},
+  {flag:'🇵🇬',ja:'パプアニューギニア',en:'Papua New Guinea'},
+  {flag:'🇵🇼',ja:'パラオ',en:'Palau'},
+  {flag:'🇵🇾',ja:'パラグアイ',en:'Paraguay'},
+  {flag:'🇵🇸',ja:'パレスチナ',en:'Palestine'},
+  {flag:'🇧🇧',ja:'バルバドス',en:'Barbados'},
+  {flag:'🇧🇩',ja:'バングラデシュ',en:'Bangladesh'},
+  {flag:'🇭🇺',ja:'ハンガリー',en:'Hungary'},
+  // フ行
+  {flag:'🇫🇯',ja:'フィジー',en:'Fiji'},
+  {flag:'🇵🇭',ja:'フィリピン',en:'Philippines'},
+  {flag:'🇫🇮',ja:'フィンランド',en:'Finland'},
+  {flag:'🇧🇹',ja:'ブータン',en:'Bhutan'},
+  {flag:'🇧🇷',ja:'ブラジル',en:'Brazil'},
+  {flag:'🇫🇷',ja:'フランス',en:'France'},
+  {flag:'🇧🇬',ja:'ブルガリア',en:'Bulgaria'},
+  {flag:'🇧🇫',ja:'ブルキナファソ',en:'Burkina Faso'},
+  {flag:'🇧🇳',ja:'ブルネイ',en:'Brunei'},
+  {flag:'🇧🇮',ja:'ブルンジ',en:'Burundi'},
+  // ベ行
+  {flag:'🇧🇯',ja:'ベナン',en:'Benin'},
+  {flag:'🇻🇪',ja:'ベネズエラ',en:'Venezuela'},
+  {flag:'🇧🇾',ja:'ベラルーシ',en:'Belarus'},
+  {flag:'🇧🇿',ja:'ベリーズ',en:'Belize'},
+  {flag:'🇧🇪',ja:'ベルギー',en:'Belgium'},
+  {flag:'🇵🇪',ja:'ペルー',en:'Peru'},
+  {flag:'🇻🇳',ja:'ベトナム',en:'Vietnam'},
+  // ホ行
+  {flag:'🇧🇦',ja:'ボスニア・ヘルツェゴビナ',en:'Bosnia & Herzegovina'},
+  {flag:'🇧🇼',ja:'ボツワナ',en:'Botswana'},
+  {flag:'🇧🇴',ja:'ボリビア',en:'Bolivia'},
+  {flag:'🇵🇹',ja:'ポルトガル',en:'Portugal'},
+  {flag:'🇵🇱',ja:'ポーランド',en:'Poland'},
+  {flag:'🇭🇳',ja:'ホンジュラス',en:'Honduras'},
+  // マ行
+  {flag:'🇲🇭',ja:'マーシャル諸島',en:'Marshall Islands'},
+  {flag:'🇲🇬',ja:'マダガスカル',en:'Madagascar'},
+  {flag:'🇲🇼',ja:'マラウイ',en:'Malawi'},
+  {flag:'🇲🇱',ja:'マリ',en:'Mali'},
+  {flag:'🇲🇹',ja:'マルタ',en:'Malta'},
+  {flag:'🇲🇾',ja:'マレーシア',en:'Malaysia'},
+  // ミ行
+  {flag:'🇫🇲',ja:'ミクロネシア',en:'Micronesia'},
+  {flag:'🇿🇦',ja:'南アフリカ',en:'South Africa'},
+  {flag:'🇲🇲',ja:'ミャンマー',en:'Myanmar'},
+  // ム行
+  {flag:'🇲🇺',ja:'モーリシャス',en:'Mauritius'},
+  {flag:'🇲🇷',ja:'モーリタニア',en:'Mauritania'},
+  {flag:'🇲🇿',ja:'モザンビーク',en:'Mozambique'},
+  {flag:'🇲🇨',ja:'モナコ',en:'Monaco'},
+  {flag:'🇲🇩',ja:'モルドバ',en:'Moldova'},
+  {flag:'🇲🇻',ja:'モルディブ',en:'Maldives'},
+  {flag:'🇲🇦',ja:'モロッコ',en:'Morocco'},
+  {flag:'🇲🇳',ja:'モンゴル',en:'Mongolia'},
+  {flag:'🇲🇪',ja:'モンテネグロ',en:'Montenegro'},
+  {flag:'🇲🇽',ja:'メキシコ',en:'Mexico'},
+  // ヤ行
+  {flag:'🇯🇴',ja:'ヨルダン',en:'Jordan'},
+  // ラ行
+  {flag:'🇱🇦',ja:'ラオス',en:'Laos'},
+  {flag:'🇱🇻',ja:'ラトビア',en:'Latvia'},
+  // リ行
+  {flag:'🇱🇹',ja:'リトアニア',en:'Lithuania'},
+  {flag:'🇱🇾',ja:'リビア',en:'Libya'},
+  {flag:'🇱🇮',ja:'リヒテンシュタイン',en:'Liechtenstein'},
+  {flag:'🇱🇷',ja:'リベリア',en:'Liberia'},
+  // ル行
+  {flag:'🇷🇴',ja:'ルーマニア',en:'Romania'},
+  {flag:'🇱🇺',ja:'ルクセンブルク',en:'Luxembourg'},
+  {flag:'🇷🇼',ja:'ルワンダ',en:'Rwanda'},
+  // レ行
+  {flag:'🇱🇧',ja:'レバノン',en:'Lebanon'},
+  {flag:'🇱🇸',ja:'レソト',en:'Lesotho'},
+  // ロ行
+  {flag:'🇷🇺',ja:'ロシア',en:'Russia'},
+  // その他（50音外）
+  {flag:'🇬🇾',ja:'ガイアナ',en:'Guyana'},
+  {flag:'🇬🇹',ja:'グアテマラ',en:'Guatemala'},
+  {flag:'🇬🇷',ja:'ギリシャ',en:'Greece'},
+  {flag:'🇰🇷',ja:'韓国',en:'South Korea'},
+  {flag:'🇰🇵',ja:'北朝鮮',en:'North Korea'},
+  {flag:'🇲🇰',ja:'北マケドニア',en:'North Macedonia'},
+  {flag:'🌏',ja:'その他',en:'Other'},
+];
+
 // ===== TAB SWITCHING =====
 function switchTab(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -715,6 +1099,7 @@ function applyLang() {
   renderTours();
   renderHighlights();
   renderPacking(currentFilter);
+  renderMessages();
 }
 
 // ===== MAP =====
@@ -971,12 +1356,191 @@ function filterPacking(cat) {
   renderPacking(cat);
 }
 
+// ===== MESSAGES =====
+let allMessages = [];
+let isAdmin = false;
+const ADMIN_PW = 'trip2026';
+
+function toggleAdminArea() {
+  if (isAdmin) {
+    isAdmin = false;
+    const btn = document.getElementById('admin-toggle-btn');
+    if (btn) { btn.textContent = '管理者'; btn.classList.remove('active'); }
+    renderMsgList();
+    return;
+  }
+  const area = document.getElementById('admin-area');
+  if (area) area.style.display = area.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function adminLogin() {
+  const pw = document.getElementById('admin-pw').value;
+  const errEl = document.getElementById('admin-error');
+  if (pw === ADMIN_PW) {
+    isAdmin = true;
+    document.getElementById('admin-area').style.display = 'none';
+    document.getElementById('admin-pw').value = '';
+    const btn = document.getElementById('admin-toggle-btn');
+    if (btn) { btn.textContent = '管理者 [ON]'; btn.classList.add('active'); }
+    if (errEl) errEl.textContent = '';
+    renderMsgList();
+  } else {
+    if (errEl) errEl.textContent = 'パスワードが違います';
+  }
+}
+
+async function deleteMessage(key) {
+  if (!confirm('このメッセージを削除しますか？')) return;
+  try {
+    await db.ref('messages').child(key).remove();
+  } catch (e) {
+    alert('削除に失敗しました: ' + e.message);
+  }
+}
+
+const howOptions = [
+  { key:'hostel', ja:'ゲストハウス・ホステル', en:'Hostel / Guesthouse' },
+  { key:'tour',   ja:'ツアー',                 en:'Tour' },
+  { key:'sns',    ja:'SNS',                    en:'Social Media' },
+  { key:'friend', ja:'共通の友人',             en:'Mutual Friend' },
+  { key:'other',  ja:'その他',                 en:'Other' },
+];
+
+function buildCountryOptions(selectEl) {
+  const prev = selectEl.value;
+  const placeholder = lang === 'en' ? '-- Select --' : '-- 選択してください --';
+  selectEl.innerHTML = `<option value="">${placeholder}</option>`;
+  countries.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.ja;
+    opt.textContent = `${c.flag} ${lang === 'en' ? c.en : c.ja}`;
+    selectEl.appendChild(opt);
+  });
+  selectEl.value = prev;
+}
+
+function buildHowOptions(selectEl) {
+  const prev = selectEl.value;
+  const placeholder = lang === 'en' ? '-- Select --' : '-- 選択してください --';
+  selectEl.innerHTML = `<option value="">${placeholder}</option>`;
+  howOptions.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o.key;
+    opt.textContent = lang === 'en' ? o.en : o.ja;
+    selectEl.appendChild(opt);
+  });
+  selectEl.value = prev;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderMsgList() {
+  const container = document.getElementById('msg-cards');
+  const countEl = document.getElementById('msg-count');
+  if (!container) return;
+  if (!allMessages.length) {
+    container.innerHTML = `<div class="msg-empty">${lang === 'en' ? 'No messages yet. Be the first to send one!' : 'まだメッセージはありません。最初のメッセージを送ってみましょう！'}</div>`;
+    if (countEl) countEl.textContent = '';
+    return;
+  }
+  if (countEl) countEl.textContent = ` (${allMessages.length})`;
+  container.innerHTML = '';
+  allMessages.forEach(msg => {
+    const homeC = countries.find(c => c.ja === msg.homeCountry);
+    const metC  = countries.find(c => c.ja === msg.metCountry);
+    const homeFlag = homeC?.flag || '';
+    const metFlag  = metC?.flag  || '';
+    const homeLabel = lang === 'en' ? (homeC?.en || msg.homeCountry) : msg.homeCountry;
+    const metLabel  = lang === 'en' ? (metC?.en  || msg.metCountry)  : msg.metCountry;
+    const howLabel  = (howOptions.find(o => o.key === msg.how))?.[lang] || msg.how;
+    const date = new Date(msg.createdAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'ja-JP', { year:'numeric', month:'long', day:'numeric' });
+    const metPrefix = lang === 'en' ? 'Met in' : '知り合った国';
+    const howPrefix = lang === 'en' ? 'via'    : '出会い方';
+    const card = document.createElement('div');
+    card.className = 'msg-card';
+    card.innerHTML = `
+      <div class="msg-card-header">
+        <span class="msg-card-name">${escapeHtml(msg.name)}</span>
+        <span>${homeFlag}</span>
+        <span style="font-size:0.78rem;color:var(--sage)">${escapeHtml(homeLabel)}</span>
+      </div>
+      <div class="msg-card-meta">${metPrefix}: ${metFlag} ${escapeHtml(metLabel)} &nbsp;·&nbsp; ${howPrefix}: ${escapeHtml(howLabel)}</div>
+      <div class="msg-card-body">${escapeHtml(msg.body).replace(/\n/g,'<br>')}</div>
+      <div class="msg-card-date">${date}</div>`;
+    if (isAdmin && msg._key) {
+      const delBtn = document.createElement('button');
+      delBtn.className = 'msg-delete-btn';
+      delBtn.textContent = '×';
+      delBtn.onclick = () => deleteMessage(msg._key);
+      card.appendChild(delBtn);
+    }
+    container.appendChild(card);
+  });
+}
+
+function renderMessages() {
+  const homeEl = document.getElementById('msg-home');
+  const metEl  = document.getElementById('msg-met');
+  const howEl  = document.getElementById('msg-how');
+  if (homeEl) buildCountryOptions(homeEl);
+  if (metEl)  buildCountryOptions(metEl);
+  if (howEl)  buildHowOptions(howEl);
+  renderMsgList();
+}
+
+async function submitMessage() {
+  const nameEl = document.getElementById('msg-name');
+  const homeEl = document.getElementById('msg-home');
+  const metEl  = document.getElementById('msg-met');
+  const howEl  = document.getElementById('msg-how');
+  const bodyEl = document.getElementById('msg-body');
+  const status = document.getElementById('msg-status');
+  const btn    = document.getElementById('msg-submit');
+  const name = nameEl.value.trim();
+  const home = homeEl.value;
+  const met  = metEl.value;
+  const how  = howEl.value;
+  const body = bodyEl.value.trim();
+  if (!name || !home || !met || !how || !body) {
+    status.className = 'msg-status error';
+    status.textContent = lang === 'en' ? 'Please fill in all required fields.' : '必須項目をすべて入力してください。';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = lang === 'en' ? 'Sending...' : '送信中...';
+  status.className = 'msg-status';
+  status.textContent = '';
+  try {
+    await db.ref('messages').push({ name, homeCountry: home, metCountry: met, how, body, createdAt: Date.now() });
+    nameEl.value = ''; homeEl.value = ''; metEl.value = ''; howEl.value = ''; bodyEl.value = '';
+    status.className = 'msg-status success';
+    status.textContent = lang === 'en' ? 'Sent! Thank you! 🎉' : '送信しました！ありがとう！🎉';
+  } catch (e) {
+    status.className = 'msg-status error';
+    status.textContent = lang === 'en' ? 'Something went wrong. Please try again.' : 'エラーが発生しました。再度お試しください。';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = t('msg_send');
+  }
+}
+
+db.ref('messages').orderByChild('createdAt').on('value', snapshot => {
+  allMessages = [];
+  snapshot.forEach(child => { allMessages.unshift({ ...child.val(), _key: child.key }); });
+  renderMsgList();
+});
+
 // ===== INIT =====
 renderItinerary();
 renderBudget();
 renderTours();
 renderHighlights();
 renderPacking('all');
+renderMessages();
 </script>
 </body>
 </html>
