@@ -707,25 +707,25 @@ const i18n = {
 
 // ===== DATA =====
 const stops = [
-  {num:1,  name:"東京（出国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"成田発 Thai VietJet VZ831",                         area:"日本",       country:"日本",       flag:"🇯🇵", transport:null},
-  {num:2,  name:"バンコク",                          lat:13.7563,  lon:100.5018, days:"11", note:"ワクチン一括接種・バンコク観光",                      area:"アジア",     country:"タイ",       flag:"🇹🇭", transport:"✈️ Thai VietJet"},
-  {num:3,  name:"ムンバイ",                          lat:19.0760,  lon:72.8777,  days:"5",  note:"ゲートウェイオブインディア・エレファンタ島",           area:"アジア",     country:"インド",     flag:"🇮🇳", transport:"✈️ Thai VietJet"},
-  {num:4,  name:"ナイロビ・マサイマラ",              lat:-1.2921,  lon:36.8219,  days:"14", note:"マサイマラサファリ（グレートマイグレーション）",       area:"東アフリカ", country:"ケニア",     flag:"🇰🇪", transport:"✈️ Kenya Airways"},
-  {num:5,  name:"カンパラ・ブウィンディ",            lat:0.3476,   lon:32.5825,  days:"8",  note:"ゴリラトレッキング・チンパンジートレッキング",         area:"東アフリカ", country:"ウガンダ",   flag:"🇺🇬", transport:"🚌 陸路バス"},
-  {num:6,  name:"キガリ",                            lat:-1.9441,  lon:30.0619,  days:"4",  note:"虐殺記念館・現代アフリカの街並み",                    area:"東アフリカ", country:"ルワンダ",   flag:"🇷🇼", transport:"🚌 陸路バス"},
-  {num:7,  name:"ダルエスサラーム・ザンジバル・キリマンジャロ", lat:-6.7924, lon:39.2083, days:"24", note:"ザンジバル島（10日）・キリマンジャロ登山（8日マチャメルート）", area:"東アフリカ", country:"タンザニア", flag:"🇹🇿", transport:"🚌 陸路バス"},
-  {num:8,  name:"ビクトリアフォールズ",              lat:-17.9243, lon:25.8572,  days:"4",  note:"世界三大瀑布・バンジージャンプ・ラフティング",        area:"南部アフリカ",country:"ジンバブエ", flag:"🇿🇼", transport:"🚂 TAZARA鉄道"},
-  {num:9,  name:"ウィントフック・ナミブ砂漠",        lat:-22.5597, lon:17.0832,  days:"10", note:"ナミブ砂漠・デッドフレイ・ソーサスフレイ",            area:"南部アフリカ",country:"ナミビア",   flag:"🇳🇦", transport:"🚌 陸路バス"},
-  {num:10, name:"ケープタウン",                      lat:-33.9249, lon:18.4241,  days:"14", note:"テーブルマウンテン・喜望峰・ワインランド",            area:"南部アフリカ",country:"南アフリカ", flag:"🇿🇦", transport:"🚌 陸路バス"},
-  {num:11, name:"サンパウロ・リオ・イグアス",        lat:-23.5505, lon:-46.6333, days:"14", note:"コルコバード・コパカバーナ・イグアスの滝（ブラジル側）",area:"南米",      country:"ブラジル",   flag:"🇧🇷", transport:"✈️ ケープタウン→サンパウロ"},
-  {num:12, name:"ブエノスアイレス・イグアス",        lat:-34.6037, lon:-58.3816, days:"10", note:"イグアスの滝（アルゼンチン側）・タンゴショー",        area:"南米",       country:"アルゼンチン",flag:"🇦🇷", transport:"🚌 陸路バス"},
-  {num:13, name:"サンティアゴ・アタカマ",            lat:-33.4489, lon:-70.6693, days:"8",  note:"アタカマ砂漠・月の谷・タティオ間欠泉・星空観測",      area:"南米",       country:"チリ",       flag:"🇨🇱", transport:"🚌 陸路バス"},
-  {num:14, name:"ウユニ・ラパス",                    lat:-19.5832, lon:-65.7533, days:"8",  note:"ウユニ塩湖・星空ツアー・死の道路・ティワナク遺跡",    area:"南米",       country:"ボリビア",   flag:"🇧🇴", transport:"🚌 陸路バス（国境越え）"},
-  {num:15, name:"クスコ・マチュピチュ・リマ",        lat:-13.5319, lon:-71.9675, days:"14", note:"マチュピチュ・クスコ旧市街・レインボーマウンテン",     area:"南米",       country:"ペルー",     flag:"🇵🇪", transport:"🚌 陸路バス"},
-  {num:16, name:"カルタヘナ・メデジン・ボゴタ",      lat:4.7110,   lon:-74.0721, days:"12", note:"カルタヘナ旧市街・メデジン・コーヒー農園",            area:"南米",       country:"コロンビア", flag:"🇨🇴", transport:"✈️ リマ→ボゴタ"},
-  {num:17, name:"アンティグア・アティトラン",        lat:14.5586,  lon:-90.7295, days:"10", note:"アンティグア旧市街・アティトラン湖・マヤ遺跡・火山",  area:"中米",       country:"グアテマラ", flag:"🇬🇹", transport:"✈️ ボゴタ→グアテマラシティ"},
-  {num:18, name:"メキシコシティ・オアハカ・カンクン",lat:19.4326,  lon:-99.1332, days:"14", note:"テオティワカン・チチェンイッツァ・オアハカ・年越し",  area:"中米",       country:"メキシコ",   flag:"🇲🇽", transport:"🚌 陸路バス"},
-  {num:19, name:"東京（帰国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"メキシコシティ→成田 帰国",                           area:"日本",       country:"日本",       flag:"🇯🇵", transport:"✈️ メキシコシティ→成田"},
+  {num:1,  name:"東京（出国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"成田発 Thai VietJet VZ831",                                    area:"日本",       country:"日本",       flag:"🇯🇵", transport:null,                          from:"7/6",   to:null},
+  {num:2,  name:"バンコク",                          lat:13.7563,  lon:100.5018, days:"11", note:"ワクチン一括接種・バンコク観光・スネークファーム（7/7予定）",    area:"アジア",     country:"タイ",       flag:"🇹🇭", transport:"✈️ Thai VietJet",             from:"7/6",   to:"7/17"},
+  {num:3,  name:"ムンバイ",                          lat:19.0760,  lon:72.8777,  days:"5",  note:"ゲートウェイオブインディア・エレファンタ島",                    area:"アジア",     country:"インド",     flag:"🇮🇳", transport:"✈️ Thai VietJet",             from:"7/17",  to:"7/22"},
+  {num:4,  name:"ナイロビ・マサイマラ",              lat:-1.2921,  lon:36.8219,  days:"14", note:"マサイマラサファリ（グレートマイグレーション）",                area:"東アフリカ", country:"ケニア",     flag:"🇰🇪", transport:"✈️ Kenya Airways",            from:"7/22",  to:"8/5"},
+  {num:5,  name:"カンパラ・ブウィンディ",            lat:0.3476,   lon:32.5825,  days:"8",  note:"ゴリラトレッキング・チンパンジートレッキング",                  area:"東アフリカ", country:"ウガンダ",   flag:"🇺🇬", transport:"🚌 陸路バス",                 from:"8/5",   to:"8/13"},
+  {num:6,  name:"キガリ",                            lat:-1.9441,  lon:30.0619,  days:"4",  note:"虐殺記念館・現代アフリカの街並み",                              area:"東アフリカ", country:"ルワンダ",   flag:"🇷🇼", transport:"🚌 陸路バス",                 from:"8/13",  to:"8/17"},
+  {num:7,  name:"ダルエスサラーム・ザンジバル・キリマンジャロ", lat:-6.7924, lon:39.2083, days:"24", note:"ザンジバル島（10日）・キリマンジャロ登山（8日マチャメルート）", area:"東アフリカ", country:"タンザニア", flag:"🇹🇿", transport:"🚌 陸路バス",  from:"8/17",  to:"9/10"},
+  {num:8,  name:"ビクトリアフォールズ",              lat:-17.9243, lon:25.8572,  days:"4",  note:"世界三大瀑布・バンジージャンプ・ラフティング（ヨハネスブルク経由）", area:"南部アフリカ",country:"ジンバブエ", flag:"🇿🇼", transport:"🚂 TAZARA鉄道",          from:"9/10",  to:"9/14"},
+  {num:9,  name:"ウィントフック・ナミブ砂漠",        lat:-22.5597, lon:17.0832,  days:"10", note:"ナミブ砂漠・デッドフレイ・ソーサスフレイ",                      area:"南部アフリカ",country:"ナミビア",   flag:"🇳🇦", transport:"🚌 陸路バス",                 from:"9/14",  to:"9/24"},
+  {num:10, name:"ケープタウン",                      lat:-33.9249, lon:18.4241,  days:"14", note:"テーブルマウンテン・喜望峰・ワインランド",                      area:"南部アフリカ",country:"南アフリカ", flag:"🇿🇦", transport:"🚌 陸路バス",                 from:"9/24",  to:"10/8"},
+  {num:11, name:"サンパウロ・リオ・イグアス",        lat:-23.5505, lon:-46.6333, days:"14", note:"コルコバード・コパカバーナ・イグアスの滝（ブラジル側）",        area:"南米",       country:"ブラジル",   flag:"🇧🇷", transport:"✈️ ケープタウン→サンパウロ", from:"10/8",  to:"10/22"},
+  {num:12, name:"ブエノスアイレス・イグアス",        lat:-34.6037, lon:-58.3816, days:"10", note:"イグアスの滝（アルゼンチン側）・タンゴショー",                  area:"南米",       country:"アルゼンチン",flag:"🇦🇷", transport:"🚌 陸路バス",                 from:"10/22", to:"11/1"},
+  {num:13, name:"サンティアゴ・アタカマ",            lat:-33.4489, lon:-70.6693, days:"8",  note:"アタカマ砂漠・月の谷・タティオ間欠泉・星空観測",                area:"南米",       country:"チリ",       flag:"🇨🇱", transport:"🚌 陸路バス",                 from:"11/1",  to:"11/9"},
+  {num:14, name:"ウユニ・ラパス",                    lat:-19.5832, lon:-65.7533, days:"8",  note:"ウユニ塩湖・星空ツアー・死の道路・ティワナク遺跡",              area:"南米",       country:"ボリビア",   flag:"🇧🇴", transport:"🚌 陸路バス（国境越え）",     from:"11/9",  to:"11/17"},
+  {num:15, name:"クスコ・マチュピチュ・リマ",        lat:-13.5319, lon:-71.9675, days:"14", note:"マチュピチュ・クスコ旧市街・レインボーマウンテン・ペルーレール", area:"南米",       country:"ペルー",     flag:"🇵🇪", transport:"🚌 陸路バス",                 from:"11/17", to:"12/1"},
+  {num:16, name:"カルタヘナ・メデジン・ボゴタ",      lat:4.7110,   lon:-74.0721, days:"12", note:"カルタヘナ旧市街・メデジン・コーヒー農園",                      area:"南米",       country:"コロンビア", flag:"🇨🇴", transport:"✈️ リマ→ボゴタ",              from:"12/1",  to:"12/13"},
+  {num:17, name:"アンティグア・アティトラン",        lat:14.5586,  lon:-90.7295, days:"10", note:"アンティグア旧市街・アティトラン湖・マヤ遺跡・ティカル・火山",  area:"中米",       country:"グアテマラ", flag:"🇬🇹", transport:"✈️ ボゴタ→グアテマラシティ", from:"12/13", to:"12/23"},
+  {num:18, name:"メキシコシティ・オアハカ・カンクン",lat:19.4326,  lon:-99.1332, days:"14", note:"テオティワカン・チチェンイッツァ・オアハカ・年越し",            area:"中米",       country:"メキシコ",   flag:"🇲🇽", transport:"🚌 陸路バス",                 from:"12/23", to:"1/6"},
+  {num:19, name:"東京（帰国）",                      lat:35.6762,  lon:139.6503, days:"-",  note:"メキシコシティ→成田 帰国",                                      area:"日本",       country:"日本",       flag:"🇯🇵", transport:"✈️ メキシコシティ→成田",      from:"1/6",   to:null},
 ];
 
 const airPairs = new Set(["1-2","2-3","3-4","10-11","15-16","16-17","18-19"]);
@@ -859,11 +859,12 @@ function timeAgo(ts) {
 function buildPopup(s) {
   const color = areaColors[s.area];
   const transport = s.transport ? `<div style="color:#888;font-size:12px;margin-bottom:4px">${s.transport}</div>` : '';
+  const dateLine = s.from ? `<div style="font-size:11px;color:#888;margin-bottom:6px">📅 ${s.from}${s.to ? '〜'+s.to : ''}</div>` : '';
   const days = s.days !== '-' ? `<div style="margin-top:6px;font-size:12px;background:#f0f0f0;display:inline-block;padding:2px 8px;border-radius:999px"><b>${s.days}泊</b></div>` : '';
   return `<div style="min-width:200px;font-family:sans-serif">${transport}
     <div style="font-weight:800;font-size:14px;margin-bottom:4px">${s.flag} ${s.name}</div>
-    <div style="color:${color};font-size:12px;font-weight:700;margin-bottom:6px">${s.area}</div>
-    <div style="font-size:12px;color:#555;line-height:1.6">${s.note}</div>${days}</div>`;
+    <div style="color:${color};font-size:12px;font-weight:700;margin-bottom:4px">${s.area}</div>
+    ${dateLine}<div style="font-size:12px;color:#555;line-height:1.6">${s.note}</div>${days}</div>`;
 }
 
 function updateLiveBanner(d) {
@@ -915,7 +916,7 @@ function renderItinerary() {
       <td style="font-weight:700;text-align:center">${s.num}</td>
       <td>${badge}</td>
       <td>${s.flag} ${s.country}</td>
-      <td style="font-weight:600">${s.name}</td>
+      <td style="font-weight:600">${s.name}${s.from ? `<div style="font-size:0.72rem;color:#999;font-weight:400;margin-top:2px">${s.from}${s.to ? '〜'+s.to : ''}</div>` : ''}</td>
       <td style="text-align:center;font-size:0.8rem">${i===0||i===stops.length-1?'—':(airPairs.has(`${stops[i-1]?.num}-${s.num}`)? '✈️':'🚌')}</td>
       <td class="days-num">${nightsTxt}</td>
       <td class="highlight-text">${s.note}</td>`;
@@ -1175,12 +1176,14 @@ function renderHighlights() {
   stops.filter(s => s.days !== '-' && parseInt(s.days) >= 4).forEach(s => {
     const card = document.createElement('div');
     card.className = 'highlight-card';
+    const dateStr = s.from ? `${s.from}${s.to ? '〜'+s.to : ''}` : '';
     card.innerHTML = `
       <div class="highlight-card-top" style="background:${areaColors[s.area]}"></div>
       <div class="highlight-card-body">
         <div class="num">${s.num}</div>
         <h3>${s.flag} ${s.name}</h3>
         <div class="country" style="color:${areaColors[s.area]}">${s.area} · ${s.country}</div>
+        ${dateStr ? `<div style="font-size:0.78rem;color:#999;margin-bottom:6px">📅 ${dateStr}</div>` : ''}
         <p>${s.note}</p>
         <span class="days-tag">${s.days}泊</span>
       </div>`;
