@@ -1,2 +1,9 @@
 .env
 *.csv
+PW.txt
+*.PDF
+*.pdf
+desktop.ini
+trip-2026-spec.md
+trip-files/
+trip-scripts/
