@@ -1211,11 +1211,11 @@ function timeAgo(ts) {
 }
 
 db.ref('location').on('value', snapshot => {
-  const d = snapshot.val();
   const banner = document.getElementById('location-banner');
   const textEl = document.getElementById('location-text');
   banner.classList.add('visible');
-  if (!d) return;
+  const d = snapshot.val();
+  if (!d || Date.now() < new Date('2026-07-06').getTime()) return;
   const ago = timeAgo(d.updatedAt);
   const msg = d.message ? `「${d.message}」` : '';
   textEl.textContent = lang === 'en'
