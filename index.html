@@ -529,7 +529,7 @@ const T = {
   tab_budget:  { ja:'予算',         en:'Budget' },
   tab_hl:      { ja:'ハイライト',   en:'Highlights' },
   tab_pack:    { ja:'持ち物',       en:'Packing' },
-  loc_loading: { ja:'現在地を取得中...',  en:'Loading location...' },
+  loc_loading: { ja:'出発準備中 — 2026年7月6日スタート', en:'Preparing for departure — Starting July 6, 2026' },
   area_jp:     { ja:'日本',         en:'Japan' },
   area_as:     { ja:'アジア',       en:'Asia' },
   area_ea:     { ja:'東アフリカ',   en:'East Africa' },
@@ -1211,11 +1211,11 @@ function timeAgo(ts) {
 }
 
 db.ref('location').on('value', snapshot => {
-  return; // GPS表示OFF（再開時はこの行を削除）
   const d = snapshot.val();
-  if (!d) return;
   const banner = document.getElementById('location-banner');
   const textEl = document.getElementById('location-text');
+  banner.classList.add('visible');
+  if (!d) return;
   const ago = timeAgo(d.updatedAt);
   const msg = d.message ? `「${d.message}」` : '';
   textEl.textContent = lang === 'en'
