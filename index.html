@@ -1211,6 +1211,7 @@ function timeAgo(ts) {
 }
 
 db.ref('location').on('value', snapshot => {
+  return; // GPS表示OFF（再開時はこの行を削除）
   const d = snapshot.val();
   if (!d) return;
   const banner = document.getElementById('location-banner');
