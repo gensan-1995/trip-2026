@@ -188,6 +188,24 @@
       border: 1px solid var(--line); padding: 2px 8px;
       font-family: var(--mono); font-size: 0.72rem; color: var(--sage);
     }
+    .photo-toggle { width: 100%; padding: 8px 20px; background: none; border: none; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 0.72rem; color: var(--sage); cursor: pointer; text-align: left; letter-spacing: 0.05em; }
+    .photo-toggle:hover { background: rgba(28,28,28,0.03); }
+    .photo-gallery { display: none; padding: 14px 20px 18px; border-top: 1px solid var(--line); }
+    .photo-gallery.open { display: block; }
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 4px; }
+    .photo-item { position: relative; }
+    .photo-thumb { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; display: block; transition: opacity 0.15s; }
+    .photo-thumb:hover { opacity: 0.8; }
+    .photo-delete { display: none; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: var(--accent); border: none; color: #fff; font-size: 0.65rem; cursor: pointer; line-height: 1; padding: 0; }
+    .photo-item:hover .photo-delete { display: block; }
+    .photo-upload-btn { margin-top: 10px; display: block; width: 100%; padding: 8px; border: 1px dashed var(--line); background: none; font-family: var(--mono); font-size: 0.72rem; color: var(--sage); cursor: pointer; letter-spacing: 0.04em; transition: border-color 0.15s; }
+    .photo-upload-btn:hover { border-color: var(--sage); }
+    .photo-uploading { font-family: var(--mono); font-size: 0.7rem; color: var(--sage); margin-top: 8px; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(28,28,28,0.92); z-index: 9999; align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 92vw; max-height: 92vh; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: #fff; font-size: 1.6rem; cursor: pointer; opacity: 0.7; line-height: 1; }
+    .lightbox-close:hover { opacity: 1; }
 
     /* ===== FOOTER ===== */
     footer {
@@ -493,6 +511,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ===== LANGUAGE =====
@@ -1099,6 +1118,15 @@ function applyLang() {
   renderTours();
   renderHighlights();
   renderPacking(currentFilter);
+  document.querySelectorAll('.photo-toggle').forEach(btn => {
+    const num = btn.dataset.stop;
+    const count = photoData[num] ? Object.keys(photoData[num]).length : 0;
+    const isOpen = document.querySelector(`.photo-gallery[data-stop="${num}"]`)?.classList.contains('open');
+    btn.innerHTML = `${lang === 'en' ? 'Photos' : '写真'}<span class="photo-count">${count > 0 ? ` (${count})` : ''}</span> ${isOpen ? '▴' : '▾'}`;
+  });
+  document.querySelectorAll('.photo-gallery.open').forEach(el => {
+    renderPhotoGrid(el.dataset.stop, el.querySelector('.photo-grid'));
+  });
   renderMessages();
 }
 
@@ -1166,6 +1194,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const storage = firebase.storage();
 let liveMarker = null;
 
 function timeAgo(ts) {
@@ -1281,6 +1310,7 @@ function renderHighlights() {
     const countryLabel = lang === 'en' ? s.countryEn : s.country;
     const noteLabel = lang === 'en' ? s.noteEn : s.note;
     const nightsLabel = s.days + t('nights_unit');
+    const count = photoData[s.num] ? Object.keys(photoData[s.num]).length : 0;
     const card = document.createElement('div');
     card.className = 'highlight-card';
     card.innerHTML = `
@@ -1292,8 +1322,126 @@ function renderHighlights() {
         <p>${noteLabel}</p>
         <span class="days-tag">${nightsLabel}</span>
       </div>`;
+    const toggle = document.createElement('button');
+    toggle.className = 'photo-toggle';
+    toggle.dataset.stop = s.num;
+    toggle.innerHTML = `${lang === 'en' ? 'Photos' : '写真'}<span class="photo-count">${count > 0 ? ` (${count})` : ''}</span> ▾`;
+    toggle.onclick = () => togglePhotoGallery(s.num);
+    const gallery = document.createElement('div');
+    gallery.className = 'photo-gallery';
+    gallery.dataset.stop = s.num;
+    gallery.innerHTML = '<div class="photo-grid"></div>';
+    card.appendChild(toggle);
+    card.appendChild(gallery);
     grid.appendChild(card);
   });
+}
+
+// ===== PHOTO GALLERY =====
+const photoData = {};
+
+db.ref('photos').on('value', snapshot => {
+  Object.keys(photoData).forEach(k => delete photoData[k]);
+  snapshot.forEach(stopSnap => {
+    photoData[stopSnap.key] = {};
+    stopSnap.forEach(p => { photoData[stopSnap.key][p.key] = p.val(); });
+  });
+  document.querySelectorAll('.photo-gallery.open').forEach(el => {
+    renderPhotoGrid(el.dataset.stop, el.querySelector('.photo-grid'));
+  });
+  document.querySelectorAll('.photo-toggle').forEach(btn => {
+    const num = btn.dataset.stop;
+    const count = photoData[num] ? Object.keys(photoData[num]).length : 0;
+    btn.querySelector('.photo-count').textContent = count > 0 ? ` (${count})` : '';
+  });
+});
+
+function togglePhotoGallery(num) {
+  const gallery = document.querySelector(`.photo-gallery[data-stop="${num}"]`);
+  const btn = document.querySelector(`.photo-toggle[data-stop="${num}"]`);
+  const isOpen = gallery.classList.toggle('open');
+  const count = photoData[num] ? Object.keys(photoData[num]).length : 0;
+  btn.innerHTML = `${lang === 'en' ? 'Photos' : '写真'}<span class="photo-count">${count > 0 ? ` (${count})` : ''}</span> ${isOpen ? '▴' : '▾'}`;
+  if (isOpen) renderPhotoGrid(num, gallery.querySelector('.photo-grid'));
+}
+
+function renderPhotoGrid(num, grid) {
+  grid.innerHTML = '';
+  const photos = photoData[num] || {};
+  Object.entries(photos).forEach(([key, p]) => {
+    const item = document.createElement('div');
+    item.className = 'photo-item';
+    const img = document.createElement('img');
+    img.className = 'photo-thumb';
+    img.src = p.url;
+    img.loading = 'lazy';
+    img.onclick = () => openLightbox(p.url);
+    item.appendChild(img);
+    if (isAdmin) {
+      const del = document.createElement('button');
+      del.className = 'photo-delete';
+      del.textContent = '×';
+      del.onclick = (e) => { e.stopPropagation(); deletePhoto(num, key, p.url); };
+      item.appendChild(del);
+    }
+    grid.appendChild(item);
+  });
+  const gallery = grid.closest('.photo-gallery');
+  const existing = gallery.querySelector('.photo-upload-btn');
+  if (existing) existing.remove();
+  const statusEl = gallery.querySelector('.photo-uploading');
+  if (statusEl) statusEl.remove();
+  if (isAdmin) {
+    const uploadBtn = document.createElement('button');
+    uploadBtn.className = 'photo-upload-btn';
+    uploadBtn.textContent = lang === 'en' ? '+ Add Photos' : '+ 写真を追加';
+    uploadBtn.onclick = () => openPhotoUpload(num, gallery);
+    gallery.appendChild(uploadBtn);
+  }
+}
+
+function openPhotoUpload(num, gallery) {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.onchange = () => uploadPhotos(num, input.files, gallery);
+  input.click();
+}
+
+async function uploadPhotos(num, files, gallery) {
+  if (!files.length) return;
+  let status = gallery.querySelector('.photo-uploading');
+  if (!status) {
+    status = document.createElement('div');
+    status.className = 'photo-uploading';
+    gallery.appendChild(status);
+  }
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    status.textContent = `${lang === 'en' ? 'Uploading' : 'アップロード中'} ${i + 1}/${files.length}...`;
+    const path = `photos/stop_${num}/${Date.now()}_${file.name}`;
+    const ref = storage.ref(path);
+    await ref.put(file);
+    const url = await ref.getDownloadURL();
+    await db.ref(`photos/${num}`).push({ url, createdAt: Date.now() });
+  }
+  status.textContent = '';
+}
+
+async function deletePhoto(num, key, url) {
+  if (!confirm(lang === 'en' ? 'Delete this photo?' : 'この写真を削除しますか？')) return;
+  await db.ref(`photos/${num}/${key}`).remove();
+  try { await storage.refFromURL(url).delete(); } catch (e) {}
+}
+
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(e) {
+  if (e && e.target.id === 'lightbox-img') return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
 }
 
 // ===== PACKING =====
@@ -1551,5 +1699,10 @@ renderHighlights();
 renderPacking('all');
 renderMessages();
 </script>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
 </body>
 </html>
