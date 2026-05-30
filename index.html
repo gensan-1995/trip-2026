@@ -4,53 +4,111 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>半年間バックパッカー旅 2026–2027</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --cream:  #F2EDE4;
-      --ink:    #1C1C1C;
-      --accent: #B85C2C;
-      --sage:   #6B7C6E;
-      --line:   rgba(28,28,28,0.13);
-      --serif:  "Playfair Display", Georgia, serif;
-      --sans:   "DM Sans", system-ui, sans-serif;
-      --mono:   "DM Mono", ui-monospace, monospace;
+      --cream:  #1E222E;
+      --ink:    #D8D0C4;
+      --accent: #E06B38;
+      --sage:   #7DC4A0;
+      --line:   rgba(255,255,255,0.09);
+      --serif:  "Bebas Neue", system-ui, sans-serif;
+      --sans:   "Inter", system-ui, sans-serif;
+      --mono:   "JetBrains Mono", ui-monospace, monospace;
       --jp: #1C1C1C; --as: #B85C2C; --ea: #6B7C6E;
       --sa: #9B7B52; --sm: #5B7B52; --cm: #6E4A3C;
     }
-    body { font-family: var(--sans); background: var(--cream); color: var(--ink); }
+    body { font-family: var(--sans); background: #0F1117; color: var(--ink); }
 
     /* ===== HERO ===== */
-    .hero { background: var(--ink); color: var(--cream); padding: 56px 24px 44px; }
-    .hero-content { max-width: 900px; margin: 0 auto; }
+    .hero { background: linear-gradient(160deg, #0D1117 0%, #131825 100%); color: #D8D0C4; padding: 56px 24px 44px; }
+    .hero-content {
+      max-width: 900px; margin: 0 auto;
+      border: 1px solid rgba(224,107,56,0.22); padding: 36px 40px;
+    }
     .hero h1 {
-      font-family: var(--serif); font-size: clamp(1.6rem, 5vw, 2.8rem);
-      font-weight: 900; letter-spacing: 0.01em; margin-bottom: 8px;
+      font-family: var(--serif); font-size: clamp(1.9rem, 6vw, 3.4rem);
+      font-weight: 400; letter-spacing: 0.08em; margin-bottom: 10px;
+    }
+    .hero h1::after {
+      content: ''; display: block;
+      width: 100%; max-width: 280px; height: 1px;
+      background: linear-gradient(to right, rgba(224,107,56,0.7), rgba(224,107,56,0));
+      margin-top: 16px;
     }
     .hero .subtitle {
       font-family: var(--mono); font-size: clamp(0.85rem, 2.5vw, 1rem);
-      opacity: 0.55; margin-bottom: 36px;
+      opacity: 0.55; margin-bottom: 0; letter-spacing: 0.06em;
     }
-    .stats { display: flex; gap: 40px; flex-wrap: wrap; }
+    .hero .subtitle::after {
+      content: '';
+      display: block;
+      border-top: 1px solid rgba(224,107,56,0.3);
+      margin: 18px 0 24px;
+      width: 220px;
+    }
+    .stats { display: flex; gap: 16px; flex-wrap: wrap; }
+    .stats > .stat-pill {
+      background: rgba(224,107,56,0.07);
+      box-shadow: 0 0 0 1px rgba(224,107,56,0.22), 0 0 14px rgba(224,107,56,0.10);
+      border-radius: 4px;
+      padding: 10px 16px;
+    }
     .stat-pill .stat-value {
-      display: block; font-family: var(--mono); font-size: 1.5rem;
+      display: block; font-family: var(--mono); font-size: 1.8rem;
       font-weight: 500; color: var(--accent);
     }
     .stat-pill .stat-label {
       display: block; font-size: 0.75rem; opacity: 0.5; margin-top: 2px; letter-spacing: 0.04em;
     }
 
-    /* ===== SUPPORT BUTTON ===== */
-    .support-btn {
-      display: inline-block; padding: 10px 24px;
-      border: 1.5px solid rgba(242,237,228,0.4); color: var(--cream);
-      font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
-      text-decoration: none; letter-spacing: 0.04em;
-      transition: background 0.15s, border-color 0.15s;
+    /* ===== TRIP PROGRESS ===== */
+    .trip-progress {
+      margin-top: 24px; background: rgba(224,107,56,0.08);
+      border: 1px solid rgba(224,107,56,0.22);
+      border-radius: 2px; padding: 14px 18px; max-width: 520px;
     }
-    .support-btn:hover { background: rgba(242,237,228,0.12); border-color: rgba(242,237,228,0.7); }
+    .progress-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 10px; flex-wrap: wrap; gap: 6px;
+    }
+    .progress-meta span { font-family: var(--mono); font-size: 0.8rem; opacity: 0.75; }
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.15); border-radius: 4px; height: 6px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; background: var(--accent); border-radius: 4px;
+      transition: width 1.2s ease; width: 0%;
+    }
+    /* ===== DYNAMIC STATS ===== */
+    .stats-dynamic {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.09);
+    }
+    .stats-dynamic .stat-pill .stat-value { font-size: 1.3rem; }
+
+    /* ===== SUPPORT BUTTON ===== */
+    .support-area {
+      margin-top: 32px; padding-top: 24px;
+      border-top: 1px solid rgba(224,107,56,0.2);
+    }
+    .support-label {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--accent); letter-spacing: 0.14em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .support-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .support-btn {
+      display: inline-block; padding: 11px 28px;
+      background: var(--accent); color: #0F1117;
+      font-family: var(--sans); font-size: 0.88rem; font-weight: 700;
+      text-decoration: none; letter-spacing: 0.05em; border-radius: 3px;
+      box-shadow: 0 0 16px rgba(224,107,56,0.28);
+      transition: opacity 0.15s, box-shadow 0.15s;
+    }
+    .support-btn:hover { opacity: 0.88; box-shadow: 0 0 26px rgba(224,107,56,0.45); }
     .msg-support-btn {
       display: inline-block; padding: 9px 22px;
       border: 1.5px solid var(--ink); color: var(--ink);
@@ -62,7 +120,7 @@
 
     /* ===== TABS ===== */
     .tabs-bar {
-      background: var(--cream); border-bottom: 1px solid var(--line);
+      background: #181C24; border-bottom: 1px solid rgba(255,255,255,0.08);
       display: flex; align-items: stretch;
       position: sticky; top: 0; z-index: 1000;
     }
@@ -70,19 +128,19 @@
     .tab-btn {
       padding: 14px 22px; border: none; background: none;
       font-family: var(--sans); font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; color: rgba(28,28,28,0.4);
+      cursor: pointer; color: rgba(216,208,196,0.35);
       border-bottom: 2px solid transparent;
       transition: color 0.15s, border-color 0.15s; letter-spacing: 0.02em;
     }
-    .tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); }
-    .tab-btn:hover:not(.active) { color: var(--ink); }
+    .tab-btn.active { color: #D8D0C4; border-bottom-color: var(--accent); border-bottom-width: 3px; }
+    .tab-btn:hover:not(.active) { color: #D8D0C4; }
     .lang-toggle {
-      padding: 0 18px; border: none; border-left: 1px solid var(--line);
+      padding: 0 18px; border: none; border-left: 1px solid rgba(255,255,255,0.08);
       background: none; font-family: var(--mono); font-size: 0.75rem;
       font-weight: 500; cursor: pointer; color: var(--sage);
       letter-spacing: 0.08em; transition: color 0.15s; white-space: nowrap;
     }
-    .lang-toggle:hover { color: var(--ink); }
+    .lang-toggle:hover { color: #D8D0C4; }
 
     /* ===== SECTIONS ===== */
     .section { display: none; padding: 32px 16px 56px; max-width: 1100px; margin: 0 auto; }
@@ -93,9 +151,10 @@
     #map-section.active { display: flex; flex-direction: column; }
     #map { height: calc(100vh - 130px); min-height: 500px; }
     .current-location-banner {
-      display: none; background: var(--ink); color: var(--cream);
+      display: none; background: #0F1117; color: #D8D0C4;
       padding: 10px 20px; font-size: 0.85rem; font-weight: 600;
       align-items: center; gap: 10px; flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
     .current-location-banner.visible { display: flex; }
     .pulse-dot {
@@ -103,14 +162,14 @@
       background: var(--accent); animation: pulse 1.5s infinite; flex-shrink: 0;
     }
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(184,92,44,0.7); }
-      70%  { box-shadow: 0 0 0 8px rgba(184,92,44,0); }
-      100% { box-shadow: 0 0 0 0 rgba(184,92,44,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(224,107,56,0.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(224,107,56,0); }
+      100% { box-shadow: 0 0 0 0 rgba(224,107,56,0); }
     }
     .map-legend {
-      background: var(--cream); padding: 12px 20px;
+      background: #181C24; padding: 12px 20px;
       display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
-      border-top: 1px solid var(--line); font-size: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.8rem; color: #D8D0C4;
     }
     .legend-item { display: flex; align-items: center; gap: 6px; }
     .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
@@ -118,13 +177,13 @@
 
     /* ===== ITINERARY ===== */
     .section-title {
-      font-family: var(--serif); font-size: 1.5rem; font-weight: 700;
-      margin-bottom: 24px; color: var(--ink);
-      border-left: 3px solid var(--accent); padding-left: 14px;
+      font-family: var(--serif); font-size: 1.8rem; font-weight: 400;
+      margin-bottom: 24px; color: var(--ink); letter-spacing: 0.06em;
+      border-left: 4px solid var(--accent); padding-left: 14px;
     }
     .route-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     .route-table th {
-      background: var(--ink); color: var(--cream);
+      background: #252932; color: #D8D0C4;
       padding: 10px 12px; text-align: left; white-space: nowrap;
       font-family: var(--sans); font-weight: 600;
       font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
@@ -160,8 +219,9 @@
     .budget-bar-wrap { margin-top: 12px; background: var(--line); height: 2px; }
     .budget-bar { height: 2px; background: var(--c); transition: width 1s ease; }
     .total-box {
-      background: var(--ink); color: var(--cream);
+      background: #252932; color: #D8D0C4;
       padding: 36px 32px; text-align: center; margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.07);
     }
     .total-box .label {
       font-family: var(--sans); font-size: 0.72rem;
@@ -209,11 +269,12 @@
 
     /* ===== FOOTER ===== */
     footer {
-      background: var(--ink); color: rgba(242,237,228,0.45);
+      background: #0F1117; color: rgba(216,208,196,0.45);
       text-align: center; padding: 24px 20px;
       font-family: var(--mono); font-size: 0.75rem; margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.07);
     }
-    footer a { color: rgba(242,237,228,0.75); }
+    footer a { color: rgba(216,208,196,0.75); }
 
     /* ===== PACKING ===== */
     .packing-filter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
@@ -228,7 +289,7 @@
     .packing-category { margin-bottom: 32px; }
     .packing-category-title {
       font-family: var(--sans); font-size: 0.72rem; font-weight: 700;
-      padding: 8px 14px; background: var(--ink); color: var(--cream);
+      padding: 8px 14px; background: #252932; color: #D8D0C4;
       margin-bottom: 0; text-transform: uppercase; letter-spacing: 0.08em;
     }
     .packing-grid {
@@ -253,7 +314,7 @@
 
     /* ===== MESSAGES ===== */
     .msg-layout { display: flex; flex-direction: column; gap: 40px; }
-    .msg-form-box { border: 1px solid var(--line); padding: 28px 32px; }
+    .msg-form-box { border: 1px solid var(--line); padding: 28px 32px; box-shadow: 0 2px 16px rgba(28,28,28,0.06); }
     .msg-form-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
     .msg-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .msg-field { display: flex; flex-direction: column; gap: 6px; }
@@ -271,7 +332,7 @@
     .msg-field input:focus, .msg-field select:focus, .msg-field textarea:focus { border-color: var(--accent); }
     .msg-field textarea { resize: vertical; min-height: 90px; }
     .msg-submit {
-      background: var(--ink); color: var(--cream); border: none; padding: 11px 28px;
+      background: var(--accent); color: #0F1117; border: none; padding: 11px 28px;
       font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
       cursor: pointer; transition: opacity 0.15s; float: right; margin-top: 4px;
     }
@@ -328,9 +389,34 @@
       <div class="stat-pill"><span class="stat-value">19</span><span class="stat-label" data-i18n="stat_cities">都市</span></div>
       <div class="stat-pill"><span class="stat-value">200万</span><span class="stat-label" data-i18n="stat_budget">円 / 総予算</span></div>
     </div>
-    <div style="margin-top:28px;">
-      <div style="font-family:var(--mono);font-size:0.72rem;opacity:0.4;letter-spacing:0.08em;margin-bottom:10px;" data-i18n="support_btn">☕ 旅を応援する</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <!-- TRIP PROGRESS BAR -->
+    <div class="trip-progress">
+      <div class="progress-meta">
+        <span id="progress-day-text"></span>
+        <span id="progress-city-text"></span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+    </div>
+    <!-- DYNAMIC STATS -->
+    <div class="stats stats-dynamic">
+      <div class="stat-pill">
+        <span class="stat-value"><span id="stat-km">—</span></span>
+        <span class="stat-label" data-i18n="stat_km_label">km 総移動距離</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-value"><span id="stat-flights">—</span></span>
+        <span class="stat-label" data-i18n="stat_flights_label">フライト</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-value"><span id="stat-land">—</span></span>
+        <span class="stat-label" data-i18n="stat_land_label">陸路移動</span>
+      </div>
+    </div>
+    <div class="support-area">
+      <p class="support-label" data-i18n="support_btn">☕ 旅を応援する</p>
+      <div class="support-btns">
         <a href="https://paypal.me/genyasan" target="_blank" rel="noopener" class="support-btn">PayPal</a>
         <a href="https://qr.paypay.ne.jp/p2p01_dBaoZp1ywlTR0NJU" target="_blank" rel="noopener" class="support-btn">PayPay</a>
       </div>
@@ -588,6 +674,9 @@ const T = {
   time_min:    { ja:'分前',         en:'m ago' },
   time_hr:     { ja:'時間前',       en:'h ago' },
   time_day:    { ja:'日前',         en:'d ago' },
+  stat_km_label:      { ja:'km 総移動距離',  en:'km Total Distance' },
+  stat_flights_label: { ja:'フライト',        en:'Flights' },
+  stat_land_label:    { ja:'陸路移動',        en:'Land Routes' },
 };
 
 function t(key) { return T[key] ? T[key][lang] : key; }
@@ -1127,6 +1216,7 @@ function applyLang() {
     renderPhotoGrid(el.dataset.stop, el.querySelector('.photo-grid'));
   });
   renderMessages();
+  initTripProgress();
 }
 
 // ===== MAP =====
@@ -1703,6 +1793,80 @@ db.ref('messages').orderByChild('createdAt').on('value', snapshot => {
   renderMsgList();
 });
 
+// ===== TRIP PROGRESS & STATS =====
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function countUpAnimation(el, target, duration) {
+  const start = performance.now();
+  (function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(p * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  })(start);
+}
+
+function initTripProgress() {
+  const tripStart = new Date('2026-07-06');
+  const tripEnd   = new Date('2027-01-06');
+  const totalDays = 184;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  // Cumulative start day index for each stop
+  let cumDay = 0;
+  const stopStartDays = stops.map(s => {
+    const sd = cumDay;
+    cumDay += parseInt(s.days) || 0;
+    return sd;
+  });
+
+  const daysSinceStart = Math.floor((today - tripStart) / 86400000);
+  const fillEl  = document.getElementById('progress-bar-fill');
+  const dayTxt  = document.getElementById('progress-day-text');
+  const cityTxt = document.getElementById('progress-city-text');
+
+  if (today < tripStart) {
+    const daysUntil = Math.ceil((tripStart - today) / 86400000);
+    dayTxt.textContent  = lang === 'ja' ? `出発まであと ${daysUntil} 日` : `${daysUntil} days to departure`;
+    cityTxt.textContent = '';
+    if (fillEl) fillEl.style.width = '0%';
+  } else if (daysSinceStart >= totalDays) {
+    dayTxt.textContent  = lang === 'ja' ? '旅が終わりました（184日間）' : 'Trip completed (184 days)';
+    cityTxt.textContent = '';
+    if (fillEl) fillEl.style.width = '100%';
+  } else {
+    const currentDay    = daysSinceStart + 1;
+    const pct           = (currentDay / totalDays * 100).toFixed(1);
+    const visitedCities = stops.filter((s, i) => daysSinceStart >= stopStartDays[i]).length;
+    dayTxt.textContent  = lang === 'ja' ? `${currentDay} 日目 / ${totalDays} 日間` : `Day ${currentDay} of ${totalDays}`;
+    cityTxt.textContent = lang === 'ja' ? `${visitedCities} / 19 都市訪問済み` : `${visitedCities} / 19 cities visited`;
+    if (fillEl) fillEl.style.width = pct + '%';
+  }
+
+  // Compute stats once on first call
+  if (!initTripProgress._statsSet) {
+    let totalKm = 0;
+    for (let i = 0; i < stops.length - 1; i++)
+      totalKm += haversineKm(stops[i].lat, stops[i].lon, stops[i+1].lat, stops[i+1].lon);
+    totalKm = Math.round(totalKm / 100) * 100;
+    const flightCount = airPairs.size;
+    const landCount   = (stops.length - 1) - flightCount;
+    const kmEl = document.getElementById('stat-km');
+    const flEl = document.getElementById('stat-flights');
+    const ldEl = document.getElementById('stat-land');
+    if (kmEl) countUpAnimation(kmEl, totalKm, 1500);
+    if (flEl) countUpAnimation(flEl, flightCount, 800);
+    if (ldEl) countUpAnimation(ldEl, landCount, 800);
+    initTripProgress._statsSet = true;
+  }
+}
+
 // ===== INIT =====
 renderItinerary();
 renderBudget();
@@ -1710,6 +1874,7 @@ renderTours();
 renderHighlights();
 renderPacking('all');
 renderMessages();
+initTripProgress();
 </script>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
