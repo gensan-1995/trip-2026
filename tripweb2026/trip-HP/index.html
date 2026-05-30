@@ -11,7 +11,7 @@
     :root {
       --cream:  #F2EDE4;
       --ink:    #1C1C1C;
-      --accent: #B85C2C;
+      --accent: #C9963A;
       --sage:   #6B7C6E;
       --line:   rgba(28,28,28,0.13);
       --serif:  "Playfair Display", Georgia, serif;
@@ -23,11 +23,16 @@
     body { font-family: var(--sans); background: var(--cream); color: var(--ink); }
 
     /* ===== HERO ===== */
-    .hero { background: var(--ink); color: var(--cream); padding: 56px 24px 44px; }
+    .hero { background: linear-gradient(160deg, #1C1C1C 0%, #242420 100%); color: var(--cream); padding: 56px 24px 44px; }
     .hero-content { max-width: 900px; margin: 0 auto; }
     .hero h1 {
       font-family: var(--serif); font-size: clamp(1.6rem, 5vw, 2.8rem);
-      font-weight: 900; letter-spacing: 0.01em; margin-bottom: 8px;
+      font-weight: 900; letter-spacing: -0.01em; margin-bottom: 8px;
+    }
+    .hero h1::after {
+      content: ''; display: block;
+      width: 56px; height: 2px;
+      background: var(--accent); margin-top: 14px; opacity: 0.85;
     }
     .hero .subtitle {
       font-family: var(--mono); font-size: clamp(0.85rem, 2.5vw, 1rem);
@@ -35,7 +40,7 @@
     }
     .stats { display: flex; gap: 40px; flex-wrap: wrap; }
     .stat-pill .stat-value {
-      display: block; font-family: var(--mono); font-size: 1.5rem;
+      display: block; font-family: var(--mono); font-size: 1.8rem;
       font-weight: 500; color: var(--accent);
     }
     .stat-pill .stat-label {
@@ -44,8 +49,8 @@
 
     /* ===== TRIP PROGRESS ===== */
     .trip-progress {
-      margin-top: 28px; background: rgba(255,255,255,0.08);
-      border-radius: 6px; padding: 14px 18px; max-width: 520px;
+      margin-top: 28px; background: rgba(201,150,58,0.10);
+      border-radius: 4px; padding: 14px 18px; max-width: 520px;
     }
     .progress-meta {
       display: flex; justify-content: space-between; align-items: baseline;
@@ -98,7 +103,7 @@
       border-bottom: 2px solid transparent;
       transition: color 0.15s, border-color 0.15s; letter-spacing: 0.02em;
     }
-    .tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); }
+    .tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); border-bottom-width: 3px; }
     .tab-btn:hover:not(.active) { color: var(--ink); }
     .lang-toggle {
       padding: 0 18px; border: none; border-left: 1px solid var(--line);
@@ -127,9 +132,9 @@
       background: var(--accent); animation: pulse 1.5s infinite; flex-shrink: 0;
     }
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(184,92,44,0.7); }
-      70%  { box-shadow: 0 0 0 8px rgba(184,92,44,0); }
-      100% { box-shadow: 0 0 0 0 rgba(184,92,44,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(201,150,58,0.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(201,150,58,0); }
+      100% { box-shadow: 0 0 0 0 rgba(201,150,58,0); }
     }
     .map-legend {
       background: var(--cream); padding: 12px 20px;
@@ -144,7 +149,7 @@
     .section-title {
       font-family: var(--serif); font-size: 1.5rem; font-weight: 700;
       margin-bottom: 24px; color: var(--ink);
-      border-left: 3px solid var(--accent); padding-left: 14px;
+      border-left: 4px solid var(--accent); padding-left: 14px;
     }
     .route-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     .route-table th {
@@ -277,7 +282,7 @@
 
     /* ===== MESSAGES ===== */
     .msg-layout { display: flex; flex-direction: column; gap: 40px; }
-    .msg-form-box { border: 1px solid var(--line); padding: 28px 32px; }
+    .msg-form-box { border: 1px solid var(--line); padding: 28px 32px; box-shadow: 0 2px 16px rgba(28,28,28,0.06); }
     .msg-form-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
     .msg-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .msg-field { display: flex; flex-direction: column; gap: 6px; }
