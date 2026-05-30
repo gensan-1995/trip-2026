@@ -42,6 +42,30 @@
       display: block; font-size: 0.75rem; opacity: 0.5; margin-top: 2px; letter-spacing: 0.04em;
     }
 
+    /* ===== TRIP PROGRESS ===== */
+    .trip-progress {
+      margin-top: 28px; background: rgba(255,255,255,0.08);
+      border-radius: 6px; padding: 14px 18px; max-width: 520px;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 10px; flex-wrap: wrap; gap: 6px;
+    }
+    .progress-meta span { font-family: var(--mono); font-size: 0.8rem; opacity: 0.75; }
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.15); border-radius: 4px; height: 6px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; background: var(--accent); border-radius: 4px;
+      transition: width 1.2s ease; width: 0%;
+    }
+    /* ===== DYNAMIC STATS ===== */
+    .stats-dynamic {
+      margin-top: 16px; padding-top: 16px;
+      border-top: 1px solid rgba(242,237,228,0.15);
+    }
+    .stats-dynamic .stat-pill .stat-value { font-size: 1.3rem; }
+
     /* ===== SUPPORT BUTTON ===== */
     .support-btn {
       display: inline-block; padding: 10px 24px;
@@ -188,6 +212,24 @@
       border: 1px solid var(--line); padding: 2px 8px;
       font-family: var(--mono); font-size: 0.72rem; color: var(--sage);
     }
+    .photo-toggle { width: 100%; padding: 8px 20px; background: none; border: none; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 0.72rem; color: var(--sage); cursor: pointer; text-align: left; letter-spacing: 0.05em; }
+    .photo-toggle:hover { background: rgba(28,28,28,0.03); }
+    .photo-gallery { display: none; padding: 14px 20px 18px; border-top: 1px solid var(--line); }
+    .photo-gallery.open { display: block; }
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 4px; }
+    .photo-item { position: relative; }
+    .photo-thumb { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; display: block; transition: opacity 0.15s; }
+    .photo-thumb:hover { opacity: 0.8; }
+    .photo-delete { display: none; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: var(--accent); border: none; color: #fff; font-size: 0.65rem; cursor: pointer; line-height: 1; padding: 0; }
+    .photo-item:hover .photo-delete { display: block; }
+    .photo-upload-btn { margin-top: 10px; display: block; width: 100%; padding: 8px; border: 1px dashed var(--line); background: none; font-family: var(--mono); font-size: 0.72rem; color: var(--sage); cursor: pointer; letter-spacing: 0.04em; transition: border-color 0.15s; }
+    .photo-upload-btn:hover { border-color: var(--sage); }
+    .photo-uploading { font-family: var(--mono); font-size: 0.7rem; color: var(--sage); margin-top: 8px; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(28,28,28,0.92); z-index: 9999; align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 92vw; max-height: 92vh; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: #fff; font-size: 1.6rem; cursor: pointer; opacity: 0.7; line-height: 1; }
+    .lightbox-close:hover { opacity: 1; }
 
     /* ===== FOOTER ===== */
     footer {
@@ -265,7 +307,7 @@
     .msg-list-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
     .msg-count { font-family: var(--mono); font-size: 0.85rem; color: var(--sage); margin-left: 8px; font-weight: 400; }
     .msg-cards { display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); }
-    .msg-card { background: var(--cream); padding: 20px 24px; border-left: 3px solid var(--accent); transition: background 0.15s; }
+    .msg-card { position: relative; background: var(--cream); padding: 20px 24px; border-left: 3px solid var(--accent); transition: background 0.15s; }
     .msg-card:hover { background: rgba(28,28,28,0.02); }
     .msg-card-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
     .msg-card-name { font-weight: 700; font-size: 1rem; }
@@ -273,6 +315,17 @@
     .msg-card-body { font-size: 0.88rem; line-height: 1.75; color: var(--ink); }
     .msg-card-date { font-family: var(--mono); font-size: 0.7rem; color: rgba(28,28,28,0.35); margin-top: 10px; }
     .msg-empty { text-align: center; padding: 48px 24px; color: var(--sage); font-size: 0.88rem; }
+    .msg-delete-btn { position: absolute; top: 10px; right: 12px; background: none; border: 1px solid var(--accent); color: var(--accent); font-size: 0.72rem; width: 22px; height: 22px; cursor: pointer; opacity: 0.55; transition: opacity 0.15s, background 0.15s; line-height: 1; padding: 0; }
+    .msg-delete-btn:hover { opacity: 1; background: var(--accent); color: #fff; }
+    .admin-area { display: none; align-items: center; gap: 8px; padding: 14px 0 2px; }
+    .admin-pw-input { font-family: var(--mono); font-size: 0.78rem; border: 1px solid var(--line); background: none; padding: 6px 10px; color: var(--ink); outline: none; width: 150px; }
+    .admin-pw-input:focus { border-color: var(--sage); }
+    .admin-pw-btn { font-family: var(--mono); font-size: 0.72rem; border: 1px solid var(--line); background: none; padding: 6px 12px; cursor: pointer; color: var(--sage); letter-spacing: 0.04em; transition: border-color 0.15s; }
+    .admin-pw-btn:hover { border-color: var(--sage); }
+    .admin-pw-error { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+    .admin-toggle-btn { display: block; margin-top: 18px; font-family: var(--mono); font-size: 0.62rem; color: rgba(28,28,28,0.18); background: none; border: none; cursor: pointer; letter-spacing: 0.06em; padding: 0; transition: color 0.15s; }
+    .admin-toggle-btn:hover { color: var(--sage); }
+    .admin-toggle-btn.active { color: var(--accent); }
 
     @media (max-width: 600px) {
       .tab-btn { padding: 12px 8px; font-size: 0.76rem; }
@@ -298,6 +351,31 @@
       <div class="stat-pill"><span class="stat-value">17</span><span class="stat-label" data-i18n="stat_countries">カ国</span></div>
       <div class="stat-pill"><span class="stat-value">19</span><span class="stat-label" data-i18n="stat_cities">都市</span></div>
       <div class="stat-pill"><span class="stat-value">200万</span><span class="stat-label" data-i18n="stat_budget">円 / 総予算</span></div>
+    </div>
+    <!-- TRIP PROGRESS BAR -->
+    <div class="trip-progress">
+      <div class="progress-meta">
+        <span id="progress-day-text"></span>
+        <span id="progress-city-text"></span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+    </div>
+    <!-- DYNAMIC STATS -->
+    <div class="stats stats-dynamic">
+      <div class="stat-pill">
+        <span class="stat-value"><span id="stat-km">—</span></span>
+        <span class="stat-label" data-i18n="stat_km_label">km 総移動距離</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-value"><span id="stat-flights">—</span></span>
+        <span class="stat-label" data-i18n="stat_flights_label">フライト</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-value"><span id="stat-land">—</span></span>
+        <span class="stat-label" data-i18n="stat_land_label">陸路移動</span>
+      </div>
     </div>
     <div style="margin-top:28px;">
       <div style="font-family:var(--mono);font-size:0.72rem;opacity:0.4;letter-spacing:0.08em;margin-bottom:10px;" data-i18n="support_btn">☕ 旅を応援する</div>
@@ -464,6 +542,12 @@
     <div>
       <div class="msg-list-title" data-i18n="msg_list_title">📬 みんなからの応援<span class="msg-count" id="msg-count"></span></div>
       <div id="msg-cards" class="msg-cards"></div>
+      <div id="admin-area" class="admin-area">
+        <input type="password" id="admin-pw" class="admin-pw-input" placeholder="パスワード" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="admin-pw-btn" onclick="adminLogin()">ログイン</button>
+        <span id="admin-error" class="admin-pw-error"></span>
+      </div>
+      <button id="admin-toggle-btn" class="admin-toggle-btn" onclick="toggleAdminArea()">管理者</button>
     </div>
 
   </div>
@@ -494,7 +578,7 @@ const T = {
   tab_budget:  { ja:'予算',         en:'Budget' },
   tab_hl:      { ja:'ハイライト',   en:'Highlights' },
   tab_pack:    { ja:'持ち物',       en:'Packing' },
-  loc_loading: { ja:'現在地を取得中...',  en:'Loading location...' },
+  loc_loading: { ja:'出発準備中 — 2026年7月6日スタート', en:'Preparing for departure — Starting July 6, 2026' },
   area_jp:     { ja:'日本',         en:'Japan' },
   area_as:     { ja:'アジア',       en:'Asia' },
   area_ea:     { ja:'東アフリカ',   en:'East Africa' },
@@ -553,6 +637,9 @@ const T = {
   time_min:    { ja:'分前',         en:'m ago' },
   time_hr:     { ja:'時間前',       en:'h ago' },
   time_day:    { ja:'日前',         en:'d ago' },
+  stat_km_label:      { ja:'km 総移動距離',  en:'km Total Distance' },
+  stat_flights_label: { ja:'フライト',        en:'Flights' },
+  stat_land_label:    { ja:'陸路移動',        en:'Land Routes' },
 };
 
 function t(key) { return T[key] ? T[key][lang] : key; }
@@ -1082,7 +1169,17 @@ function applyLang() {
   renderTours();
   renderHighlights();
   renderPacking(currentFilter);
+  document.querySelectorAll('.photo-toggle').forEach(btn => {
+    const num = btn.dataset.stop;
+    const count = photoData[num] ? Object.keys(photoData[num]).length : 0;
+    const isOpen = document.querySelector(`.photo-gallery[data-stop="${num}"]`)?.classList.contains('open');
+    btn.innerHTML = `${lang === 'en' ? 'Photos' : '写真'}<span class="photo-count">${count > 0 ? ` (${count})` : ''}</span> ${isOpen ? '▴' : '▾'}`;
+  });
+  document.querySelectorAll('.photo-gallery.open').forEach(el => {
+    renderPhotoGrid(el.dataset.stop, el.querySelector('.photo-grid'));
+  });
   renderMessages();
+  initTripProgress();
 }
 
 // ===== MAP =====
@@ -1149,6 +1246,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const IMGBB_API_KEY = '9d5c2ebdd31dc26c2374313bfb62f683';
 let liveMarker = null;
 
 function timeAgo(ts) {
@@ -1166,10 +1264,11 @@ function timeAgo(ts) {
 }
 
 db.ref('location').on('value', snapshot => {
-  const d = snapshot.val();
-  if (!d) return;
   const banner = document.getElementById('location-banner');
   const textEl = document.getElementById('location-text');
+  banner.classList.add('visible');
+  const d = snapshot.val();
+  if (!d || Date.now() < new Date('2026-07-06').getTime()) return;
   const ago = timeAgo(d.updatedAt);
   const msg = d.message ? `「${d.message}」` : '';
   textEl.textContent = lang === 'en'
@@ -1264,6 +1363,7 @@ function renderHighlights() {
     const countryLabel = lang === 'en' ? s.countryEn : s.country;
     const noteLabel = lang === 'en' ? s.noteEn : s.note;
     const nightsLabel = s.days + t('nights_unit');
+    const count = photoData[s.num] ? Object.keys(photoData[s.num]).length : 0;
     const card = document.createElement('div');
     card.className = 'highlight-card';
     card.innerHTML = `
@@ -1275,8 +1375,138 @@ function renderHighlights() {
         <p>${noteLabel}</p>
         <span class="days-tag">${nightsLabel}</span>
       </div>`;
+    const toggle = document.createElement('button');
+    toggle.className = 'photo-toggle';
+    toggle.dataset.stop = s.num;
+    toggle.innerHTML = `${lang === 'en' ? 'Photos' : '写真'}<span class="photo-count">${count > 0 ? ` (${count})` : ''}</span> ▾`;
+    toggle.onclick = () => togglePhotoGallery(s.num);
+    const gallery = document.createElement('div');
+    gallery.className = 'photo-gallery';
+    gallery.dataset.stop = s.num;
+    gallery.innerHTML = '<div class="photo-grid"></div>';
+    card.appendChild(toggle);
+    card.appendChild(gallery);
     grid.appendChild(card);
   });
+}
+
+// ===== PHOTO GALLERY =====
+const photoData = {};
+
+db.ref('photos').on('value', snapshot => {
+  Object.keys(photoData).forEach(k => delete photoData[k]);
+  snapshot.forEach(stopSnap => {
+    photoData[stopSnap.key] = {};
+    stopSnap.forEach(p => { photoData[stopSnap.key][p.key] = p.val(); });
+  });
+  document.querySelectorAll('.photo-gallery.open').forEach(el => {
+    renderPhotoGrid(el.dataset.stop, el.querySelector('.photo-grid'));
+  });
+  document.querySelectorAll('.photo-toggle').forEach(btn => {
+    const num = btn.dataset.stop;
+    const count = photoData[num] ? Object.keys(photoData[num]).length : 0;
+    btn.querySelector('.photo-count').textContent = count > 0 ? ` (${count})` : '';
+  });
+});
+
+function togglePhotoGallery(num) {
+  const gallery = document.querySelector(`.photo-gallery[data-stop="${num}"]`);
+  const btn = document.querySelector(`.photo-toggle[data-stop="${num}"]`);
+  const isOpen = gallery.classList.toggle('open');
+  const count = photoData[num] ? Object.keys(photoData[num]).length : 0;
+  btn.innerHTML = `${lang === 'en' ? 'Photos' : '写真'}<span class="photo-count">${count > 0 ? ` (${count})` : ''}</span> ${isOpen ? '▴' : '▾'}`;
+  if (isOpen) renderPhotoGrid(num, gallery.querySelector('.photo-grid'));
+}
+
+function renderPhotoGrid(num, grid) {
+  grid.innerHTML = '';
+  const photos = photoData[num] || {};
+  Object.entries(photos).forEach(([key, p]) => {
+    const item = document.createElement('div');
+    item.className = 'photo-item';
+    const img = document.createElement('img');
+    img.className = 'photo-thumb';
+    img.src = p.url;
+    img.loading = 'lazy';
+    img.onclick = () => openLightbox(p.url);
+    item.appendChild(img);
+    if (isAdmin) {
+      const del = document.createElement('button');
+      del.className = 'photo-delete';
+      del.textContent = '×';
+      del.onclick = (e) => { e.stopPropagation(); deletePhoto(num, key); };
+      item.appendChild(del);
+    }
+    grid.appendChild(item);
+  });
+  const gallery = grid.closest('.photo-gallery');
+  const existing = gallery.querySelector('.photo-upload-btn');
+  if (existing) existing.remove();
+  const statusEl = gallery.querySelector('.photo-uploading');
+  if (statusEl) statusEl.remove();
+  if (isAdmin) {
+    const uploadBtn = document.createElement('button');
+    uploadBtn.className = 'photo-upload-btn';
+    uploadBtn.textContent = lang === 'en' ? '+ Add Photos' : '+ 写真を追加';
+    uploadBtn.onclick = () => openPhotoUpload(num, gallery);
+    gallery.appendChild(uploadBtn);
+  }
+}
+
+function openPhotoUpload(num, gallery) {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.onchange = () => uploadPhotos(num, input.files, gallery);
+  input.click();
+}
+
+async function uploadPhotos(num, files, gallery) {
+  if (!files.length) return;
+  let status = gallery.querySelector('.photo-uploading');
+  if (!status) {
+    status = document.createElement('div');
+    status.className = 'photo-uploading';
+    gallery.appendChild(status);
+  }
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    status.textContent = `${lang === 'en' ? 'Uploading' : 'アップロード中'} ${i + 1}/${files.length}...`;
+    try {
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      const form = new FormData();
+      form.append('key', IMGBB_API_KEY);
+      form.append('image', base64);
+      const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: form });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error?.message || 'Upload failed');
+      await db.ref(`photos/${num}`).push({ url: json.data.url, deleteUrl: json.data.delete_url, createdAt: Date.now() });
+    } catch (e) {
+      status.textContent = lang === 'en' ? 'Upload failed. Please try again.' : 'アップロードに失敗しました。';
+      return;
+    }
+  }
+  status.textContent = '';
+}
+
+async function deletePhoto(num, key) {
+  if (!confirm(lang === 'en' ? 'Delete this photo?' : 'この写真を削除しますか？')) return;
+  await db.ref(`photos/${num}/${key}`).remove();
+}
+
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(e) {
+  if (e && e.target.id === 'lightbox-img') return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
 }
 
 // ===== PACKING =====
@@ -1341,12 +1571,57 @@ function filterPacking(cat) {
 
 // ===== MESSAGES =====
 let allMessages = [];
+let isAdmin = false;
+const ADMIN_PW_HASH = '980468ff553dc8f9019f42957e586f872f72cf6831480784b7f9fac8831efe87';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function toggleAdminArea() {
+  if (isAdmin) {
+    isAdmin = false;
+    const btn = document.getElementById('admin-toggle-btn');
+    if (btn) { btn.textContent = '管理者'; btn.classList.remove('active'); }
+    renderMsgList();
+    return;
+  }
+  const area = document.getElementById('admin-area');
+  if (area) area.style.display = area.style.display === 'flex' ? 'none' : 'flex';
+}
+
+async function adminLogin() {
+  const pw = document.getElementById('admin-pw').value;
+  const errEl = document.getElementById('admin-error');
+  const hash = await sha256(pw);
+  if (hash === ADMIN_PW_HASH) {
+    isAdmin = true;
+    document.getElementById('admin-area').style.display = 'none';
+    document.getElementById('admin-pw').value = '';
+    const btn = document.getElementById('admin-toggle-btn');
+    if (btn) { btn.textContent = '管理者 [ON]'; btn.classList.add('active'); }
+    if (errEl) errEl.textContent = '';
+    renderMsgList();
+  } else {
+    if (errEl) errEl.textContent = 'パスワードが違います';
+  }
+}
+
+async function deleteMessage(key) {
+  if (!confirm('このメッセージを削除しますか？')) return;
+  try {
+    await db.ref('messages').child(key).remove();
+  } catch (e) {
+    alert('削除に失敗しました: ' + e.message);
+  }
+}
 
 const howOptions = [
   { key:'hostel', ja:'ゲストハウス・ホステル', en:'Hostel / Guesthouse' },
   { key:'tour',   ja:'ツアー',                 en:'Tour' },
   { key:'sns',    ja:'SNS',                    en:'Social Media' },
-  { key:'friend', ja:'共通の友人',             en:'Mutual Friend' },
+  { key:'friend', ja:'友人',                   en:'Friend' },
   { key:'other',  ja:'その他',                 en:'Other' },
 ];
 
@@ -1415,6 +1690,13 @@ function renderMsgList() {
       <div class="msg-card-meta">${metPrefix}: ${metFlag} ${escapeHtml(metLabel)} &nbsp;·&nbsp; ${howPrefix}: ${escapeHtml(howLabel)}</div>
       <div class="msg-card-body">${escapeHtml(msg.body).replace(/\n/g,'<br>')}</div>
       <div class="msg-card-date">${date}</div>`;
+    if (isAdmin) {
+      const delBtn = document.createElement('button');
+      delBtn.className = 'msg-delete-btn';
+      delBtn.textContent = '×';
+      delBtn.onclick = () => deleteMessage(msg._key);
+      card.appendChild(delBtn);
+    }
     container.appendChild(card);
   });
 }
@@ -1467,9 +1749,86 @@ async function submitMessage() {
 
 db.ref('messages').orderByChild('createdAt').on('value', snapshot => {
   allMessages = [];
-  snapshot.forEach(child => { allMessages.unshift(child.val()); });
+  snapshot.forEach(child => {
+    const val = child.val();
+    if (val) allMessages.unshift(Object.assign({}, val, { _key: child.key }));
+  });
   renderMsgList();
 });
+
+// ===== TRIP PROGRESS & STATS =====
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function countUpAnimation(el, target, duration) {
+  const start = performance.now();
+  (function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(p * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  })(start);
+}
+
+function initTripProgress() {
+  const tripStart = new Date('2026-07-06');
+  const tripEnd   = new Date('2027-01-06');
+  const totalDays = 184;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  // Cumulative start day index for each stop
+  let cumDay = 0;
+  const stopStartDays = stops.map(s => {
+    const sd = cumDay;
+    cumDay += parseInt(s.days) || 0;
+    return sd;
+  });
+
+  const daysSinceStart = Math.floor((today - tripStart) / 86400000);
+  const fillEl  = document.getElementById('progress-bar-fill');
+  const dayTxt  = document.getElementById('progress-day-text');
+  const cityTxt = document.getElementById('progress-city-text');
+
+  if (today < tripStart) {
+    const daysUntil = Math.ceil((tripStart - today) / 86400000);
+    dayTxt.textContent  = lang === 'ja' ? `出発まであと ${daysUntil} 日` : `${daysUntil} days to departure`;
+    cityTxt.textContent = '';
+    if (fillEl) fillEl.style.width = '0%';
+  } else if (daysSinceStart >= totalDays) {
+    dayTxt.textContent  = lang === 'ja' ? '旅が終わりました（184日間）' : 'Trip completed (184 days)';
+    cityTxt.textContent = '';
+    if (fillEl) fillEl.style.width = '100%';
+  } else {
+    const currentDay    = daysSinceStart + 1;
+    const pct           = (currentDay / totalDays * 100).toFixed(1);
+    const visitedCities = stops.filter((s, i) => daysSinceStart >= stopStartDays[i]).length;
+    dayTxt.textContent  = lang === 'ja' ? `${currentDay} 日目 / ${totalDays} 日間` : `Day ${currentDay} of ${totalDays}`;
+    cityTxt.textContent = lang === 'ja' ? `${visitedCities} / 19 都市訪問済み` : `${visitedCities} / 19 cities visited`;
+    if (fillEl) fillEl.style.width = pct + '%';
+  }
+
+  // Compute stats once on first call
+  if (!initTripProgress._statsSet) {
+    let totalKm = 0;
+    for (let i = 0; i < stops.length - 1; i++)
+      totalKm += haversineKm(stops[i].lat, stops[i].lon, stops[i+1].lat, stops[i+1].lon);
+    totalKm = Math.round(totalKm / 100) * 100;
+    const flightCount = airPairs.size;
+    const landCount   = (stops.length - 1) - flightCount;
+    const kmEl = document.getElementById('stat-km');
+    const flEl = document.getElementById('stat-flights');
+    const ldEl = document.getElementById('stat-land');
+    if (kmEl) countUpAnimation(kmEl, totalKm, 1500);
+    if (flEl) countUpAnimation(flEl, flightCount, 800);
+    if (ldEl) countUpAnimation(ldEl, landCount, 800);
+    initTripProgress._statsSet = true;
+  }
+}
 
 // ===== INIT =====
 renderItinerary();
@@ -1478,6 +1837,12 @@ renderTours();
 renderHighlights();
 renderPacking('all');
 renderMessages();
+initTripProgress();
 </script>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
 </body>
 </html>
