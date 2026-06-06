@@ -1547,6 +1547,10 @@ async function uploadPhotos(num, files, gallery) {
 
 async function deletePhoto(num, key) {
   if (!confirm(lang === 'en' ? 'Delete this photo?' : 'この写真を削除しますか？')) return;
+  const photo = photoData[num]?.[key];
+  if (photo?.deleteUrl) {
+    try { await fetch(photo.deleteUrl, { mode: 'no-cors' }); } catch (e) {}
+  }
   await db.ref(`photos/${num}/${key}`).remove();
 }
 
@@ -1596,7 +1600,7 @@ function renderPacking(filterCat) {
       const div = document.createElement('div');
       div.className = `packing-item priority-${item.priority}`;
       div.innerHTML = `
-        <input type="checkbox" class="packing-item-check" ${isChecked?'checked':''} onchange="toggleItem('${key.replace(/'/g,"\\'")}', this)">
+        <input type="checkbox" class="packing-item-check" ${isChecked?'checked':''} data-key="${key.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" onchange="toggleItem(this.dataset.key, this)">
         <div class="packing-item-body">
           <div class="packing-item-name ${isChecked?'checked':''}">${displayName} <span class="packing-item-qty">${item.qty}</span></div>
           <div class="packing-item-meta">${displayNote}</div>
