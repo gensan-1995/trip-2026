@@ -1,0 +1,17 @@
+{
+  "name": "半年間バックパッカー旅 2026–2027",
+  "short_name": "旅2026",
+  "description": "世界一周バックパッカー旅の旅程・予算・持ち物管理",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0F1117",
+  "theme_color": "#E06B38",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

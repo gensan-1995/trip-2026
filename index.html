@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>半年間バックパッカー旅 2026–2027</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#E06B38">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="旅2026">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
@@ -1900,5 +1905,10 @@ initTripProgress();
   <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
   <img id="lightbox-img" src="" alt="">
 </div>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+</script>
 </body>
 </html>
