@@ -223,6 +223,12 @@
     .budget-card .detail { font-size: 0.78rem; color: var(--sage); margin-top: 4px; }
     .budget-bar-wrap { margin-top: 12px; background: var(--line); height: 2px; }
     .budget-bar { height: 2px; background: var(--c); transition: width 1s ease; }
+    .actual-input { width: 110px; background: var(--cream); border: 1px solid var(--line); color: var(--ink); font-family: var(--mono); font-size: 0.8rem; padding: 4px 8px; text-align: right; -moz-appearance: textfield; }
+    .actual-input::-webkit-outer-spin-button, .actual-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .actual-input:focus { outline: none; border-color: var(--sage); }
+    .diff-good { color: var(--sage); }
+    .diff-bad  { color: var(--accent); }
+    .actual-total-row td { border-top: 1px solid var(--line); font-weight: 600; padding-top: 10px; }
     .total-box {
       background: #252932; color: #D8D0C4;
       padding: 36px 32px; text-align: center; margin-bottom: 24px;
@@ -526,6 +532,28 @@
       <tbody id="tour-body"></tbody>
     </table>
   </div>
+  <div class="section-title" style="margin-top:32px;" data-i18n="sec_actual">実費トラッカー</div>
+  <div style="overflow-x:auto;">
+    <table class="route-table">
+      <thead>
+        <tr>
+          <th data-i18n="th_region">地域</th>
+          <th data-i18n="th_planned">計画予算</th>
+          <th data-i18n="th_actual_col">実費（円）</th>
+          <th data-i18n="th_diff">差額</th>
+        </tr>
+      </thead>
+      <tbody id="actual-body"></tbody>
+      <tfoot>
+        <tr class="actual-total-row">
+          <td data-i18n="th_total">合計</td>
+          <td id="at-plan-total" style="font-family:var(--mono)">—</td>
+          <td id="at-actual-total" style="font-family:var(--mono)">—</td>
+          <td id="at-diff-total">—</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 </div>
 
 <!-- ===== HIGHLIGHTS TAB ===== -->
@@ -659,8 +687,14 @@ const T = {
   sec_tours:   { ja:'主要ツアー費用', en:'Major Tours' },
   th_tour:     { ja:'ツアー名',     en:'Tour' },
   th_cost:     { ja:'費用（目安）', en:'Est. Cost' },
-  th_days:     { ja:'日数',         en:'Days' },
-  sec_hl:      { ja:'旅のハイライト', en:'Trip Highlights' },
+  th_days:       { ja:'日数',         en:'Days' },
+  sec_actual:    { ja:'実費トラッカー', en:'Actual Expenses' },
+  th_region:     { ja:'地域',          en:'Region' },
+  th_planned:    { ja:'計画予算',       en:'Planned' },
+  th_actual_col: { ja:'実費（円）',     en:'Actual (¥)' },
+  th_diff:       { ja:'差額',           en:'Difference' },
+  th_total:      { ja:'合計',           en:'Total' },
+  sec_hl:        { ja:'旅のハイライト', en:'Trip Highlights' },
   sec_pack:    { ja:'持ち物リスト', en:'Packing List' },
   f_all:       { ja:'すべて',       en:'All' },
   f_bags:      { ja:'バッグ',       en:'Bags' },
@@ -1224,6 +1258,7 @@ function applyLang() {
   renderItinerary();
   renderBudget();
   renderTours();
+  renderActualTracker();
   renderHighlights();
   renderPacking(currentFilter);
   document.querySelectorAll('.photo-toggle').forEach(btn => {
@@ -1407,6 +1442,63 @@ function renderTours() {
         <td style="font-family:var(--mono)">${tr.days}</td>
       </tr>`;
   });
+}
+
+// ===== ACTUAL EXPENSE TRACKER =====
+const PLAN_YEN = [200000, 800000, 350000, 400000, 150000, 350000];
+
+function loadActualData() {
+  try { return JSON.parse(localStorage.getItem('actual_expenses') || '{}'); } catch(e) { return {}; }
+}
+
+function renderActualTracker() {
+  const data = loadActualData();
+  const tbody = document.getElementById('actual-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  let totalPlan = 0, totalActual = 0, hasActual = false;
+
+  budgetCards.forEach((card, i) => {
+    const label = (card[lang] || card.ja).title;
+    const planned = PLAN_YEN[i];
+    const raw = data[i];
+    const actual = (raw !== undefined && raw !== '') ? Number(raw) : null;
+    const diff = actual !== null ? actual - planned : null;
+
+    totalPlan += planned;
+    if (actual !== null) { totalActual += actual; hasActual = true; }
+
+    const diffHtml = diff !== null
+      ? `<span class="${diff <= 0 ? 'diff-good' : 'diff-bad'}">${diff > 0 ? '+' : ''}${diff.toLocaleString()}</span>`
+      : '—';
+
+    tbody.innerHTML += `<tr>
+      <td><span style="color:${card.colorVar}">●</span> ${label}</td>
+      <td style="font-family:var(--mono)">${planned.toLocaleString()}</td>
+      <td><input type="number" class="actual-input" min="0" step="1000" value="${actual !== null ? actual : ''}" onchange="updateActual(${i},this.value)" placeholder="未入力"></td>
+      <td style="font-family:var(--mono)">${diffHtml}</td>
+    </tr>`;
+  });
+
+  document.getElementById('at-plan-total').textContent = totalPlan.toLocaleString();
+  const actualEl = document.getElementById('at-actual-total');
+  const diffEl   = document.getElementById('at-diff-total');
+  if (hasActual) {
+    actualEl.textContent = totalActual.toLocaleString();
+    const d = totalActual - totalPlan;
+    diffEl.innerHTML = `<span class="${d <= 0 ? 'diff-good' : 'diff-bad'}">${d > 0 ? '+' : ''}${d.toLocaleString()}</span>`;
+  } else {
+    actualEl.textContent = '—';
+    diffEl.textContent = '—';
+  }
+}
+
+function updateActual(idx, value) {
+  const data = loadActualData();
+  if (value === '' || value === null) { delete data[idx]; } else { data[idx] = Number(value); }
+  localStorage.setItem('actual_expenses', JSON.stringify(data));
+  renderActualTracker();
 }
 
 // ===== HIGHLIGHTS =====
@@ -1895,6 +1987,7 @@ function initTripProgress() {
 renderItinerary();
 renderBudget();
 renderTours();
+renderActualTracker();
 renderHighlights();
 renderPacking('all');
 renderMessages();
